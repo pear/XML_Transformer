@@ -199,6 +199,8 @@ class XML_Transformer_CallbackRegistry {
         foreach ($namespacePrefixes as $namespacePrefix) {
             $this->overloadedNamespaces[$i]['active'] = true;
         }
+
+        $this->_locked = false;
     }
 
     // }}}
