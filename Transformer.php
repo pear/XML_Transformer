@@ -216,7 +216,6 @@ class XML_Transformer {
     }
 
     // }}}
-
     // {{{ function stackdump()
 
     /**
@@ -226,7 +225,6 @@ class XML_Transformer {
     * @return string
     * @access public
     */
-
     function stackdump() {
         $r = sprintf(
           "Stackdump (level: %s) follows:\n",
@@ -265,7 +263,6 @@ class XML_Transformer {
     }
 
     // }}}
-
     // {{{ function attributesToString($attributes)
 
     /**
