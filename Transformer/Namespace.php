@@ -65,6 +65,39 @@
 * @access  public
 */
 class XML_Transformer_Namespace {
+    // {{{ Members
+
+    /**
+    * @var    array
+    * @access private
+    */
+    var $_prefix = array();
+
+    /**
+    * @var    string
+    * @access private
+    */
+    var $_transformer = '';
+
+    // }}}
+    // {{{ function initObserver($prefix, &$object)
+
+    /**
+    * Called by XML_Transformer at initialization time.
+    * We use this to remember our namespace prefixes
+    * (there can be multiple) and a pointer to the
+    * Transformer object.
+    *
+    * @param  string
+    * @param  object
+    * @access public
+    */
+    function initObserver($prefix, &$object) {
+      $this->_prefix[]    = $prefix;
+      $this->_transformer = $object;
+    }
+
+    // }}}
     // {{{ function startElement($element, $attributes)
 
     /**
