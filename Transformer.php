@@ -430,7 +430,7 @@ class XML_Transformer {
           sprintf(
             'startElement[%d]: %s %s',
             $this->_level,
-            $element,
+            ($namespacePrefix != '&MAIN') ? $namespacePrefix . ':' . $element : $element,
             $this->attributesToString($attributes)
           ),
           $element
@@ -485,7 +485,7 @@ class XML_Transformer {
           sprintf(
             'endElement[%d]: %s (with cdata=%s)',
             $this->_level,
-            $element,
+            ($namespacePrefix != '&MAIN') ? $namespacePrefix . ':' . $element : $element,
             $this->_cdataStack[$this->_level]
           ),
           $element
