@@ -33,6 +33,12 @@
     <notes>
 + Added a base class for namespace-handling transformer classes.
 
++ Removed canonicalName() method in favour of more general
+  canonicalizeAttributes() method.
+
+* Attributes are now canonicalize on-the-fly, and not at
+  serialization which can be too late.
+
 * Fixed recursive transformation of overloaded namespaces.
     </notes>
     <filelist>

@@ -289,13 +289,6 @@ class XML_Transformer {
     function attributesToString($attributes) {
         $string = '';
 
-        if ($this->_caseFolding) {
-            $attributes = array_change_key_case(
-              $attributes,
-              $this->_caseFoldingTo
-            );
-        }
-
         ksort($attributes);
 
         foreach ($attributes as $key => $value) {
@@ -306,21 +299,29 @@ class XML_Transformer {
     }
 
     // }}}
-    // {{{ function canonicalName($name)
+    // {{{ function canonicalizeAttributes($attributes)
 
     /**
-    * Returns the canonical name of a given element.
+    * Canonicalizes a given attributes array.
     *
-    * @param  string
-    * @return string
+    * @param  array
+    * @return array
     * @access public
     */
-    function canonicalName($name) {
+    function canonicalize($target) {
         if ($this->_caseFolding) {
-            return ($this->_caseFoldingTo == CASE_UPPER) ? strtoupper($name) : strtolower($name);
-        } else {
-            return $name;
+
+            if (is_string($target)) {
+                return ($this->_caseFoldingTo == CASE_UPPER) ? strtoupper($target) : strtolower($target);
+            } else {
+                return array_change_key_case(
+                  $target,
+                  $this->_caseFoldingTo
+                );
+            }
         }
+
+        return $target;
     }
 
     // }}}
@@ -337,7 +338,7 @@ class XML_Transformer {
     * @access public
     */
     function overloadElement($element, $startHandler, $endHandler, $recursiveOperation = '') {
-        $element = $this->canonicalName($element);
+        $element = $this->canonicalize($element);
 
         $this->_registerElementCallback($element, 'start', $startHandler);
         $this->_registerElementCallback($element, 'end',   $endHandler);
@@ -356,7 +357,7 @@ class XML_Transformer {
     * @access public
     */
     function unOverloadElement($element) {
-        $element = $this->canonicalName($element);
+        $element = $this->canonicalize($element);
 
         if (isset($this->_overloadedElements[$element])) {
             unset($this->_overloadedElements[$element]);
@@ -380,7 +381,7 @@ class XML_Transformer {
     */
     function isOverloadedElement($element) {
         return isset(
-          $this->_overloadedElements[$this->canonicalName($element)]
+          $this->_overloadedElements[$this->canonicalize($element)]
         );
     }
 
@@ -395,7 +396,7 @@ class XML_Transformer {
     * @access public
     */
     function overloadNamespace($namespacePrefix, &$object) {
-        $namespacePrefix = $this->canonicalName($namespacePrefix);
+        $namespacePrefix = $this->canonicalize($namespacePrefix);
 
         if (is_object($object) &&
             method_exists($object, 'startElement') &&
@@ -431,7 +432,7 @@ class XML_Transformer {
     * @access public
     */
     function unOverloadNamespace($namespacePrefix) {
-        $namespacePrefix = $this->canonicalName($namespacePrefix);
+        $namespacePrefix = $this->canonicalize($namespacePrefix);
 
         if (isset($this->_overloadedNamespaces[$namespacePrefix])) {
             unset($this->_overloadedNamespaces[$namespacePrefix]);
@@ -455,7 +456,7 @@ class XML_Transformer {
     */
     function isOverloadedNamespace($namespacePrefix) {
         return isset(
-          $this->_overloadedNamespaces[$this->canonicalName($namespacePrefix)]
+          $this->_overloadedNamespaces[$this->canonicalize($namespacePrefix)]
         );
     }
 
@@ -600,7 +601,8 @@ class XML_Transformer {
     * @access private
     */
     function _startElement($parser, $element, $attributes) {
-        $element         = $this->canonicalName($element);
+        $attributes      = $this->canonicalize($attributes);
+        $element         = $this->canonicalize($element);
         $namespacePrefix = '';
 
         if (strstr($element, ':')) {
@@ -671,7 +673,7 @@ class XML_Transformer {
     */
     function _endElement($parser, $element) {
         $cdata           = $this->_cdataStack[$this->_level];
-        $element         = $this->canonicalName($element);
+        $element         = $this->canonicalize($element);
         $namespacePrefix = '';
         $recursion       = false;
 
