@@ -116,7 +116,7 @@ class XML_Transformer_Namespace {
         }
 
         return sprintf(
-          "<!-- undefined: %s --><%s %s>",
+          "<!-- undefined: %s --><%s%s>",
 
           $element,
           $element,
