@@ -494,6 +494,7 @@ class XML_Transformer {
                 'caseFolding'          => $this->_caseFolding,
                 'overloadedElements'   => $this->_overloadedElements,
                 'overloadedNamespaces' => $this->_overloadedNamespaces,
+                'recursiveOperation'   =  $this->_recursiveOperation,
                 'startup'              => false
               )
             );
