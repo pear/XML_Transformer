@@ -28,6 +28,34 @@
     <state>devel</state>
     <date>2002-XX-XX</date>
     <notes>
+<![CDATA[
++ Added DocBook namespace handler.
+
++ Added Widget namespace handler.
+
+* Significant performance improvement by preventing unnecessary
+  recursive parsing.
+
+  By returning
+
+    array(
+      $cdata,
+      true
+    )
+
+  instead of
+
+    $cdata
+
+  a callback handler for the endElement event can notify the
+  Transformer not to recurively process its result.
+
+* Improved debugging.
+
+  The debug information is no longer printed as XML comments
+  into the XML output tree, but sent to the error.log.
+
+]]>
     </notes>
     <filelist>
       <dir name="/" baseinstalldir="XML">
