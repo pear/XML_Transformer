@@ -415,22 +415,23 @@ class XML_Transformer {
         $process    = $this->_lastProcessed != $element;
 
         if (strstr($element, ':')) {
-            list($namespacePrefix, $element) = explode(':', $element);
+            list($namespacePrefix, $qElement) = explode(':', $element);
         } else {
             $namespacePrefix = '&MAIN';
+            $qElement        = $element;
         }
 
         // Push element's name and attributes onto the stack.
 
         $this->_level++;
-        $this->_elementStack[$this->_level]    = $element;
+        $this->_elementStack[$this->_level]    = $qElement;
         $this->_attributesStack[$this->_level] = $attributes;
 
         $this->_debug(
           sprintf(
             'startElement[%d]: %s %s',
             $this->_level,
-            ($namespacePrefix != '&MAIN') ? $namespacePrefix . ':' . $element : $element,
+            $element,
             $this->attributesToString($attributes)
           ),
           $element
@@ -442,7 +443,7 @@ class XML_Transformer {
             // that is registered for this namespace.
 
             $cdata = $this->_callbackRegistry->overloadedNamespaces[$namespacePrefix]['object']->startElement(
-              $element,
+              $qElement,
               $attributes
             );
         } else {
@@ -451,7 +452,7 @@ class XML_Transformer {
 
             $cdata = sprintf(
               '<%s%s>',
-              ($namespacePrefix != '&MAIN') ? $namespacePrefix . ':' . $element : $element,
+              $element,
               $this->attributesToString($attributes)
             );
         }
@@ -476,16 +477,17 @@ class XML_Transformer {
         $recursion = false;
 
         if (strstr($element, ':')) {
-            list($namespacePrefix, $element) = explode(':', $element);
+            list($namespacePrefix, $qElement) = explode(':', $element);
         } else {
             $namespacePrefix = '&MAIN';
+            $qElement        = $element;
         }
 
         $this->_debug(
           sprintf(
             'endElement[%d]: %s (with cdata=%s)',
             $this->_level,
-            ($namespacePrefix != '&MAIN') ? $namespacePrefix . ':' . $element : $element,
+            $element,
             $this->_cdataStack[$this->_level]
           ),
           $element
@@ -497,7 +499,7 @@ class XML_Transformer {
             // that is registered for this namespace.
 
             $cdata = $this->_callbackRegistry->overloadedNamespaces[$namespacePrefix]['object']->endElement(
-              $element,
+              $qElement,
               $cdata
             );
 
@@ -506,7 +508,7 @@ class XML_Transformer {
             // No callback was registered for this element's
             // closing tag, copy it.
 
-            $cdata .= '</' . (($namespacePrefix != '&MAIN') ? $namespacePrefix . ':' . $element : $element) . '>';
+            $cdata .= '</' . $element . '>';
         }
 
         if ($recursion) {
