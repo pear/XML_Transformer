@@ -311,7 +311,6 @@ class XML_Transformer {
     */
     function canonicalize($target) {
         if ($this->_caseFolding) {
-
             if (is_string($target)) {
                 return ($this->_caseFoldingTo == CASE_UPPER) ? strtoupper($target) : strtolower($target);
             } else {
