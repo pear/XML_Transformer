@@ -27,25 +27,25 @@ require_once 'XML/Transformer.php';
 *
 *   <?php
 *   require_once 'XML/Transformer/Driver/OutputBuffer.php';
+*   require_once 'XML/Transformer/Namespace.php';
+*
+*   class Main extends XML_Transformer_Namespace {
+*       function start_bold($attributes) {
+*           return '<b>';
+*       }
+*
+*       function end_bold($cdata) {
+*           return $cdata . '</b>';
+*       }
+*   }
 *
 *   $t = new XML_Transformer_Driver_OutputBuffer(
 *     array(
-*       'overloadedElements' => array(
-*         'bold' => array(
-*           'start' => 'startElementBold',
-*           'end'   => 'endElementBold'
-*         )
+*       'overloadedNamespaces' => array(
+*         '&MAIN' => new Main
 *       )
 *     )
 *   );
-*
-*   function startElementBold($attributes) {
-*     return '<b>';
-*   }
-*
-*   function endElementBold($cdata) {
-*     return $cdata . '</b>';
-*   }
 *   ?>
 *   <bold>text</bold>
 *
@@ -79,8 +79,7 @@ class XML_Transformer_Driver_OutputBuffer extends XML_Transformer {
     function XML_Transformer_Driver_OutputBuffer($parameters = array()) {
         $this->XML_Transformer($parameters);
 
-        if (!empty($this->_callbackRegistry->overloadedElements) ||
-            !empty($this->_callbackRegistry->overloadedNamespaces)) {
+        if (!empty($this->_callbackRegistry->overloadedNamespaces)) {
             $this->start();
         }
     }
