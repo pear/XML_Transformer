@@ -274,7 +274,6 @@ class XML_Transformer {
     * @param  array
     * @return string
     * @access public
-    * @static
     */
     function attributesToString($attributes) {
         $string = '';
