@@ -411,9 +411,161 @@ The link is added to the database. No output is being generated.
 
 2.5.2 XML_Transformer_Namespace_DocBook
 
-
+* TODO (sb)
 
 2.5.3 XML_Transformer_Namespace_Image
+
+The Image namespace implements a number of tags that are loosely
+related to images. At the moment there is a tag that
+autogenerates height/width attributes and another tag that turns
+its content text into a PNG with that text.
+
+The default namespace prefix for this namespace is "img".
+
+2.5.3.1 The img tag.
+
+This tag will generate a <img /> tag with the original
+attributes, and will add width and height attributes if
+possible.
+
+Example:
+
+<img:img src="somepng.png" alt="blah" />
+
+Result:
+
+<img alt="blah" height="168" src="somepng.png" width="320" />
+
+2.5.3.2 The gtext tag
+
+Gtext is short for graphical text. The tag will take its content
+and turn it into a single PNG or a series of PNGs using
+ImageTTFText() internally.
+
+Gtext takes a very large number of attributes. All of them can
+be specified as defaults with <img:gtextdefault /> (see below)
+and individually overridden.
+
+Limitations:
+
+Gtext requires a directory called "/cache/gtext" below
+DocumentRoot that is writeable by the webserver. Also, Fonts are
+looked for in /usr/X11R6/lib/X11/fonts/truetype. Currently there
+is no API to override this.
+
+Attributes:
+
+- split
+
+  Split is either "none", "word" or "char". If it is "none",
+  the complete content of a gtext is set as a single image.
+  If it is "word", each word of the content is set as a
+  separate image. This does not look as good as a single
+  image, but can be word wrapped. If it is "char", each
+  character is rendered as a single image. This loads
+  very fast (multiple occurences of the same character
+  are mapped onto the same file), but does not look right.
+
+- font
+
+  Name of the TTF font to use.
+
+  If an absolute pathname is supplied, that font is being used.
+  Otherwise /usr/X11R6/lib/X11/fonts/truetype/ is prepended to
+  the font name and that file is tried.
+
+- fontsize
+
+  What size to render the font in (TTF points).
+
+
+- alt
+
+  By default, each generated image is created with the text
+  on the image as alt Tag. This can be overridden by specifying
+  an alt tag (not recommended).
+
+  Note that XML attributes may not contain tags. Thus, all
+  markup is being stripped from the automatically generated
+  alt tag in order to ensure well-formed HTML.
+
+- bgcolor, fgcolor
+
+  The generated image is initially filled with bgcolor. This
+  color is then set to transparent (unless prohibited, see
+  below). After that, text is rendered in fgcolor into this
+  image.
+
+- antialias
+
+  The rendered text is by default generated with antialiasing.
+  If you do not want the text to be antialiased, set the
+  antialias attribute to "no".
+
+- transparency
+
+  The background color is by default set to transparent.
+  If you do not want the bgcolor to be set transparent,
+  set the transparency attribute to "no".
+
+- cacheable
+
+  By default, the generated image is stored in the gtext
+  cache. After that, subsequent renderings of that image
+  are not done. Instead the cached image is referenced.
+
+  If you set the cacheable attribute to "no", the image
+  is recreated on each <img:gtext /> call. This is
+  recommended during development.
+
+- spacing
+
+  <img:gtext /> tries to create the generated PNG as small as
+  possible. If you specify a spacing attribute, a transparent
+  border of x pixels is added around all four borders of the
+  generated image.
+
+- border
+
+  Additionally, if you specify a border, an x pixel border is
+  added around the text and the spacing. Unlike spacing the
+  border is painted in bordercolor.
+
+- bordercolor
+
+  The color to paint the border in is specified using the
+  bordercolor attribute.
+
+Example:
+
+  <img:gtextdefault bgcolor="888888" fgcolor="#000000"
+                    font="arial.ttf" fontsize="33"
+                    border="2" spacing="2"
+                    split="" cacheable="no"/>
+
+  <img:gtext>Antialias</img:gtext><br/>
+  <img:gtext antialias="no">No Antialias</img:gtext><br/>
+  <img:gtext>OoAaMmXxGgQqpP§</img:gtext><br />
+  <img:gtext transparency="no">abcdefghijklmnopqrstuvwxyz</img:gtext><br />
+  <img:gtext>ABCDEFGHIJKLMNOPQRSTUVWXYZ</img:gtext><br />
+  <img:gtext>0123456789 äöüßÄÖÜ</img:gtext><br />
+  <img:gtext>!§$%/()=?+*~#',;.:-_|</img:gtext><br />
+  <img:gtext split="word">Ein Satz mit x.</img:gtext><br/>
+  <img:gtext split="char">Alphabet Soup!</img:gtext>
+
+2.5.3.3 The gtextdefault tag
+
+<img:gtextdefault /> takes all attributes of <img:gtext /> and
+stores them. These attributes are then supplied to all
+subsequent <img:gtext /> calls. They may be overriden by
+specifiying alternative values in the <img:gtext />.
+
+<img:gtextdefault /> is empty and renderes to nothing.
+
+Example:
+
+See above, <img:gtext /> for an example.
+
 
 2.5.4 XML_Transformer_Namespace_PHP
 
