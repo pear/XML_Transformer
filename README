@@ -280,6 +280,35 @@ All namespaces we supply are derived from
 XML_Transformer_Namespace and subject to the limitations and
 interfaces of this baseclass.
 
+If you are looking into our code in order to write your own
+namespaces, we recommend you look into Anchor first. Anchor is
+your plain vanilly namespace with no tricks and extra features.
+
+The DocBook namespace is an example of a two-pass namespace. If
+you have an application that needs to generate tables of
+contents, cross references or other stuff that cannot be done
+without reordering, you should read DocBook as an example.
+
+The Image namespace generates PNG images, and uses a local cache
+for this. That is, we generate files in our cache, and generate
+<img /> HTML tags that references these files. This is fast, and
+saves us multiple renderings of the same image. You should look
+into these techniques if your tags are graphically intensive or
+otherwise ressource consuming. Also, <img:gtext /> uses a lot of
+parameters, and often these are similar across multiple calls of
+<img:gtext /> on the same page. We supply <img:gtextdefault />
+as a mechanism to provide sensible defaults to subsequent calls.
+Look into our code to learn how we did this.
+
+The PHP namespace implements <php:define />, which gobbles up
+its contents unparsed. In order to do this it uses getLock() and
+releaseLock() in transformer. If you need code that is read
+as-is and evaluated later, look into this. Also, the PHP
+namespace uses PHP's eval function extensively to generate
+namespace classes at run-time. This is not a recommended
+practice, but probably interesting code.
+
+
 2.5.1 XML_Transformer_Namespace_Anchor
 
 The Anchor namespace implements a number of tags that create
@@ -380,8 +409,9 @@ Result:
 
 The link is added to the database. No output is being generated.
 
-
 2.5.2 XML_Transformer_Namespace_DocBook
+
+
 
 2.5.3 XML_Transformer_Namespace_Image
 
