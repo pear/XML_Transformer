@@ -112,6 +112,12 @@ class XML_Transformer {
     * @var    boolean
     * @access private
     */
+    var $_recursiveOperation = true;
+
+    /**
+    * @var    boolean
+    * @access private
+    */
     var $_started = false;
 
     /**
@@ -127,17 +133,24 @@ class XML_Transformer {
         $this->_caseFolding          = isset($parameters['caseFolding'])          ? $parameters['caseFolding']          : false;
         $overloadedElements          = isset($parameters['overloadedElements'])   ? $parameters['overloadedElements']   : array();
         $this->_overloadedNamespaces = isset($parameters['overloadedNamespaces']) ? $parameters['overloadedNamespaces'] : array();
+        $this->_recursiveOperation   = isset($parameters['recursiveOperation'])   ? $parameters['recursiveOperation']   : true;
 
         if ($startup) {
             // Walk through overloadedElements array,
             // that was passed to the constructor and
             // register the element callbacks it contains.
 
-            foreach ($overloadedElements as $element => $callbacks) {
-                $callbacks['start'] = isset($callbacks['start']) ? $callbacks['start'] : '';
-                $callbacks['end']   = isset($callbacks['end'])   ? $callbacks['end']   : '';
+            foreach ($overloadedElements as $element => $overloadedElement) {
+                $overloadedElement['start']              = isset($overloadedElement['start'])              ? $overloadedElement['start']              : '';
+                $overloadedElement['end']                = isset($overloadedElement['end'])                ? $overloadedElement['end']                : '';
+                $overloadedElement['recursiveOperation'] = isset($overloadedElement['recursiveOperation']) ? $overloadedElement['recursiveOperation'] : $this->_recursiveOperation;
 
-                $this->overloadElement($element, $callbacks['start'], $callbacks['end']);
+                $this->overloadElement(
+                  $element,
+                  $overloadedElement['start'],
+                  $overloadedElement['end'],
+                  $overloadedElement['recursiveOperation']
+                );
             }
 
             // Start transformation.
@@ -190,13 +203,16 @@ class XML_Transformer {
     * @param  string
     * @param  string
     * @param  string
+    * @param  boolean
     * @access public
     */
-    function overloadElement($element, $startHandler, $endHandler) {
+    function overloadElement($element, $startHandler, $recursiveOperation = '') {
         $element = $this->canonicalName($element);
 
         $this->_registerElementCallback($element, 'start', $startHandler);
         $this->_registerElementCallback($element, 'end',   $endHandler);
+
+        $this->_overloadedElements[$element]['recursiveOperation'] = !empty($recursiveOperation) ? $recursiveOperation : $this->_recursiveOperation;
     }
 
     /**
@@ -296,6 +312,18 @@ class XML_Transformer {
     function setCaseFolding($caseFolding) {
         if (is_bool($caseFolding)) {
             $this->_caseFolding = $caseFolding;
+        }
+    }
+
+    /**
+    * Enables or disables the recursive operation.
+    *
+    * @param  boolean
+    * @access public
+    */
+    function setRecursiveOperation($recursiveOperation) {
+        if (is_bool($recursiveOperation)) {
+            $this->_recursiveOperation = $recursiveOperation;
         }
     }
 
@@ -455,7 +483,10 @@ class XML_Transformer {
             $cdata .= '</' . $element . '>';
         }
 
-        if ($recursion) {
+        if ($resursion &&
+            $this->_overloadedElements[$element]['recursiveOperation']
+           )
+        {
             // Recursively process this transformation's result.
 
             $transformer = new XML_Transformer(
