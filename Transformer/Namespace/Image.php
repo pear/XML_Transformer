@@ -20,7 +20,7 @@ require_once 'XML/Transformer/Namespace.php';
 require_once 'XML/Transformer/Util.php';
 
 define(PEAR_XML_TRANSFORMER_IMAGE_FONTPATH, '/usr/X11R6/lib/X11/fonts/truetype');
-define(PEAR_XML_TRANSFORMER_IMAGE_CACHEDIR, '/cache/gtext');
+define(PEAR_XML_TRANSFORMER_IMAGE_cacheDir, '/cache/gtext');
 
 /**
 * Handler for the Image Namespace.
@@ -46,7 +46,7 @@ class XML_Transformer_Namespace_Image extends XML_Transformer_Namespace {
         return $path;
     }
 
-    function _createalt($word) {
+    function _createAlt($word) {
         if (isset($this->gtext_attributes['alt'])) {
             return $this->gtext_attributes['alt'];
         }
@@ -54,7 +54,7 @@ class XML_Transformer_Namespace_Image extends XML_Transformer_Namespace {
         return $word;
     }
 
-    function _colorstring($color) {
+    function _colorString($color) {
         if (substr($color, 0, 1) == '#') {
             $color = substr($color, 1);
         }
@@ -77,7 +77,7 @@ class XML_Transformer_Namespace_Image extends XML_Transformer_Namespace {
         return $r[1];
     }
 
-    function _createimage($word, $baseline) {
+    function _createImage($word, $baseline) {
         $font         = isset($this->gtext_attributes['font'])         ? $this->gtext_attributes['font']         : 'arial.ttf';
         $fh           = isset($this->gtext_attributes['fontsize'])     ? $this->gtext_attributes['fontsize']     : 12;
         $bgcolor      = isset($this->gtext_attributes['bgcolor'])      ? $this->gtext_attributes['bgcolor']      : '#ffffff';
@@ -96,18 +96,18 @@ class XML_Transformer_Namespace_Image extends XML_Transformer_Namespace {
          * but better to err on the safe side.
          */
         $cachefile = md5(XML_Transformer_Util::attributesToString($this->gtext_attributes) . ':' . $word) . '.png';
-        $cachedir  = $_SERVER['DOCUMENT_ROOT']
-                   . PEAR_XML_TRANSFORMER_IMAGE_CACHEDIR;
-        $cachename = "$cachedir/$cachefile";
-        $cacheurl  = PEAR_XML_TRANSFORMER_IMAGE_CACHEDIR. "/$cachefile";
+        $cacheDir  = $_SERVER['DOCUMENT_ROOT']
+                   . PEAR_XML_TRANSFORMER_IMAGE_cacheDir;
+        $cacheName = "$cacheDir/$cachefile";
+        $cacheURL  = PEAR_XML_TRANSFORMER_IMAGE_cacheDir. "/$cachefile";
 
-        if (!is_dir($cachedir)) {
-            mkdir($cachedir, 01777);
+        if (!is_dir($cacheDir)) {
+            mkdir($cacheDir, 01777);
         }
 
         /* Don't do the same work twice. */
-        if (file_exists($cachename) && $cacheable != 'no') {
-            return $cacheurl;
+        if (file_exists($cacheName) && $cacheable != 'no') {
+            return $cacheURL;
         }
 
         $r = ImageTTFBBox(
@@ -127,21 +127,21 @@ class XML_Transformer_Namespace_Image extends XML_Transformer_Namespace {
 
         $im = ImageCreate($www, $hhh);
 
-        list($r, $g, $b) = $this->_colorstring($bgcolor);
+        list($r, $g, $b) = $this->_colorString($bgcolor);
         $bg = ImageColorAllocate($im, $r, $g, $b);
 
         if ($transparency != 'no') {
             ImageColorTransparent($im, $bg);
         }
 
-        list($r, $g, $b) = $this->_colorstring($fgcolor);
+        list($r, $g, $b) = $this->_colorString($fgcolor);
         $fg = ImageColorAllocate($im, $r, $g, $b);
 
         if ($antialias == 'no') {
             $fg = -$fg;
         }
 
-        list($r, $g, $b) = $this->_colorstring($bordercolor);
+        list($r, $g, $b) = $this->_colorString($bordercolor);
         $bo = ImageColorAllocate($im, $r, $g, $b);
 
         ImageFilledRectangle($im, 0, 0, $www, $hhh, $bg);
@@ -167,18 +167,18 @@ class XML_Transformer_Namespace_Image extends XML_Transformer_Namespace {
           $word
         );
 
-        ImagePNG($im, $cachename);
+        ImagePNG($im, $cacheName);
         ImageDestroy($im);
 
-        return $cacheurl;
+        return $cacheURL;
     }
 
     /* <img:img />
      *   src=...  -- src of the image, must be getimagesize() compatible
      *            -- all other attributes are copied
      */
-    function start_img($att) {
-        $this->img_attributes = $att;
+    function start_img($attributes) {
+        $this->img_attributes = $attributes;
 
         return '';
     }
@@ -213,18 +213,18 @@ class XML_Transformer_Namespace_Image extends XML_Transformer_Namespace {
      *   border=...     -- draw a border of x pixels around the text
      *   bordercolor=...-- color to use for border
      */
-    function start_gtext($att) {
+    function start_gtext($attributes) {
         foreach ($this->gtextdefault_attributes as $k => $v) {
-            if (! isset($att[$k])) {
-                $att[$k] = $v;
+            if (! isset($attributes[$k])) {
+                $attributes[$k] = $v;
             }
         }
 
-        if (!file_exists($att['font'])) {
-            $att['font'] = PEAR_XML_TRANSFORMER_IMAGE_FONTPATH . '/' . $att['font'];
+        if (!file_exists($attributes['font'])) {
+            $attributes['font'] = PEAR_XML_TRANSFORMER_IMAGE_FONTPATH . '/' . $attributes['font'];
         }
   
-        $this->gtext_attributes = $att;
+        $this->gtext_attributes = $attributes;
   
         return '';
     }
@@ -266,8 +266,8 @@ class XML_Transformer_Namespace_Image extends XML_Transformer_Namespace {
               $this->gtext_attributes['fontsize']
             );
 
-            $src = $this->_createimage($word,$baseline);
-            $alt = $this->_createalt($word);
+            $src = $this->_createImage($word,$baseline);
+            $alt = $this->_createAlt($word);
 
             $r .= sprintf(
               '<img:img src="%s" alt="%s" />',
@@ -284,8 +284,8 @@ class XML_Transformer_Namespace_Image extends XML_Transformer_Namespace {
      *
      * as <img:gtext />, stores attributes as defaults for gtext.
      */
-    function start_gtextdefault($att) {
-        $this->gtextdefault_attributes = $att;
+    function start_gtextdefault($attributes) {
+        $this->gtextdefault_attributes = $attributes;
 
         return '';
     }
