@@ -103,7 +103,7 @@ class XML_Transformer_CallbackRegistry {
             );
         }
 
-        if (!is_subclass_of()) {
+        if (!is_subclass_of($object, 'XML_Transformer_Namespace')) {
             return sprintf(
               'Cannot overload namespace "%s", ' .
               'provided object was not instantiated from ' .
