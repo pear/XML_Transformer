@@ -802,18 +802,16 @@ class XML_Transformer {
     }
 
     // }}}
-    // {{{ function _parseCallback($element, $event, $callback)
+    // {{{ function _parseCallback($callback)
 
     /**
     * Parses a PHP callback.
     *
     * @param  string
-    * @param  string
-    * @param  string
     * @return mixed
     * @access private
     */
-    function _parseCallback($element, $event, $callback) {
+    function _parseCallback($callback) {
         $parsedCallback = false;
 
         // classname::staticMethod
@@ -845,15 +843,6 @@ class XML_Transformer {
         if ($parsedCallback) {
             return $parsedCallback;
         } else {
-            $this->_handleError(
-              sprintf(
-                'Callback %s for <%s%s> does not exist.',
-                $callback,
-                ($event == 'end') ? '/' : '',
-                $element
-              )
-            );
-
             return false;
         }
     }
@@ -870,8 +859,17 @@ class XML_Transformer {
     * @access private
     */
     function _registerElementCallback($element, $event, $callback) {
-        if ($parsedCallback = $this->_parseCallback($element, $event, $callback)) {
+        if ($parsedCallback = $this->_parseCallback($callback)) {
             $this->_overloadedElements[$element][$event] = $parsedCallback;
+        } else {
+            $this->_handleError(
+              sprintf(
+                'Callback %s for <%s%s> does not exist.',
+                $callback,
+                ($event == 'end') ? '/' : '',
+                $element
+              )
+            );
         }
     }
 
