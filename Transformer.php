@@ -329,7 +329,7 @@ class XML_Transformer {
     }
 
     // }}}
-    // {{{ function setCollapsingOfEmptyTags($collapseEmptyTags)
+    // {{{ public function setCollapsingOfEmptyTags($collapseEmptyTags)
 
     /**
     * Sets the XML parser's case-folding option.
@@ -337,7 +337,7 @@ class XML_Transformer {
     * @param  boolean
     * @access public
     */
-    function setCollapsingOfEmptyTags($collapseEmptyTags) {
+    public function setCollapsingOfEmptyTags($collapseEmptyTags) {
         if (is_bool($collapseEmptyTags)) {
             $this->collapseEmptyTags = $collapseEmptyTags;
         }
