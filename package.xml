@@ -28,7 +28,7 @@
   <license>PHP License</license>
   <release>
     <version>0.5</version>
-    <state>devel</state>
+    <state>stable</state>
     <date>2002-09-08</date>
     <notes>
 * Resolved infinite recursion problem that arose when handlers
