@@ -603,6 +603,8 @@ class XML_Transformer {
         // Push element's name and attributes onto the stack.
 
         $this->_level++;
+        $this->_elementStack[$this->_level]    = $element;
+        $this->_attributesStack[$this->_level] = $attributes;
 
         $this->_debug(
           sprintf(
@@ -613,9 +615,6 @@ class XML_Transformer {
           ),
           $element
         );
-
-        $this->_elementStack[$this->_level]    = $element;
-        $this->_attributesStack[$this->_level] = $attributes;
 
         if (isset($this->_overloadedNamespaces[$namespacePrefix])) {
             // The event is handled by a callback
