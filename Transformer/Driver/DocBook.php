@@ -61,16 +61,24 @@ require_once 'XML/Transformer/Namespace/DocBook.php';
 * Output
 *
 *   <html>
+*     <head>
+*       <title>
+*         Sebastian Bergmann: An Article
+*       </title>
+*     </head>
 *     <body>
+*       <h1 class="title">
+*         Sebastian Bergmann: An Article
+*       </h1>
 *       <div class="section">
 *         <a id="foo"></a>
-*         <h2>
+*         <h2 class="title">
 *           1. Section One
 *         </h2>
 *       </div>
 *       <div class="section">
 *         <a id="bar"></a>
-*         <h2>
+*         <h2 class="title">
 *           2. Section Two
 *         </h2>
 *         <p>

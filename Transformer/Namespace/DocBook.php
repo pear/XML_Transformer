@@ -153,7 +153,7 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     * @var    array
     * @access private
     */
-    var $_processXref = false;
+    var $_secondPass = false;
 
     /**
     * @var    array
@@ -198,7 +198,14 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     * @return string
     * @access public
     */
-    function start_artheader($attributes) {}
+    function start_artheader($attributes) {
+        if (!$this->_secondPass) {
+            return sprintf(
+              '<artheader%s>',
+              XML_Transformer_Util::attributesToString($attributes)
+            );
+        }
+    }
 
     // }}}
     // {{{ function end_artheader($cdata)
@@ -208,7 +215,16 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     * @return string
     * @access public
     */
-    function end_artheader($cdata) {}
+    function end_artheader($cdata) {
+        if (!$this->_secondPass) {
+            $cdata = $cdata . '</artheader>';
+
+            return array(
+              $cdata,
+              false
+            );
+        }
+    }
 
     // }}}
     // {{{ function start_article($attributes)
@@ -219,12 +235,23 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     * @access public
     */
     function start_article($attributes) {
-        $id = $this->_startSection(
-          'article',
-          isset($attributes['id']) ? $attributes['id'] : ''
-        );
+        if (!$this->_secondPass) {
+            $id = $this->_startSection(
+              'article',
+              isset($attributes['id']) ? $attributes['id'] : ''
+            );
 
-        return '<html><body>' . $id;
+            return '<article>' . $id;
+        } else {
+            return sprintf(
+              '<html><head><title>%s: %s</title><body><h1 class="title">%s: %s</h1>',
+
+              $this->_author,
+              $this->_title,
+              $this->_author,
+              $this->_title
+            );
+        }
     }
 
     // }}}
@@ -236,11 +263,20 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     * @access public
     */
     function end_article($cdata) {
-        $this->_endSection('article');
+        if (!$this->_secondPass) {
+            $this->_endSection('article');
 
-        $this->_processXref = true;
+            $this->_secondPass = true;
 
-        return $cdata . '</body></html>';
+            $cdata = $cdata . '</article>';
+        } else {
+            $cdata = $cdata . '</body></html>';
+        }
+
+        return array(
+          $cdata,
+          false
+        );
     }
 
     // }}}
@@ -727,17 +763,17 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
         switch ($this->_context[sizeof($this->_context)-1]) {
             case 'chapter':
             case 'section': {
-                return '<h2>' . $this->_currentSectionNumber . '. ';
+                return '<h2 class="title">' . $this->_currentSectionNumber . '. ';
             }
             break;
 
             case 'example': {
-                return '<h2>Example ' . $this->_currentExampleNumber;
+                return '<h3 class="title">Example ' . $this->_currentExampleNumber;
             }
             break;
 
             case 'figure': {
-                return '<h2>Figure ' . $this->_currentFigureNumber;
+                return '<h3 class="title">Figure ' . $this->_currentFigureNumber;
             }
             break;
         }
@@ -766,10 +802,14 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
             break;
 
             case 'chapter':
-            case 'example':
-            case 'figure':
             case 'section': {
                 return $cdata . '</h2>';
+            }
+            break;
+
+            case 'example':
+            case 'figure': {
+                return $cdata . '</h3>';
             }
             break;
 
@@ -812,7 +852,7 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     * @access public
     */
     function start_xref($attributes) {
-        if ($this->_processXref) {
+        if ($this->_secondPass) {
             return sprintf(
               '<a href="#%s">%s</a>',
 
@@ -836,7 +876,7 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     * @access public
     */
     function end_xref($cdata) {
-        if (!$this->_processXref) {
+        if (!$this->_secondPass) {
             $cdata = $cdata . '</xref>';
         }
 
