@@ -136,7 +136,7 @@ simple tags such as <body/> or <p/>. The name of the empty namespace is '' or
 
 To make the definition of namespaces easy, we supply a class 
 XML_Transformer_Namespace from which you can inherit (Note that 
-XML_Transformer_namespace ist only one possible implementation for a namespace. 
+XML_Transformer_namespace is only one possible implementation for a namespace. 
 You are free to choose a different implementation schema anytime, for example if 
 the direct mapping of classes to namespaces is not applicable for your 
 deployment scenario). The class is suitable for all non-nesting tags and the 
