@@ -237,4 +237,9 @@ class XML_Transformer_PHP extends XML_Transformer_Namespace {
 
     // }}}
 }
+
+/*
+ * vim600:  et sw=2 ts=2 fdm=marker
+ * vim<600: et sw=2 ts=2
+ */
 ?>
