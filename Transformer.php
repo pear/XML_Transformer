@@ -285,6 +285,7 @@ class XML_Transformer {
     * @param  array
     * @return string
     * @access public
+    * @static
     */
     function attributesToString($attributes) {
         $string = '';
@@ -515,21 +516,6 @@ class XML_Transformer {
     }
 
     // }}}
-    // {{{ function setRecursiveOperation($recursiveOperation)
-
-    /**
-    * Enables or disables the recursive operation.
-    *
-    * @param  boolean
-    * @access public
-    */
-    function setRecursiveOperation($recursiveOperation) {
-        if (is_bool($recursiveOperation)) {
-            $this->_recursiveOperation = $recursiveOperation;
-        }
-    }
-
-    // }}}
     // {{{ function setDebug($debug)
 
     /**
@@ -546,6 +532,21 @@ class XML_Transformer {
 
         else if (is_bool($debug)) {
             $this->_debug = $debug;
+        }
+    }
+
+    // }}}
+    // {{{ function setRecursiveOperation($recursiveOperation)
+
+    /**
+    * Enables or disables the recursive operation.
+    *
+    * @param  boolean
+    * @access public
+    */
+    function setRecursiveOperation($recursiveOperation) {
+        if (is_bool($recursiveOperation)) {
+            $this->_recursiveOperation = $recursiveOperation;
         }
     }
 
@@ -856,6 +857,39 @@ class XML_Transformer {
     }
 
     // }}}
+    // {{{ function _debug($debugMessage, $currentElement = '')
+
+    /**
+    * Sends a debug message to error.log, if debugging is enabled.
+    *
+    * @param  string
+    * @access private
+    */
+    function _debug($debugMessage, $currentElement = '') {
+        if ($this->_debug &&
+            (empty($this->_debugFilter) ||
+             isset($this->_debugFilter[$currentElement]))) {
+            error_log($debugMessage);
+        }
+    }
+
+    // }}}
+    // {{{ function _handleError($errorMessage)
+
+    /**
+    * Inserts an error message into the output.
+    *
+    * @param  string
+    * @access private
+    */
+    function _handleError($errorMessage) {
+        $this->_cdataStack[$this->_level] .= sprintf(
+          "<!-- Transformer Error: %s -->\n",
+          $errorMessage
+        );
+    }
+
+    // }}}
     // {{{ function _parseCallback($callback)
 
     /**
@@ -924,39 +958,6 @@ class XML_Transformer {
                 $element
               )
             );
-        }
-    }
-
-    // }}}
-    // {{{ function _handleError($errorMessage)
-
-    /**
-    * Inserts an error message into the output.
-    *
-    * @param  string
-    * @access private
-    */
-    function _handleError($errorMessage) {
-        $this->_cdataStack[$this->_level] .= sprintf(
-          "<!-- Transformer Error: %s -->\n",
-          $errorMessage
-        );
-    }
-
-    // }}}
-    // {{{ function _debug($debugMessage, $currentElement = '')
-
-    /**
-    * Sends a debug message to error.log, if debugging is enabled.
-    *
-    * @param  string
-    * @access private
-    */
-    function _debug($debugMessage, $currentElement = '') {
-        if ($this->_debug &&
-            (empty($this->_debugFilter) ||
-             isset($this->_debugFilter[$currentElement]))) {
-            error_log($debugMessage);
         }
     }
 
