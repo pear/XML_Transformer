@@ -3,7 +3,7 @@
 // +---------------------------------------------------------------------------+
 // | PEAR :: XML :: Transformer :: Driver :: Cache                             |
 // +---------------------------------------------------------------------------+
-// | Copyright (c) 2002-2003 Sebastian Bergmann <sb@sebastian-bergmann.de> and |
+// | Copyright (c) 2002-2003-2003 Sebastian Bergmann <sb@sebastian-bergmann.de> and |
 // |                         Kristian Köhntopp <kris@koehntopp.de>.            |
 // +---------------------------------------------------------------------------+
 // | This source file is subject to version 3.00 of the PHP License,           |
