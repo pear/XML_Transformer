@@ -7,8 +7,7 @@
 // |                    Kristian Köhntopp <kris@koehntopp.de>.            |
 // +----------------------------------------------------------------------+
 // | This source file is subject to version 3.00 of the PHP License,      |
-// | that is available through the world-wide-web at                      |
-// | http://www.php.net/license/3_0.txt.                                  |
+// | that is available at http://www.php.net/license/3_0.txt.             |
 // | If you did not receive a copy of the PHP license and are unable to   |
 // | obtain it through the world-wide-web, please send a note to          |
 // | license@php.net so we can mail you a copy immediately.               |
@@ -17,7 +16,7 @@
 // $Id$
 //
 
-require_once 'XML/Transformer/Namespace.php';
+#require_once 'XML/Transformer/Namespace.php';
 
 /**
 * Handler for the PHP Namespace.
