@@ -284,7 +284,7 @@ class XML_Transformer_Namespace_Image extends XML_Transformer_Namespace {
             return $this->_gtextAttributes['alt'];
         }
 
-        return $word;
+        return strip_tags($word);
     }
 
     // }}}
