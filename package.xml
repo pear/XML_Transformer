@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE package SYSTEM "../package.dtd">
+<package version="1.0">
+  <name>Transformer</name>
+  <summary>XML Transformations in PHP</summary>
+  <description>
+    With the XML/Transformer class one can easily bind PHP
+    functionality to XML tags, thus transforming the input XML tree
+    into an output XML tree without the need for XSLT. Single XML
+    elements can be overloaded with PHP functions, methods and static
+    method calls, XML namespaces can be registered to be handled by
+    PHP classes.
+  </description>
+  <maintainers>
+    <maintainer>
+      <user>sebastian</user>
+      <name>Sebastian Bergmann</name>
+      <email>sb@sebastian-bergmann.de</email>
+    </maintainer>
+  </maintainers>
+  <release>
+    <version>0.1</version>
+    <date>2002-04-64</date>
+    <notes>
+      This is the initial independent PEAR release.
+    </notes>
+    <filelist>
+      <dir name="/" baseinstalldir="XML">
+        <file role="php">Transformer.php</file>
+      </dir>
+    </filelist>
+  </release>
+</package>
