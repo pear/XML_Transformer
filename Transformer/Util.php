@@ -50,7 +50,7 @@ class XML_Transformer_Util {
     }
 
     // }}}
-    // {{{ function handleError($errorMessage, $target = 'error_log')
+    // {{{ function logMessage($logMessage, $target = 'error_log')
 
     /**
     * Sends an error message to a given target.
@@ -60,15 +60,15 @@ class XML_Transformer_Util {
     * @access public
     * @static
     */
-    function handleError($errorMessage, $target = 'error_log') {
+    function logMessage($logMessage, $target = 'error_log') {
         switch ($target) {
             case 'echo': {
-                echo $errorMessage;
+                echo $logMessage;
             }
             break;
 
             default: {
-                error_log($errorMessage);
+                error_log($logMessage);
             }
         }
     }

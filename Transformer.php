@@ -254,7 +254,7 @@ class XML_Transformer {
                 );
             }
         } else {
-            XML_Transformer_Util::handleError(
+            XML_Transformer_Util::logMessage(
               $result,
               $this->_logTarget
             );
@@ -411,7 +411,7 @@ class XML_Transformer {
                 );
             }
 
-            XML_Transformer_Util::handleError(
+            XML_Transformer_Util::logMessage(
               $errorMessage . "\n" . $this->stackdump(),
               $this->_logTarget
             );
@@ -662,7 +662,7 @@ class XML_Transformer {
         if ($this->_debug &&
             (empty($this->_debugFilter) ||
              isset($this->_debugFilter[$currentElement]))) {
-            XML_Transformer_Util::handleError(
+            XML_Transformer_Util::logMessage(
               $debugMessage,
               $this->_logTarget
             );
