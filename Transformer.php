@@ -726,7 +726,7 @@ class XML_Transformer {
                 $this->_level,
                 $cdata
               ),
-              $element
+              '&RECURSE'
             );
 
             // Note: Recursive debugging creates monstrous output.
@@ -751,7 +751,7 @@ class XML_Transformer {
                 $this->_level,
                 $cdata
               ),
-              $element
+              '&RECURSE'
             );
         }
 
@@ -778,7 +778,8 @@ class XML_Transformer {
           $this->_level,
           $this->_cdataStack[$this->_level],
           $cdata
-        )
+        ),
+        '&CDATA'
       );
 
       $this->_cdataStack[$this->_level] .= $cdata;
