@@ -126,6 +126,12 @@ class XML_Transformer {
     */
     var $_secondPassRequired = false;
 
+    /**
+    * @var    integer
+    * @access private
+    */
+    var $_depth = 0;
+
     // }}}
     // {{{ function XML_Transformer($parameters = array())
 
@@ -406,6 +412,8 @@ class XML_Transformer {
             return $xml;
         }
 
+        $xml = str_replace("&","&amp;",$xml);
+
         // Create XML parser, set parser options.
 
         $parser = xml_parser_create();
@@ -469,9 +477,14 @@ class XML_Transformer {
         $secondPassRequired = $this->_secondPassRequired;
 
         if ($secondPassRequired) {
+            $this->depth++;
             $this->_secondPassRequired = false;
-
             $result = $this->transform($result);
+            $this->depth--;
+        }
+
+        if ($this->depth==0) {
+            $result=preg_replace("/<(\w+)([^>]*)><\/\\1>/s","<\\1\\2 />",$result);
         }
 
         $this->_secondPassRequired = $secondPassRequired;
@@ -604,7 +617,7 @@ class XML_Transformer {
               )
             );
 
-            $cdata = $transformer->transform($cdata);
+            $cdata = substr($transformer->transform("<_>$cdata</_>"),3,-4);
 
             if ($this->_checkDebug('&RECURSE')) {
                 $this->sendMessage(
