@@ -545,7 +545,16 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     function start_programlisting($attributes) {
         $this->_roles['programlisting'] = isset($attributes['role']) ? $attributes['role'] : '';
 
-        return '';
+        switch ($this->_roles['programlisting']) {
+            case 'php': {
+                return '';
+            }
+            break;
+
+            default: {
+                return '<code>';
+            }
+        }
     }
 
     // }}}
@@ -569,6 +578,13 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
                 );
             }
             break;
+
+            default: {
+                $cdata = array(
+                  $cdata . '</code>',
+                  false
+                );
+            }
         }
 
         $this->_roles['programlisting'] = '';
