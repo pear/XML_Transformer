@@ -522,10 +522,12 @@ class XML_Transformer {
     * Parses a PHP callback.
     *
     * @param  string
+    * @param  string
+    * @param  string
     * @return mixed
     * @access private
     */
-    function _parseCallback($callback, $event, $element) {
+    function _parseCallback($element, $event, $callback) {
         $parsedCallback = false;
 
         // classname::staticMethod
@@ -585,7 +587,7 @@ class XML_Transformer {
     * @access private
     */
     function _registerElementCallback($element, $event, $callback) {
-        if ($parsedCallback = $this->_parseCallback($callback, $event, $element)) {
+        if ($parsedCallback = $this->_parseCallback($element, $event, $callback)) {
             $this->_overloadedElements[$element][$event] = $parsedCallback;
         }
     }
