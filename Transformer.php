@@ -36,7 +36,7 @@
 *   <?php
 *   require_once 'XML/Transformer.php';
 *
-*   $t = new Transformer(
+*   $t = new XML_Transformer(
 *     array(
 *       'overloadedElements' => array(
 *         'bold' => array('start' => 'startElementBold',
@@ -65,7 +65,7 @@
 * @version $Revision$
 * @access  public
 */
-class Transformer {
+class XML_Transformer {
     /**
     * @var    boolean
     * @access private
@@ -120,7 +120,7 @@ class Transformer {
     * @param  array
     * @access public
     */
-    function Transformer($parameters = array()) {
+    function XML_Transformer($parameters = array()) {
         $overloadedElements = isset($parameters['overloadedElements']) ? $parameters['overloadedElements'] : array();
         $startup            = isset($parameters['startup'])            ? $parameters['startup']            : true;
 
@@ -456,7 +456,7 @@ class Transformer {
         if ($recursion) {
             // Recursively process this transformation's result.
 
-            $transformer = new Transformer(
+            $transformer = new XML_Transformer(
               array(
                 'caseFolding'          => $this->_caseFolding,
                 'overloadedElements'   => $this->_overloadedElements,

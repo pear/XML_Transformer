@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <!DOCTYPE package SYSTEM "../package.dtd">
 <package version="1.0">
-  <name>Transformer</name>
+  <name>XML_Transformer</name>
   <summary>XML Transformations in PHP</summary>
   <description>
     With the XML/Transformer class one can easily bind PHP
@@ -26,10 +26,11 @@
     </maintainer>
   </maintainers>
   <release>
-    <version>0.1</version>
-    <date>2002-04-06</date>
+    <version>0.2</version>
+    <state>stable</state>
+    <date>2002-04-07</date>
     <notes>
-      This is the initial independent PEAR release.
+      Renamed to XML_Transformer, per Stig's request.
     </notes>
     <filelist>
       <dir name="/" baseinstalldir="XML">
@@ -37,4 +38,13 @@
       </dir>
     </filelist>
   </release>
+  <changelog>
+    <release>
+      <version>0.1</version>
+      <date>2002-04-06</date>
+      <notes>
+        This is the initial independent PEAR release.
+      </notes>
+    </release>
+  </changelog>
 </package>
