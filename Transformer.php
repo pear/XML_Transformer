@@ -240,7 +240,7 @@ class XML_Transformer {
     */
     function overloadNamespace($namespacePrefix, &$object, $recursiveOperation = '') {
         if (empty($namespacePrefix) ||
-            $namespacePrefix == '&MAIN')) {
+            $namespacePrefix == '&MAIN') {
             $namespacePrefix = '&MAIN';
         } else {
             $namespacePrefix = $this->canonicalize($namespacePrefix);
