@@ -45,6 +45,9 @@
 * Attributes are now canonicalized on-the-fly, rather than at
   the time of their serialization which can be too late.
 
+  As a side-effect, the attributesToString() can now be called
+  statically.
+
 * Fixed recursive transformation of overloaded namespaces.
     </notes>
     <filelist>
