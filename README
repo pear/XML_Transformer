@@ -1,5 +1,6 @@
 
 XML Transformer Tutorial
+by Kristian Köhntopp, Sebastian Bergmann
 
 0. This file
 
@@ -16,9 +17,9 @@ XML_Transformer to illustrate its typical use.
 
 1. What is it good for?
 
-The XML Transformer is a PEAR class that can be used to
-transform XML files into other XML files. The transformation is
-being specified using PHP functions.
+The XML Transformer is a system of PEAR classes that can be used
+to transform XML files into other XML files. The transformation
+is being specified using PHP functions.
 
 We created XML Transformer, because we were annoyed with the
 syntax and capabilities of XSLT. XSLT is a very verbose language
@@ -35,21 +36,25 @@ control and so on.
 
 XML transformer can do many things that linear (non-reordering)
 XSLT can. It can do some things XSLT can't (such as recursively
-reparsing its own output), and it can utilize all PHP builting
+reparsing its own output), and it can utilize all PHP builtin
 functions and classes to do this. Transformations are specified
-using the syntax of PHP, with which you already familiar, and
+using the syntax of PHP with which you already familiar, and
 there is a simplified syntax to specify simple replacement
 transformations that does not even need PHP at all.
 
-Since XML Transformer uses a SAX parser to do its work, it
-can't do anything a SAX parser can't do, that is, it cannot do
+Since XML Transformer uses a SAX parser to do its work, it can't
+do anything a SAX parser can't do. That is, it cannot do
 reordering transformations in a single pass. You won't be able
 to generate indices, tables of contents and other summary
 operations in a single pass. If you run into such problems,
 think LaTeX and use the solutions LaTeX uses for this problems
-as well. We are considering an implementation of XML Transformer
-using a DOM parser and XPath queries to enable single pass
-reordering operations in PHP as well.
+as well - we have recently added support for multipassing, so
+that implementing such a mechanism shouldn't be too difficult.
+Also, we are providing the Docbook Namespace Transformation as
+an Example for such mechanisms. Finally, we are considering an
+implementation of XML Transformer using a DOM parser and XPath
+queries to enable single pass reordering operations in PHP as
+well.
 
 2. What are all these files and classes?
 
@@ -62,7 +67,7 @@ returns the transformed result.
 
 As transform() uses PHP's expat extension internally, the XML
 string must be a well-formed XML fragment in order for the
-transformation to work, that is, it must be starting with a tag
+transformation to work. That is, it must be starting with a tag
 and ending with the same tag.
 
 To set up a transformation, you need to create an instance of
@@ -92,7 +97,7 @@ does all the bookkeeping for XML_Transformer, tracking which
 functions are to call for which namespace and so on.
 XML_Transformer_CallbackRegistry is a Singleton, and the
 instance is maintained automatically by XML_Transformer. You
-never use it directly. 
+never use it directly.
 
 2.3 XML_Transformer_Util
 
@@ -134,12 +139,16 @@ namespace, that is, you may transform simple tags such as
 '&MAIN'.
 
 To make the defintion of namespaces easy, we supply a class
-XML_Transformer_Namespace from which you can inherit. The class
-is suitable for all non-nesting tags and the implementation
-schema shown here are suitable for non-nesting tags such as
-<img/> or <h1/>, but you'd need something more sophisticated to
-implement a nesting structure such as <table/> which can contain
-itself.
+XML_Transformer_Namespace from which you can inherit (Note that
+XML_Transformer_namespace ist only one possible implementation
+for a namespace. You are free to choose a different
+implementation schema anytime, for example if the direct mapping
+of classes to namespaces is not applicable for your deployment
+scenario). The class is suitable for all non-nesting tags and
+the implementation schemata shown here are suitable for
+non-nesting tags such as <img/> or <h1/>, but you'd need
+something more sophisticated to implement a nesting structure
+such as <table/> which can contain itself.
 
 In order to define a tag called <tag />, you create a class and
 implement functions called start_tag($attributes) and
@@ -186,21 +195,35 @@ you'd use overloadNamespace():
 This tag can now be used as "<my:tag
 name='heading'>content</my:tag>".
 
-The XML_Transformer_Namespace class has two instance variables
+The XML_Transformer_Namespace class has a few instance variables
 which may come in handy in some cases. One of them is
 _transformer, which is indeed a reference to the owning
-transformer. The other is an array _prefix, which is an
-enumeration of namespace prefixes of this namespace class. In
-our example above, that array would have just one element,
+transformer. 
+
+Another is an array _prefix, which is an enumeration of
+namespace prefixes of this namespace class. In our example
+above, that array would have just one element,
 $this->_prefix[0], and it would contain the string 'my'. As you
 might have guessed from the fact that _prefix is an array, we
 consider it legal to register a single namespace class under
 multiple prefixes, if you can manage to keep your references
-straight and not inadvertantly copy your instance.
+straight and not inadvertantly copy your instance. We have not
+bothered to implement namespace scopes, though, as we should
+have were we in the business of implementing the complete XML
+specification.
 
-We have not bothered to implement namespace scopes, though, as
-we should have were we in the business of implementing the
-complete XML specification.
+The XML_Transformer has a handy feature where Namespaces are
+autoloaded and registered under their default namespace names,
+if they define one. In order for autoloading to work, define an
+instance variable defaultNamespacePrefix as a string. This
+string is the prefix under which the namespace will register
+itself when autoloading.
+
+Finally, a namespace may indicate that it requires two passes in
+order to generate indicies or other data collections. If this is
+needed, the namespace should set secondPassRequired to true
+(default: false).
+
 
 2.5 supplied XML_Transformer Namespaces
 
