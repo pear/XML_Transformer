@@ -128,6 +128,13 @@ class XML_Transformer {
     */
     var $_started = false;
 
+
+    /**
+    * @var    boolean
+    * @access private
+    */
+    var $_debug = false;
+
     // }}}
     // {{{ function XML_Transformer($parameters = array())
 
@@ -139,6 +146,9 @@ class XML_Transformer {
     */
     function XML_Transformer($parameters = array()) {
         // Parse parameters array.
+        if (isset($parameters['debug'])) {
+          $this->setDebug($parameters['debug']);
+        }
 
         $this->_caseFolding          = isset($parameters['caseFolding'])          ? $parameters['caseFolding']          : false;
         $this->_caseFoldingTo        = isset($parameters['caseFoldingTo'])        ? $parameters['caseFoldingTo']        : CASE_UPPER;
@@ -183,15 +193,47 @@ class XML_Transformer {
             }
 
             // Start transformation.
-
+            if ($this->_debug)
+              syslog(LOG_DEBUG, "ctor (will start):".serialize($this)."\n");
             $this->start();
         } else {
             $this->_overloadedElements   = $overloadedElements;
             $this->_overloadedNamespaces = $overloadedNamespaces;
+            if ($this->_debug)
+              syslog(LOG_DEBUG, "ctor (won't start):".serialize($this)."\n");
         }
     }
 
     // }}}
+
+    // {{{ function stackdump()
+
+    /**
+    * Returns a stack dump as a debugging aid.
+    *
+    * @param
+    * @return string
+    * @access public
+    */
+
+    function stackdump() {
+      $r = sprintf("Stackdump (level: %s) follows:\n", $this->_level);
+
+      for ($i=$this->_level; $i>=0; $i--) {
+        $r .= sprintf("level=%d\n",  $i);
+        $r .= sprintf("element=%s:", $this->_elementStack[$i]);
+        $r .= sprintf("%s\n",
+                htmlspecialchars($this->attributesToString($this->_attributesStack[$i]))
+              );
+        $r .= sprintf("cdata=%s\n\n",
+                htmlspecialchars($this->_cdataStack[$i])
+              );
+      }
+      return $r;
+    }
+
+    // }}}
+
     // {{{ function attributesToString($attributes)
 
     /**
@@ -321,8 +363,7 @@ class XML_Transformer {
               'Cannot overload namespace "' .
               $namespacePrefix .
               '", method(s) "startElement" and/or "endElement" ' .
-              'are missing on given object.'
-            );
+              'are missing on given object.');
         }
 
         # if the namespace object has a method initObserver,
@@ -411,6 +452,29 @@ class XML_Transformer {
     }
 
     // }}}
+    // {{{ function setDebug($debug)
+
+    /**
+    * Enables or disables Debugging to syslog
+    *
+    * @param  boolean
+    * @access public
+    */
+    function setDebug($debug) {
+        if (is_bool($debug)) {
+            $this->_debug = $debug;
+            if ($debug) {
+              define_syslog_variables();
+              openlog($_SERVER['PHP_SELF'], LOG_PID | LOG_PERROR, LOG_LOCAL0);
+              syslog(LOG_DEBUG, "debug enabled\n");
+            } else {
+              syslog(LOG_DEBUG, "debug disabled\n");
+              closelog();
+            }
+        }
+    }
+
+    // }}}
     // {{{ function start()
 
     /**
@@ -420,6 +484,10 @@ class XML_Transformer {
     * @access public
     */
     function start() {
+        if ($this->_debug)
+          syslog(LOG_DEBUG, sprintf("start: %s\n",
+            serialize($this)
+          ));
         if (!$this->_started) {
           ob_start(array($this, 'transform'));
           $this->_started = true;
@@ -459,11 +527,13 @@ class XML_Transformer {
         // Parse input.
 
         if (!xml_parse($parser, $xml, true)) {
-            return sprintf(
-              "<!-- XML Error: %s at line %d -->\n",
+            $errmsg = sprintf(
+              "<!-- Transformer: XML Error: %s at line %d\n",
               xml_error_string(xml_get_error_code($parser)),
               xml_get_current_line_number($parser)
             );
+            $errmsg .= $this->stackdump() . " -->\n";
+            return $errmsg;
         }
 
         xml_parser_free($parser);
@@ -495,6 +565,12 @@ class XML_Transformer {
         // Push element's name and attributes onto the stack.
 
         $this->_level++;
+        if ($this->_debug)
+          syslog(LOG_DEBUG, sprintf("startElement[%d]: %s %s\n",
+            $this->_level,
+            $element,
+            $this->attributesToString($attributes)
+          ));
 
         $this->_elementStack[$this->_level]    = $element;
         $this->_attributesStack[$this->_level] = $attributes;
@@ -541,6 +617,13 @@ class XML_Transformer {
     * @access private
     */
     function _endElement($parser, $element) {
+        if ($this->_debug)
+          syslog(LOG_DEBUG, sprintf("endElement[%d]: %s (with cdata=%s)\n",
+            $this->_level,
+            $element,
+            $this->_cdataStack[$this->_level]
+          ));
+
         $cdata           = $this->_cdataStack[$this->_level];
         $element         = $this->canonicalName($element);
         $namespacePrefix = '';
@@ -584,17 +667,30 @@ class XML_Transformer {
         {
             // Recursively process this transformation's result.
 
+            if ($this->_debug)
+              syslog(LOG_DEBUG, sprintf("recursion[%d]: %s\n",
+                $this->_level,
+                $cdata
+              ));
+
+            // Note: recursive debugging creates monstrous output.
             $transformer = new XML_Transformer(
               array(
                 'caseFolding'          => $this->_caseFolding,
                 'overloadedElements'   => $this->_overloadedElements,
                 'overloadedNamespaces' => $this->_overloadedNamespaces,
                 'recursiveOperation'   => $this->_recursiveOperation,
+                'debug'                => false,
                 'started'              => true
               )
             );
 
             $cdata = $transformer->transform($cdata);
+            if ($this->_debug)
+              syslog(LOG_DEBUG, sprintf("end recursion[%d]: %s\n",
+                $this->_level,
+                $cdata
+              ));
         }
 
         // Move result of this transformation step to
@@ -614,7 +710,13 @@ class XML_Transformer {
     * @access private
     */
     function _characterData($parser, $cdata) {
-        $this->_cdataStack[$this->_level] .= $cdata;
+      if ($this->_debug)
+        syslog(LOG_DEBUG, sprintf("cdata [%d]: %s + %s\n",
+          $this->_level,
+          $this->_cdataStack[$this->_level],
+          $cdata
+        ));
+      $this->_cdataStack[$this->_level] .= $cdata;
     }
 
     // }}}
