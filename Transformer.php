@@ -468,8 +468,10 @@ class XML_Transformer {
     * @access public
     */
     function setDefaultCallback($startHandler, $endHandler) {
-        if ($startHandler = $this->_parseCallback($startHandler) &&
-            $endHandler = $this->_parseCallback($endHandler)) {
+        $startHandler = $this->_parseCallback($startHandler);
+        $endHandler   = $this->_parseCallback($endHandler);
+
+        if ($startHandler && $endHandler) {
             $this->_overloadedElements['&DEFAULT']['start'] = $startHandler;
             $this->_overloadedElements['&DEFAULT']['end']   = $endHandler;
         }
