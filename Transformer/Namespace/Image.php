@@ -272,7 +272,7 @@ class XML_Transformer_Namespace_Image extends XML_Transformer_Namespace {
             $r .= sprintf(
               '<img:img src="%s" alt="%s" />',
               $src,
-              $alt
+              addslashes($alt)
             );
         }
 
