@@ -315,7 +315,7 @@ class XML_Transformer {
             method_exists($object, 'endElement')
            )
         {
-            $this->_overloadedNamespaces[$namespacePrefix] = $object;
+            $this->_overloadedNamespaces[$namespacePrefix] = &$object;
         } else {
             $this->_handle_error(
               'Cannot overload namespace "' .
