@@ -49,11 +49,11 @@
 *       }
 *
 *       function end_img($cdata) {
-*           $src = $this->truePath($this->imageAttributes['SRC']);
+*           $src = $this->truePath($this->imageAttributes['src']);
 *           list($w, $h, $t, $whs) = getimagesize($src);
 *
-*           $this->imageAttributes['HEIGHT'] = $w;
-*           $this->imageAttributes['WIDTH']  = $h;
+*           $this->imageAttributes['height'] = $w;
+*           $this->imageAttributes['width']  = $h;
 *
 *           return sprintf(
 *             '<img %s/>',
@@ -76,7 +76,9 @@ class XML_Transformer_Namespace {
             return $this->$do($attributes);
         }
 
-        return "<!-- undefined: $element --><$element>";
+        return "<!-- undefined: $element --><$element " .
+               XML_Transformer::attributesToString($attributes) .
+               ">";
     }
 
     function endElement($element, $cdata) {
