@@ -21,7 +21,7 @@
 //
 
 /**
-* XML Transformations in PHP
+* XML Transformations in PHP.
 *
 * With this class one can easily bind PHP functionality to XML tags,
 * thus transforming an XML input tree into another XML tree without
@@ -39,9 +39,10 @@
 *   $t = new XML_Transformer(
 *     array(
 *       'overloadedElements' => array(
-*         'bold' => array('start' => 'startElementBold',
-*                         'end'   => 'endElementBold'
-*                        )
+*         'bold' => array(
+*           'start' => 'startElementBold',
+*           'end'   => 'endElementBold'
+*         )
 *       )
 *     )
 *   );
@@ -69,16 +70,43 @@ class XML_Transformer {
     // {{{ Members
 
     /**
+    * If TRUE, XML attribute and element names will be
+    * case-folded.
+    * 
+    * @var    boolean
+    * @access private
+    * @see    $_caseFoldingTo
+    */
+    var $_caseFolding = FALSE;
+
+    /**
+    * Can be set to either CASE_UPPER or CASE_LOWER
+    * and sets the target case for the case-folding.
+    *
+    * @var    integer
+    * @access private
+    * @see    $_caseFolding
+    */
+    var $_caseFoldingTo = CASE_UPPER;
+
+    /**
+    * If TRUE, debugging information will be sent to
+    * the error.log.
+    *
     * @var    boolean
     * @access private
     */
-    var $_caseFolding = false;
+    var $_debug = FALSE;
 
     /**
-    * @var    integer
+    * If TRUE, the transformation will continue recursively
+    * until the XML contains no more overloaded elements.
+    * Can be overrided on a per-element basis.
+    *
+    * @var    boolean
     * @access private
     */
-    var $_caseFoldingTo = CASE_UPPER;
+    var $_recursiveOperation = TRUE;
 
     /**
     * @var    array
@@ -120,19 +148,7 @@ class XML_Transformer {
     * @var    boolean
     * @access private
     */
-    var $_recursiveOperation = true;
-
-    /**
-    * @var    boolean
-    * @access private
-    */
-    var $_started = false;
-
-    /**
-    * @var    boolean
-    * @access private
-    */
-    var $_debug = false;
+    var $_started = FALSE;
 
     // }}}
     // {{{ function XML_Transformer($parameters = array())
@@ -150,10 +166,10 @@ class XML_Transformer {
             $this->setDebug($parameters['debug']);
         }
 
-        $this->_caseFolding          = isset($parameters['caseFolding'])          ? $parameters['caseFolding']          : false;
-        $this->_caseFoldingTo        = isset($parameters['caseFoldingTo'])        ? $parameters['caseFoldingTo']        : CASE_UPPER;
-        $this->_recursiveOperation   = isset($parameters['recursiveOperation'])   ? $parameters['recursiveOperation']   : true;
-        $this->_started              = isset($parameters['started'])              ? $parameters['started']              : false;
+        $this->_caseFolding        = isset($parameters['caseFolding'])        ? $parameters['caseFolding']        : FALSE;
+        $this->_caseFoldingTo      = isset($parameters['caseFoldingTo'])      ? $parameters['caseFoldingTo']      : CASE_UPPER;
+        $this->_recursiveOperation = isset($parameters['recursiveOperation']) ? $parameters['recursiveOperation'] : TRUE;
+        $this->_started            = isset($parameters['started'])            ? $parameters['started']            : FALSE;
 
         $overloadedElements   = isset($parameters['overloadedElements'])   ? $parameters['overloadedElements']   : array();
         $overloadedNamespaces = isset($parameters['overloadedNamespaces']) ? $parameters['overloadedNamespaces'] : array();
@@ -165,9 +181,7 @@ class XML_Transformer {
 
         if (!$this->_started &&
             (!empty($overloadedElements) ||
-             !empty($overloadedNamespaces)
-            )
-           ) {
+             !empty($overloadedNamespaces))) {
             // Check overloaded elements.
 
             foreach ($overloadedElements as $element => $overloadedElement) {
@@ -329,9 +343,9 @@ class XML_Transformer {
         if (isset($this->_overloadedElements[$element])) {
             unset($this->_overloadedElements[$element]);
 
-            return true;
+            return TRUE;
         } else {
-            return false;
+            return FALSE;
         }
     }
 
@@ -339,8 +353,8 @@ class XML_Transformer {
     // {{{ function isOverloadedElement($element)
 
     /**
-    * Returns true if a given element is overloaded,
-    * false otherwise.
+    * Returns TRUE if a given element is overloaded,
+    * FALSE otherwise.
     *
     * @param  string
     * @return boolean
@@ -367,16 +381,15 @@ class XML_Transformer {
 
         if (is_object($object) &&
             method_exists($object, 'startElement') &&
-            method_exists($object, 'endElement')
-           )
-        {
+            method_exists($object, 'endElement')) {
             $this->_overloadedNamespaces[$namespacePrefix] = &$object;
         } else {
             $this->_handle_error(
               'Cannot overload namespace "' .
               $namespacePrefix .
               '", method(s) "startElement" and/or "endElement" ' .
-              'are missing on given object.');
+              'are missing on given object.'
+            );
         }
 
         // if the namespace object has a method initObserver,
@@ -409,9 +422,9 @@ class XML_Transformer {
         if (isset($this->_overloadedNamespaces[$namespacePrefix])) {
             unset($this->_overloadedNamespaces[$namespacePrefix]);
 
-            return true;
+            return TRUE;
         } else {
-            return false;
+            return FALSE;
         }
     }
 
@@ -419,8 +432,8 @@ class XML_Transformer {
     // {{{ function isOverloadedNamespace($namespacePrefix)
 
     /**
-    * Returns true if a given namespace is overloaded,
-    * false otherwise.
+    * Returns TRUE if a given namespace is overloaded,
+    * FALSE otherwise.
     *
     * @param  string
     * @return boolean
@@ -444,9 +457,7 @@ class XML_Transformer {
     */
     function setCaseFolding($caseFolding, $caseFoldingTo = CASE_UPPER) {
         if (is_bool($caseFolding) &&
-            ($caseFoldingTo == CASE_LOWER || $caseFoldingTo == CASE_UPPER)
-           )
-        {
+            ($caseFoldingTo == CASE_LOWER || $caseFoldingTo == CASE_UPPER)) {
             $this->_caseFolding   = $caseFolding;
             $this->_caseFoldingTo = $caseFoldingTo;
         }
@@ -506,7 +517,7 @@ class XML_Transformer {
               )
             );
 
-            $this->_started = true;
+            $this->_started = TRUE;
         }
     }
 
@@ -524,7 +535,7 @@ class XML_Transformer {
     function transform($xml) {
         // Don't process input when it contains no XML elements.
 
-        if (strpos($xml, '<') === false) {
+        if (strpos($xml, '<') === FALSE) {
             return $xml;
         }
 
@@ -542,7 +553,7 @@ class XML_Transformer {
 
         // Parse input.
 
-        if (!xml_parse($parser, $xml, true)) {
+        if (!xml_parse($parser, $xml, TRUE)) {
             $errmsg = sprintf(
               "<!-- Transformer: XML Error: %s at line %d\n",
               xml_error_string(xml_get_error_code($parser)),
@@ -611,8 +622,8 @@ class XML_Transformer {
             // that is registered for this element.
 
             $cdata = call_user_func(
-                $this->_overloadedElements[$element]['start'],
-                $attributes
+              $this->_overloadedElements[$element]['start'],
+              $attributes
             );
         }
 
@@ -653,7 +664,7 @@ class XML_Transformer {
         $cdata           = $this->_cdataStack[$this->_level];
         $element         = $this->canonicalName($element);
         $namespacePrefix = '';
-        $recursion       = false;
+        $recursion       = FALSE;
 
         if (strstr($element, ':')) {
             list($namespacePrefix, $qElement) = explode(':', $element);
@@ -668,7 +679,7 @@ class XML_Transformer {
               $cdata
             );
 
-            $recursion = true;
+            $recursion = TRUE;
         }
 
         else if (isset($this->_overloadedElements[$element]['end'])) {
@@ -676,11 +687,11 @@ class XML_Transformer {
             // that is registered for this element.
 
             $cdata = call_user_func(
-                $this->_overloadedElements[$element]['end'],
-                $cdata
+              $this->_overloadedElements[$element]['end'],
+              $cdata
             );
 
-            $recursion = true;
+            $recursion = TRUE;
         }
 
         else {
@@ -691,9 +702,7 @@ class XML_Transformer {
         }
 
         if ($recursion &&
-            $this->_overloadedElements[$element]['recursiveOperation']
-           )
-        {
+            $this->_overloadedElements[$element]['recursiveOperation']) {
             // Recursively process this transformation's result.
 
             $this->_debug(
@@ -713,8 +722,8 @@ class XML_Transformer {
                 'overloadedElements'   => $this->_overloadedElements,
                 'overloadedNamespaces' => $this->_overloadedNamespaces,
                 'recursiveOperation'   => $this->_recursiveOperation,
-                'debug'                => false,
-                'started'              => true
+                'debug'                => FALSE,
+                'started'              => TRUE
               )
             );
 
@@ -771,18 +780,14 @@ class XML_Transformer {
     * @access private
     */
     function _parseCallback($element, $event, $callback) {
-        $parsedCallback = false;
+        $parsedCallback = FALSE;
 
         // classname::staticMethod
         if (strstr($callback, '::')) {
             list($class, $method) = explode('::', $callback);
 
             if (class_exists($class) &&
-                in_array(strtolower($method),
-                         get_class_methods($class)
-                        )
-               )
-            {
+                in_array(strtolower($method), get_class_methods($class))) {
                 $parsedCallback = array($class, $method);
             }
         }
@@ -793,9 +798,7 @@ class XML_Transformer {
 
             if (isset($GLOBALS[$object]) &&
                 is_object($GLOBALS[$object]) &&
-                method_exists($GLOBALS[$object], $method)
-               )
-            {
+                method_exists($GLOBALS[$object], $method)) {
                 $parsedCallback = array($GLOBALS[$object], $method);
             }
         }
@@ -817,7 +820,7 @@ class XML_Transformer {
               )
             );
 
-            return false;
+            return FALSE;
         }
     }
 
