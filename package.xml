@@ -59,7 +59,7 @@
   that provides default element handlers the old behaviour can
   be achieved.
 ]]>
-</notes>
+    </notes>
     <filelist>
       <dir name="/" baseinstalldir="XML">
         <file role="php" name="Transformer.php"/>
