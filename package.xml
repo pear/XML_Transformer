@@ -29,7 +29,7 @@
   <release>
     <version>0.4</version>
     <state>stable</state>
-    <date>2002-XX-XX</date>
+    <date>2002-09-04</date>
     <notes>
 * Added a filtering mechanism to the debugger that limits
   the generated debugging information to a given set of
