@@ -16,7 +16,7 @@
 // $Id$
 //
 
-#require_once 'XML/Transformer/Namespace.php';
+require_once 'XML/Transformer/Namespace.php';
 
 /**
 * Handler for the PHP Namespace.
