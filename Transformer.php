@@ -242,41 +242,6 @@ class XML_Transformer {
     }
 
     // }}}
-    // {{{ function stackdump()
-
-    /**
-    * Returns a stack dump as a debugging aid.
-    *
-    * @param
-    * @return string
-    * @access public
-    */
-    function stackdump() {
-        $stackdump = sprintf(
-          "Stackdump (level: %s) follows:\n",
-          $this->_level
-        );
-
-        for ($i = $this->_level; $i >= 0; $i--) {
-          $stackdump .= sprintf(
-            "level=%d\nelement=%s:%s\ncdata=%s\n\n",
-            $i,
-            $this->_elementStack[$i],
-            htmlspecialchars(
-              $this->attributesToString(
-                $this->_attributesStack[$i]
-              )
-            ),
-            htmlspecialchars(
-              $this->_cdataStack[$i]
-            )
-          );
-        }
-
-        return $stackdump;
-    }
-
-    // }}}
     // {{{ function attributesToString($attributes)
 
     /**
@@ -322,6 +287,41 @@ class XML_Transformer {
         }
 
         return $target;
+    }
+
+    // }}}
+    // {{{ function stackdump()
+
+    /**
+    * Returns a stack dump as a debugging aid.
+    *
+    * @param
+    * @return string
+    * @access public
+    */
+    function stackdump() {
+        $stackdump = sprintf(
+          "Stackdump (level: %s) follows:\n",
+          $this->_level
+        );
+
+        for ($i = $this->_level; $i >= 0; $i--) {
+          $stackdump .= sprintf(
+            "level=%d\nelement=%s:%s\ncdata=%s\n\n",
+            $i,
+            $this->_elementStack[$i],
+            htmlspecialchars(
+              $this->attributesToString(
+                $this->_attributesStack[$i]
+              )
+            ),
+            htmlspecialchars(
+              $this->_cdataStack[$i]
+            )
+          );
+        }
+
+        return $stackdump;
     }
 
     // }}}
