@@ -49,6 +49,8 @@ ini_set('highlight.string',  '#550000');
 *
 *   * <function>
 *
+*   * <graphic>
+*
 *   * <itemizedlist>
 *
 *   * <listitem>
@@ -382,6 +384,35 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
           trim($cdata) . '</b></code>',
           false
         );
+    }
+
+    // }}}
+    // {{{ function start_graphic($attributes)
+
+    /**
+    * @param  array
+    * @return string
+    * @access public
+    */
+    function start_graphic($attributes) {
+        return sprintf(
+          '<img alt="%s" border="0" src="%s" />',
+
+          isset($attributes['srccredit']) ? $attributes['srccredit'] : '',
+          isset($attributes['fileref'])   ? $attributes['fileref']   : ''
+        );
+    }
+
+    // }}}
+    // {{{ function end_graphic($cdata)
+
+    /**
+    * @param  string
+    * @return string
+    * @access public
+    */
+    function end_graphic($cdata) {
+        return '';
     }
 
     // }}}
