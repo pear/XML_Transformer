@@ -25,6 +25,7 @@
       <email>kris@koehntopp.de</email>
     </maintainer>
   </maintainers>
+  <license>PHP License</license>
   <release>
     <version>0.2</version>
     <state>stable</state>
