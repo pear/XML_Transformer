@@ -52,10 +52,10 @@
 
           <dir name="Tests">
             <dir name="Namespace">
-              <file role="php" name="AllTestss.php"/>
+              <file role="php" name="AllTests.php"/>
             </dir>
 
-            <file role="php" name="AllTestss.php"/>
+            <file role="php" name="AllTests.php"/>
           </dir>
 
           <file role="php" name="CallbackRegistry.php"/>
