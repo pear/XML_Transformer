@@ -177,8 +177,9 @@ class XML_Transformer_CallbackRegistry {
                     unset($this->overloadedNamespaces[$namespacePrefix]['active']);
                 }
             }
-            
+
             $this->_locked = true;
+
             return true;
         }
 
