@@ -130,7 +130,7 @@ class XML_Transformer {
         $this->_caseFoldingTo = isset($parameters['caseFoldingTo']) ? $parameters['caseFoldingTo'] : CASE_UPPER;
         $this->_lastProcessed = isset($parameters['lastProcessed']) ? $parameters['lastProcessed'] : '';
 
-        $autoload             = isset($parameters['autoload'])             ? $parameters['autoload']             : true;
+        $autoload             = isset($parameters['autoload'])             ? $parameters['autoload']             : false;
         $overloadedNamespaces = isset($parameters['overloadedNamespaces']) ? $parameters['overloadedNamespaces'] : array();
         $recursiveOperation   = isset($parameters['recursiveOperation'])   ? $parameters['recursiveOperation']   : true;
 
@@ -147,11 +147,8 @@ class XML_Transformer {
             );
         }
 
-        // Autoload all namespace handlers from
-        // XML/Transformer/Namespace/.
-
-        if ($autoload) {
-            $this->_autoload();
+        if ($autoload !== false) {
+            $this->_autoload($autoload);
         }
     }
 
@@ -551,35 +548,42 @@ class XML_Transformer {
     }
 
     // }}}
-    // {{{ function _autoload()
+    // {{{ function _autoload($namespaces)
 
     /**
-    * Loads all namespace handlers from the
-    * XML/Transformer/Namespace directory.
+    * Loads either all (true) or a selection of namespace
+    * handlers from XML/Transformer/Namespace/.
     *
+    * @param  mixed
     * @access private
     */
-    function _autoload() {
+    function _autoload($namespaces) {
         $path = dirname(__FILE__) . '/Transformer/Namespace/';
 
-        if ($dir = @opendir($path)) {
-            while (($file = @readdir($dir)) !== false) {
-                if (strstr($file, '.php')) {
-                    if (@include_once($path . $file)) {
-                        $namespacePrefix = $this->canonicalize(
+        if ($namespaces === true) {
+            $namespaces = array();
+
+            if ($dir = @opendir($path)) {
+                while (($file = @readdir($dir)) !== false) {
+                    if (strstr($file, '.php')) {
+                        $namespaces[] = $this->canonicalize(
                           strtolower(
                             substr($file, 0, -4)
                           )
                         );
-
-                        $className = 'XML_Transformer_Namespace_' . $namespacePrefix;
-
-                        $this->overloadNamespace(
-                          $namespacePrefix,
-                          new $className
-                        );
                     }
                 }
+            }
+        }
+
+        foreach ($namespaces as $namespace) {
+            if (@include_once($path . $namespace . '.php')) {
+                $className = 'XML_Transformer_Namespace_' . $namespace;
+
+                $this->overloadNamespace(
+                  $namespacePrefix,
+                  new $className
+                );
             }
         }
     }

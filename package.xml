@@ -36,12 +36,6 @@
 + Added automatic loading of namespace handlers that are
   stored in the XML/Transformer/Namespace directory.
 
-  This can be disabled by passing
-
-    'autoload' => false
-
-  to the XML_Transformer constructor.
-
 + Added new tags to the PHP Namespace Handler:
 
     + <php:define/> ...
