@@ -94,6 +94,12 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     */
     var $_emphasizeRole = '';
 
+    /**
+    * @var    array
+    * @access private
+    */
+    var $_sections = array();
+
     // }}}
     // {{{ function start_article($attributes)
 
@@ -193,7 +199,7 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     */
     function start_section($attributes) {
         return '<h2 class="title" style="clear: both">' .
-               $this->_nextID('section') . '. ';
+               $this->_startSection('section') . '. ';
     }
 
     // }}}
@@ -205,6 +211,8 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     * @access public
     */
     function end_section($cdata) {
+        $this->_endSection('section');
+
         return $cdata . '</h2>';
     }
 
@@ -257,23 +265,48 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     }
 
     // }}}
-    // {{{ function nextID($sequence)
+    // {{{ function _startSection($type)
 
     /**
     * @param  string
-    * @return integer
-    * @access private
+    * @return string
+    * @access public
     */
-    function _nextID($sequence) {
-        static $sequences;
+    function _startSection($type) {
+        $result = '';
 
-        if (!isset($sequences[$sequence])) {
-            $sequences[$sequence] = 1;
+        if (!isset($this->_sections[$type]['open'])) {
+            $this->_sections[$type]['open']  = 1;
         } else {
-            $sequences[$sequence]++;
+            $this->_sections[$type]['open']++;
         }
 
-        return $sequences[$sequence];
+        if (!isset($this->_sections[$type]['id'][$this->_sections[$type]['open']])) {
+            $this->_sections[$type]['id'][$this->_sections[$type]['open']] = 1;
+        } else {
+            $this->_sections[$type]['id'][$this->_sections[$type]['open']]++;
+        }
+
+        for ($i = 1; $i <= $this->_sections[$type]['open']; $i++) {
+            if (!empty($result)) {
+                $result .= '.';
+            }
+
+            $result .= $this->_sections[$type]['id'][$i];
+        }
+
+        return $result;
+    }
+
+    // }}}
+    // {{{ function _endSection($type)
+
+    /**
+    * @param  string
+    * @access private
+    */
+    function _endSection($type) {
+        $this->_sections[$type]['open']--;
     }
 
     // }}}
