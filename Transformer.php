@@ -661,6 +661,15 @@ class XML_Transformer {
     * @access private
     */
     function _endElement($parser, $element) {
+        $cdata           = $this->_cdataStack[$this->_level];
+        $element         = $this->canonicalName($element);
+        $namespacePrefix = '';
+        $recursion       = false;
+
+        if (strstr($element, ':')) {
+            list($namespacePrefix, $qElement) = explode(':', $element);
+        }
+
         $this->_debug(
           sprintf(
             'endElement[%d]: %s (with cdata=%s)',
@@ -670,15 +679,6 @@ class XML_Transformer {
           ),
           $element
         );
-
-        $cdata           = $this->_cdataStack[$this->_level];
-        $element         = $this->canonicalName($element);
-        $namespacePrefix = '';
-        $recursion       = false;
-
-        if (strstr($element, ':')) {
-            list($namespacePrefix, $qElement) = explode(':', $element);
-        }
 
         if (isset($this->_overloadedNamespaces[$namespacePrefix])) {
             // The event is handled by a callback
