@@ -121,14 +121,17 @@ class XML_Transformer {
     * @access public
     */
     function XML_Transformer($parameters = array()) {
-        $overloadedElements = isset($parameters['overloadedElements']) ? $parameters['overloadedElements'] : array();
-        $startup            = isset($parameters['startup'])            ? $parameters['startup']            : true;
+        // Parse parameters array.
 
+        $startup                     = isset($parameters['startup'])              ? $parameters['startup']              : true;
         $this->_caseFolding          = isset($parameters['caseFolding'])          ? $parameters['caseFolding']          : false;
+        $overloadedElements          = isset($parameters['overloadedElements'])   ? $parameters['overloadedElements']   : array();
         $this->_overloadedNamespaces = isset($parameters['overloadedNamespaces']) ? $parameters['overloadedNamespaces'] : array();
 
         if ($startup) {
-            // This object is created by the user.
+            // Walk through overloadedElements array,
+            // that was passed to the constructor and
+            // register the element callbacks it contains.
 
             foreach ($overloadedElements as $element => $callbacks) {
                 $callbacks['start'] = isset($callbacks['start']) ? $callbacks['start'] : '';
@@ -137,11 +140,10 @@ class XML_Transformer {
                 $this->overloadElement($element, $callbacks['start'], $callbacks['end']);
             }
 
+            // Start transformation.
+
             $this->start();
         } else {
-            // This object is created by another instance
-            // of Transformer (inside the recursion).
-
             $this->_overloadedElements = $overloadedElements;
         }
     }
@@ -332,7 +334,7 @@ class XML_Transformer {
         xml_set_object($parser, $this);
         xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, $this->_caseFolding);
 
-        // Register SAX callbacks
+        // Register SAX callbacks.
 
         xml_set_element_handler($parser, '_startElement', '_endElement');
         xml_set_character_data_handler($parser, '_characterData');
