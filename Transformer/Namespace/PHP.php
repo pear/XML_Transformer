@@ -25,10 +25,10 @@ require_once 'XML/Transformer/Namespace.php';
 *
 *   <?php
 *   require_once 'XML/Transformer_OutputBuffer.php';
-*   require_once 'XML/Transformer/PHP.php';
+*   require_once 'XML/Transformer/Namespace/PHP.php';
 *
 *   $t = new XML_Transformer_OutputBuffer;
-*   $t->overloadNamespace('php', new XML_Transformer_PHP);
+*   $t->overloadNamespace('php', new XML_Transformer_Namespace_PHP);
 *   $t->start();
 *   ?>
 *   <dl>
@@ -49,7 +49,7 @@ require_once 'XML/Transformer/Namespace.php';
 * @version $Revision$
 * @access  public
 */
-class XML_Transformer_PHP extends XML_Transformer_Namespace {
+class XML_Transformer_Namespace_PHP extends XML_Transformer_Namespace {
     // {{{ Members
 
     /**
@@ -149,7 +149,7 @@ class XML_Transformer_PHP extends XML_Transformer_Namespace {
         $this->_inNamespace = true;
         $this->_namespace   = $attributes['name'];
 
-        $classname = 'PEAR_XML_TRANSFORMER_PHP_' . $this->_namespace;
+        $classname = 'PEAR_XML_TRANSFORMER_NAMESPACE_PHP_' . $this->_namespace;
 
         $this->_namespaceClassDefinition = sprintf(
           'class %s extends XML_Transformer_Namespace {',
@@ -168,7 +168,7 @@ class XML_Transformer_PHP extends XML_Transformer_Namespace {
     * @access public
     */
     function end_namespace($cdata) {
-        $classname = 'PEAR_XML_TRANSFORMER_PHP_' . $this->_namespace;
+        $classname = 'PEAR_XML_TRANSFORMER_NAMESPACE_PHP_' . $this->_namespace;
 
         eval($this->_namespaceClassDefinition . ' };');
         $this->_namespaceClassDefinition = '';
