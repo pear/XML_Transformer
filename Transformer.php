@@ -364,9 +364,10 @@ class XML_Transformer {
             $line = xml_get_current_line_number($parser);
 
             $errorMessage = sprintf(
-              "Transformer: XML Error: %s at line %d\n",
+              "Transformer: XML Error: %s at line %d:%d\n",
               xml_error_string(xml_get_error_code($parser)),
-              $line
+              $line,
+              xml_get_current_column_number($parser)
             );
 
             $exml = preg_split('/\n/', $xml);
