@@ -642,7 +642,7 @@ class XML_Transformer {
             // opening tag, copy it.
 
             $cdata = sprintf(
-              '<%s %s>',
+              '<%s%s>',
               $element,
               $this->attributesToString($attributes)
             );
