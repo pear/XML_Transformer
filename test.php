@@ -16,7 +16,7 @@
 // $Id$
 //
 
-require_once 'PHPUnit/PHPUnit.php';
+require_once 'PHPUnit.php';
 require_once 'XML/Transformer.php';
 require_once 'XML/Transformer/Namespace.php';
 
