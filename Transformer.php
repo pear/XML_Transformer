@@ -331,7 +331,7 @@ class XML_Transformer {
         # to the transformer, both of which are commonly
         # needed in a namespace object.
 
-        if (method_exists($object, 'initObserver')) {
+        if (is_object($object) && method_exists($object, 'initObserver')) {
           $object->initObserver($namespacePrefix, &$this);
         }
     }
