@@ -66,6 +66,8 @@
 * @access  public
 */
 class XML_Transformer {
+    // {{{ Members
+
     /**
     * @var    boolean
     * @access private
@@ -120,6 +122,9 @@ class XML_Transformer {
     */
     var $_started = false;
 
+    // }}}
+    // {{{ function XML_Transformer($parameters = array())
+
     /**
     * Constructor.
     *
@@ -161,6 +166,9 @@ class XML_Transformer {
         }
     }
 
+    // }}}
+    // {{{ function attributesToString($attributes)
+
     /**
     * Returns string representation of attributes array.
     *
@@ -185,6 +193,9 @@ class XML_Transformer {
         return $string;
     }
 
+    // }}}
+    // {{{ function canonicalName($name)
+
     /**
     * Returns the canonical name of a given element.
     *
@@ -195,6 +206,9 @@ class XML_Transformer {
     function canonicalName($name) {
         return $this->_caseFolding ? strtoupper($name) : $name;
     }
+
+    // }}}
+    // {{{ function overloadElement($element, $startHandler, $endHandler, $recursiveOperation = '')
 
     /**
     * Overloads an XML element and binds its
@@ -215,6 +229,9 @@ class XML_Transformer {
         $this->_overloadedElements[$element]['recursiveOperation'] = !empty($recursiveOperation) ? $recursiveOperation : $this->_recursiveOperation;
     }
 
+    // }}}
+    // {{{ function unOverloadElement($element)
+
     /**
     * Reverts overloading of a given element.
     *
@@ -234,6 +251,9 @@ class XML_Transformer {
         }
     }
 
+    // }}}
+    // {{{ function isOverloadedElement($element)
+
     /**
     * Returns true if a given element is overloaded,
     * false otherwise.
@@ -245,6 +265,9 @@ class XML_Transformer {
     function isOverloadedElement($element) {
         return isset($this->_overloadedElements[$this->canonicalName($element)]);
     }
+
+    // }}}
+    // {{{ function overloadNamespace($namespacePrefix, &$object)
 
     /**
     * Overloads an XML Namespace.
@@ -272,6 +295,9 @@ class XML_Transformer {
         }
     }
 
+    // }}}
+    // {{{ function unOverloadNamespace($namespacePrefix)
+
     /**
     * Reverts overloading of a given XML Namespace.
     *
@@ -291,6 +317,9 @@ class XML_Transformer {
         }
     }
 
+    // }}}
+    // {{{ function isOverloadedNamespace($namespacePrefix)
+
     /**
     * Returns true if a given namespace is overloaded,
     * false otherwise.
@@ -302,6 +331,9 @@ class XML_Transformer {
     function isOverloadedNamespace($namespacePrefix) {
         return isset($this->_overloadedNamespaces[$this->canonicalName($namespacePrefix)]);
     }
+
+    // }}}
+    // {{{ function setCaseFolding($caseFolding)
 
     /**
     * Sets the XML parser's case-folding option.
@@ -315,6 +347,9 @@ class XML_Transformer {
         }
     }
 
+    // }}}
+    // {{{ function setRecursiveOperation($recursiveOperation)
+
     /**
     * Enables or disables the recursive operation.
     *
@@ -326,6 +361,9 @@ class XML_Transformer {
             $this->_recursiveOperation = $recursiveOperation;
         }
     }
+
+    // }}}
+    // {{{ function start()
 
     /**
     * Starts the output-buffering,
@@ -339,6 +377,9 @@ class XML_Transformer {
           $this->_started = true;
         }
     }
+
+    // }}}
+    // {{{ function transform($xml)
 
     /**
     * Transforms a given XML string using the registered
@@ -383,6 +424,9 @@ class XML_Transformer {
 
         return $this->_cdataStack[0];
     }
+
+    // }}}
+    // {{{ function _startElement($parser, $element, $attributes)
 
     /**
     * SAX callback for 'startElement' event.
@@ -437,6 +481,9 @@ class XML_Transformer {
 
         $this->_cdataStack[$this->_level] = $cdata;
     }
+
+    // }}}
+    // {{{ function _endElement($parser, $element)
 
     /**
     * SAX callback for 'endElement' event.
@@ -508,6 +555,9 @@ class XML_Transformer {
         $this->_cdataStack[--$this->_level] .= $cdata;
     }
 
+    // }}}
+    // {{{ function _characterData($parser, $cdata)
+
     /**
     * SAX callback for 'characterData' event.
     *
@@ -518,6 +568,9 @@ class XML_Transformer {
     function _characterData($parser, $cdata) {
         $this->_cdataStack[$this->_level] .= $cdata;
     }
+
+    // }}}
+    // {{{ function _parseCallback($element, $event, $callback)
 
     /**
     * Parses a PHP callback.
@@ -579,6 +632,9 @@ class XML_Transformer {
         }
     }
 
+    // }}}
+    // {{{ function _registerElementCallback($element, $event, $callback)
+
     /**
     * Registers a PHP callback for a given event of a XML element.
     *
@@ -593,6 +649,9 @@ class XML_Transformer {
         }
     }
 
+    // }}}
+    // {{{ function _handleError($errorMessage)
+
     /**
     * Inserts an error message into the output.
     *
@@ -604,5 +663,12 @@ class XML_Transformer {
                                              $errorMessage .
                                              " -->\n";
     }
+
+    // }}}
 }
+
+/*
+ * vim600:  et sw=2 ts=2 fdm=marker
+ * vim<600: et sw=2 ts=2
+ */
 ?>
