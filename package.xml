@@ -34,6 +34,7 @@
         <dir name="Transformer">
           <dir name="Namespace">
             <file role="php" name="Anchor.php"/>
+            <file role="php" name="DocBook.php"/>
             <file role="php" name="Image.php"/>
             <file role="php" name="PHP.php"/>
             <file role="php" name="Widget.php"/>
