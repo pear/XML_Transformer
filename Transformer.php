@@ -70,14 +70,14 @@ class XML_Transformer {
     // {{{ Members
 
     /**
-    * If TRUE, XML attribute and element names will be
+    * If true, XML attribute and element names will be
     * case-folded.
     * 
     * @var    boolean
     * @access private
     * @see    $_caseFoldingTo
     */
-    var $_caseFolding = FALSE;
+    var $_caseFolding = false;
 
     /**
     * Can be set to either CASE_UPPER or CASE_LOWER
@@ -90,14 +90,14 @@ class XML_Transformer {
     var $_caseFoldingTo = CASE_UPPER;
 
     /**
-    * If TRUE, debugging information will be sent to
+    * If true, debugging information will be sent to
     * the error.log.
     *
     * @var    boolean
     * @access private
     * @see    $_debugFilter
     */
-    var $_debug = FALSE;
+    var $_debug = false;
 
     /**
     * If not empty, debugging information will only be generated
@@ -110,14 +110,14 @@ class XML_Transformer {
     var $_debugFilter = array();
 
     /**
-    * If TRUE, the transformation will continue recursively
+    * If true, the transformation will continue recursively
     * until the XML contains no more overloaded elements.
     * Can be overrided on a per-element basis.
     *
     * @var    boolean
     * @access private
     */
-    var $_recursiveOperation = TRUE;
+    var $_recursiveOperation = true;
 
     /**
     * @var    array
@@ -159,7 +159,7 @@ class XML_Transformer {
     * @var    boolean
     * @access private
     */
-    var $_started = FALSE;
+    var $_started = false;
 
     // }}}
     // {{{ function XML_Transformer($parameters = array())
@@ -177,10 +177,10 @@ class XML_Transformer {
             $this->setDebug($parameters['debug']);
         }
 
-        $this->_caseFolding        = isset($parameters['caseFolding'])        ? $parameters['caseFolding']        : FALSE;
+        $this->_caseFolding        = isset($parameters['caseFolding'])        ? $parameters['caseFolding']        : false;
         $this->_caseFoldingTo      = isset($parameters['caseFoldingTo'])      ? $parameters['caseFoldingTo']      : CASE_UPPER;
-        $this->_recursiveOperation = isset($parameters['recursiveOperation']) ? $parameters['recursiveOperation'] : TRUE;
-        $this->_started            = isset($parameters['started'])            ? $parameters['started']            : FALSE;
+        $this->_recursiveOperation = isset($parameters['recursiveOperation']) ? $parameters['recursiveOperation'] : true;
+        $this->_started            = isset($parameters['started'])            ? $parameters['started']            : false;
 
         $overloadedElements   = isset($parameters['overloadedElements'])   ? $parameters['overloadedElements']   : array();
         $overloadedNamespaces = isset($parameters['overloadedNamespaces']) ? $parameters['overloadedNamespaces'] : array();
@@ -354,9 +354,9 @@ class XML_Transformer {
         if (isset($this->_overloadedElements[$element])) {
             unset($this->_overloadedElements[$element]);
 
-            return TRUE;
+            return true;
         } else {
-            return FALSE;
+            return false;
         }
     }
 
@@ -364,8 +364,8 @@ class XML_Transformer {
     // {{{ function isOverloadedElement($element)
 
     /**
-    * Returns TRUE if a given element is overloaded,
-    * FALSE otherwise.
+    * Returns true if a given element is overloaded,
+    * false otherwise.
     *
     * @param  string
     * @return boolean
@@ -429,9 +429,9 @@ class XML_Transformer {
         if (isset($this->_overloadedNamespaces[$namespacePrefix])) {
             unset($this->_overloadedNamespaces[$namespacePrefix]);
 
-            return TRUE;
+            return true;
         } else {
-            return FALSE;
+            return false;
         }
     }
 
@@ -439,8 +439,8 @@ class XML_Transformer {
     // {{{ function isOverloadedNamespace($namespacePrefix)
 
     /**
-    * Returns TRUE if a given namespace is overloaded,
-    * FALSE otherwise.
+    * Returns true if a given namespace is overloaded,
+    * false otherwise.
     *
     * @param  string
     * @return boolean
@@ -496,7 +496,7 @@ class XML_Transformer {
     */
     function setDebug($debug) {
         if (is_array($debug)) {
-            $this->_debug       = TRUE;
+            $this->_debug       = true;
             $this->_debugFilter = array_flip($debug);
         }
 
@@ -522,7 +522,7 @@ class XML_Transformer {
               )
             );
 
-            $this->_started = TRUE;
+            $this->_started = true;
 
             $this->_debug(
               'start: ' . serialize($this)
@@ -544,7 +544,7 @@ class XML_Transformer {
     function transform($xml) {
         // Don't process input when it contains no XML elements.
 
-        if (strpos($xml, '<') === FALSE) {
+        if (strpos($xml, '<') === false) {
             return $xml;
         }
 
@@ -562,7 +562,7 @@ class XML_Transformer {
 
         // Parse input.
 
-        if (!xml_parse($parser, $xml, TRUE)) {
+        if (!xml_parse($parser, $xml, true)) {
             $errmsg = sprintf(
               "<!-- Transformer: XML Error: %s at line %d\n",
               xml_error_string(xml_get_error_code($parser)),
@@ -675,7 +675,7 @@ class XML_Transformer {
         $cdata           = $this->_cdataStack[$this->_level];
         $element         = $this->canonicalName($element);
         $namespacePrefix = '';
-        $recursion       = FALSE;
+        $recursion       = false;
 
         if (strstr($element, ':')) {
             list($namespacePrefix, $qElement) = explode(':', $element);
@@ -690,7 +690,7 @@ class XML_Transformer {
               $cdata
             );
 
-            $recursion = TRUE;
+            $recursion = true;
         }
 
         else if (isset($this->_overloadedElements[$element]['end'])) {
@@ -702,7 +702,7 @@ class XML_Transformer {
               $cdata
             );
 
-            $recursion = TRUE;
+            $recursion = true;
         }
 
         else {
@@ -734,8 +734,8 @@ class XML_Transformer {
                 'overloadedElements'   => $this->_overloadedElements,
                 'overloadedNamespaces' => $this->_overloadedNamespaces,
                 'recursiveOperation'   => $this->_recursiveOperation,
-                'debug'                => FALSE,
-                'started'              => TRUE
+                'debug'                => false,
+                'started'              => true
               )
             );
 
@@ -794,7 +794,7 @@ class XML_Transformer {
     * @access private
     */
     function _parseCallback($element, $event, $callback) {
-        $parsedCallback = FALSE;
+        $parsedCallback = false;
 
         // classname::staticMethod
         if (strstr($callback, '::')) {
@@ -834,7 +834,7 @@ class XML_Transformer {
               )
             );
 
-            return FALSE;
+            return false;
         }
     }
 
