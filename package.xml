@@ -22,7 +22,7 @@
   <release>
     <version>1.1.0</version>
     <state>stable</state>
-    <date>2004-MM-DD</date>
+    <date>2004-11-27</date>
     <notes>
 <![CDATA[
 + Enabled the construction of nested transformers by allowing for multiple instances of XML_Transformer_CallbackRegistry. (Based upon a patch by Thomas Duffey <tduffey@homeboyz.org>)
