@@ -374,6 +374,16 @@ class XML_Transformer {
             return $xml;
         }
 
+        // Clean up, if needed.
+
+        if (!empty($this->_elementStack)) {
+            $this->_attributesStack = array();
+            $this->_cdataStack      = array('');
+            $this->_elementStack    = array();
+            $this->_level           = 0;
+            $this->_lastProcessed   = '';
+        }
+
         // Create XML parser, set parser options.
 
         $parser = xml_parser_create();
