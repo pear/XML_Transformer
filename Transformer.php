@@ -598,7 +598,7 @@ class XML_Transformer {
         $namespacePrefix = '';
 
         if (strstr($element, ':')) {
-            list($namespacePrefix, $_element) = explode(':', $element);
+            list($namespacePrefix, $qElement) = explode(':', $element);
         }
 
         // Push element's name and attributes onto the stack.
@@ -622,7 +622,7 @@ class XML_Transformer {
             // that is registered for this namespace.
 
             $cdata = $this->_overloadedNamespaces[$namespacePrefix]->startElement(
-              $_element,
+              $qElement,
               $attributes
             );
         }
@@ -677,7 +677,7 @@ class XML_Transformer {
         $recursion       = false;
 
         if (strstr($element, ':')) {
-            list($namespacePrefix, $_element) = explode(':', $element);
+            list($namespacePrefix, $qElement) = explode(':', $element);
         }
 
         if (isset($this->_overloadedNamespaces[$namespacePrefix])) {
@@ -685,7 +685,7 @@ class XML_Transformer {
             // that is registered for this namespace.
 
             $cdata = $this->_overloadedNamespaces[$namespacePrefix]->endElement(
-              $_element,
+              $qElement,
               $cdata
             );
 
