@@ -24,11 +24,12 @@
   </maintainers>
   <license>PHP License</license>
   <release>
-    <version>0.9-dev</version>
-    <state>devel</state>
-    <date>2002-XX-XX</date>
+    <version>0.8.1</version>
+    <state>stable</state>
+    <date>2003-05-06</date>
     <notes>
 <![CDATA[
+Bugfix release.
 ]]>
     </notes>
     <filelist>
