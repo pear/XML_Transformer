@@ -202,7 +202,23 @@ We have not bothered to implement namespace scopes, though, as
 we should have were we in the business of implementing the
 complete XML specification.
 
-2.5 XML_Transformer_PHP
+2.5 supplied XML_Transformer Namespaces
 
-2.6 XML_Transformer_Image
+* TODO (sb) autoloading
+
+2.5.1 XML_Transformer_Namespace_PHP
+
+* TODO (kk)
+
+2.5.2 XML_Transformer_Namespace_Image
+
+* TODO (kk)
+
+2.6 XML_Transformer_Cache
+
+* TODO (sb)
+
+2.7 XML_Transformer_OutputBuffer
+
+* TODO (any)
 
