@@ -280,7 +280,10 @@ class XML_Transformer {
         $string = '';
 
         if ($this->_caseFolding) {
-            $attributes = array_change_key_case($attributes, $this->_caseFoldingTo);
+            $attributes = array_change_key_case(
+              $attributes,
+              $this->_caseFoldingTo
+            );
         }
 
         ksort($attributes);
