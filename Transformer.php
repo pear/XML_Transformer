@@ -255,10 +255,12 @@ class XML_Transformer {
     function attributesToString($attributes) {
         $string = '';
 
-        ksort($attributes);
+        if (is_array($attributes)) {
+            ksort($attributes);
 
-        foreach ($attributes as $key => $value) {
-            $string .= ' ' . $key . '="' . $value . '"';
+            foreach ($attributes as $key => $value) {
+                $string .= ' ' . $key . '="' . $value . '"';
+            }
         }
 
         return $string;
