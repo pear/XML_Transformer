@@ -27,13 +27,10 @@
   </maintainers>
   <license>PHP License</license>
   <release>
-    <version>0.5</version>
+    <version>0.6-dev</version>
     <state>stable</state>
-    <date>2002-09-08</date>
+    <date>2002-XX-XX</date>
     <notes>
-* Resolved infinite recursion problem that arose when handlers
-  do not remove the tags of their assigned element from the input
-  XML document, but only work on it's sub-tree.
     </notes>
     <filelist>
       <dir name="/" baseinstalldir="XML">
@@ -46,6 +43,16 @@
     </deps>
   </release>
   <changelog>
+    <release>
+      <version>0.5</version>
+      <state>stable</state>
+      <date>2002-09-08</date>
+      <notes>
+* Resolved infinite recursion problem that arose when handlers
+  do not remove the tags of their assigned element from the input
+  XML document, but only work on it's sub-tree.
+      </notes>
+    </release>
     <release>
       <version>0.4</version>
       <state>stable</state>
