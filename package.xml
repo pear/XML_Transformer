@@ -31,6 +31,8 @@
 
 * XML entities are no longer replaced twice. (Patch by Thomas Duffey <tduffey@homeboyz.org>)
 
+* Refactored the testsuite to use PHPUnit2.
+
 ! XML_Transformer now requires XML_Util-1.1.0.
 ]]>
     </notes>
@@ -50,11 +52,18 @@
             <file role="php" name="Widget.php"/>
           </dir>
 
+          <dir name="Tests">
+            <file role="php" name="AllTests.php"/>
+            <file role="php" name="TestNamespace.php"/>
+            <file role="php" name="TransformerTest.php"/>
+          </dir>
+
           <file role="php" name="CallbackRegistry.php"/>
           <file role="php" name="Namespace.php"/>
         </dir>
 
         <file role="php" name="Transformer.php"/>
+        <file role="doc" name="README"/>
       </dir>
     </filelist>
     <deps>

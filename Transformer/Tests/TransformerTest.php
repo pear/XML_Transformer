@@ -16,41 +16,28 @@
 // $Id$
 //
 
-require_once 'PHPUnit.php';
+require_once 'PHPUnit2/Framework/TestCase.php';
+
+require_once 'XML/Transformer/Tests/TestNamespace.php';
 require_once 'XML/Transformer.php';
-require_once 'XML/Transformer/Namespace.php';
 
-class TestNamespace extends XML_Transformer_Namespace {
-    function start_body($attributes) {
-        return '<body>text';
+/**
+ * @author      Sebastian Bergmann <sb@sebastian-bergmann.de>
+ * @author      Kristian Köhntopp <kris@koehntopp.de>
+ * @copyright   Copyright &copy; 2002-2004 Sebastian Bergmann <sb@sebastian-bergmann.de> and Kristian Köhntopp <kris@koehntopp.de>
+ * @license     http://www.php.net/license/3_0.txt The PHP License, Version 3.0
+ * @category    XML
+ * @package     XML_Transformer
+ */
+class XML_Transformer_Tests_TransformerTest extends PHPUnit2_Framework_TestCase {
+    private $t;
+
+    public function  setUp() {
+        $this->t = new XML_Transformer;
     }
 
-    function end_body($cdata) {
-        return $cdata . '</body>';
-    }
-
-    function start_bold($attributes) {
-        return '<b>';
-    }
-
-    function end_bold($cdata) {
-        return $cdata . '</b>';
-    }
-
-    function start_boldbold($attributes) {
-        return '<bold>';
-    }
-
-    function end_boldbold($cdata) {
-        return $cdata . '</bold>';
-    }
-}
-
-class XML_Transformer_Test extends PHPUnit_TestCase {
-    function testNoRecursion() {
-        $t = new XML_Transformer;
-
-        $t->overloadNamespace(
+    public function testNoRecursion() {
+        $this->t->overloadNamespace(
           '&MAIN',
           new TestNamespace
         );
@@ -58,16 +45,14 @@ class XML_Transformer_Test extends PHPUnit_TestCase {
         $this->assertEquals(
           '<p><b>text</b></p>',
 
-          $t->transform(
+          $this->t->transform(
             '<p><bold>text</bold></p>'
           )
         );
     }
 
-    function testRecursion() {
-        $t = new XML_Transformer;
-
-        $t->overloadNamespace(
+    public function testRecursion() {
+        $this->t->overloadNamespace(
           '&MAIN',
           new TestNamespace
         );
@@ -75,16 +60,14 @@ class XML_Transformer_Test extends PHPUnit_TestCase {
         $this->assertEquals(
           '<p><b>text</b></p>',
 
-          $t->transform(
+          $this->t->transform(
             '<p><boldbold>text</boldbold></p>'
           )
         );
     }
 
-    function testSelfReplacing() {
-        $t = new XML_Transformer;
-
-        $t->overloadNamespace(
+    public function testSelfReplacing() {
+        $this->t->overloadNamespace(
           '&MAIN',
           new TestNamespace
         );
@@ -92,16 +75,14 @@ class XML_Transformer_Test extends PHPUnit_TestCase {
         $this->assertEquals(
           '<html><body>text</body></html>',
 
-          $t->transform(
+          $this->t->transform(
             '<html><body/></html>'
           )
         );
     }
 
-    function testNamespace() {
-        $t = new XML_Transformer;
-
-        $t->overloadNamespace(
+    public function testNamespace() {
+        $this->t->overloadNamespace(
           'test',
           new TestNamespace
         );
@@ -109,16 +90,14 @@ class XML_Transformer_Test extends PHPUnit_TestCase {
         $this->assertEquals(
           '<p><b>text</b></p>',
 
-          $t->transform(
+          $this->t->transform(
             '<p><test:bold>text</test:bold></p>'
           )
         );
     }
 
-    function testNamespaceURI() {
-        $t = new XML_Transformer;
-
-        $t->overloadNamespace(
+    public function testNamespaceURI() {
+        $this->t->overloadNamespace(
           'test',
           new TestNamespace
         );
@@ -126,13 +105,15 @@ class XML_Transformer_Test extends PHPUnit_TestCase {
         $this->assertEquals(
           '<p><b>text</b></p>',
 
-          $t->transform(
+          $this->t->transform(
             '<p><test:bold>text</test:bold></p>'
           )
         );
     }
 }
 
-$result = PHPUnit::run(new PHPUnit_TestSuite('XML_Transformer_Test'));
-echo $result->toString();
+/*
+ * vim600:  et sw=2 ts=2 fdm=marker
+ * vim<600: et sw=2 ts=2
+ */
 ?>
