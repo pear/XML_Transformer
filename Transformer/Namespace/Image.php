@@ -19,8 +19,8 @@
 require_once 'XML/Transformer/Namespace.php';
 require_once 'XML/Transformer/Util.php';
 
-define(PEAR_XML_TRANSFORMER_IMAGE_FONTPATH, '/usr/X11R6/lib/X11/fonts/truetype');
-define(PEAR_XML_TRANSFORMER_IMAGE_cacheDir, '/cache/gtext');
+define('PEAR_XML_TRANSFORMER_IMAGE_FONTPATH', '/usr/X11R6/lib/X11/fonts/truetype');
+define('PEAR_XML_TRANSFORMER_IMAGE_cacheDir', '/cache/gtext');
 
 /**
 * Handler for the Image Namespace.
@@ -196,7 +196,7 @@ class XML_Transformer_Namespace_Image extends XML_Transformer_Namespace {
 
             $r .= sprintf(
               '<%s:img src="%s" alt="%s" />',
-              $this->_prefix[0],
+              ($this->_prefix[0] != '&MAIN') ? $this->_prefix[0] : '',
               $src,
               addslashes($alt)
             );
