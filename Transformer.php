@@ -412,6 +412,7 @@ class XML_Transformer {
     function _startElement($parser, $element, $attributes) {
         $attributes = $this->canonicalize($attributes);
         $element    = $this->canonicalize($element);
+        $process    = $this->_lastProcessed != $element;
 
         if (strstr($element, ':')) {
             list($namespacePrefix, $element) = explode(':', $element);
@@ -435,7 +436,7 @@ class XML_Transformer {
           $element
         );
 
-        if ($this->_lastProcessed != $element &&
+        if ($process &&
             isset($this->_callbackRegistry->overloadedNamespaces[$namespacePrefix]['object'])) {
             // The event is handled by a callback
             // that is registered for this namespace.
@@ -471,6 +472,7 @@ class XML_Transformer {
     function _endElement($parser, $element) {
         $cdata     = $this->_cdataStack[$this->_level];
         $element   = $this->canonicalize($element);
+        $process   = $this->_lastProcessed != $element;
         $recursion = false;
 
         if (strstr($element, ':')) {
@@ -489,7 +491,7 @@ class XML_Transformer {
           $element
         );
 
-        if ($this->_lastProcessed != $element &&
+        if ($process &&
             isset($this->_callbackRegistry->overloadedNamespaces[$namespacePrefix]['object'])) {
             // The event is handled by a callback
             // that is registered for this namespace.
