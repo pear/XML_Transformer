@@ -31,6 +31,7 @@
     <state>stable</state>
     <date>2002-XX-XX</date>
     <notes>
+<![CDATA[
 + Added methods setDefaultCallback() and unsetDefaultCallback() to
   set/unset default callbacks for elements that are not overloaded.
 
@@ -38,6 +39,29 @@
 
 + Removed canonicalName() method in favour of more general
   canonicalizeAttributes() method.
+
++ Added namespace handler for
+
+    + <php:expr/> evaluates a given PHP expression and stores its
+      return value into the output XML tree.
+
+    + <php:logic/> executes a given block of PHP code and stores
+      its output into the output XML tree.
+
+    + <php:getvariable name=""/> inserts the contents of a given
+      global variable into the output XML tree.
+
+    + <php:setvariable name="">value</php:setvariable sets a given
+      global variable to a given value.
+
+    + <php:getparameter name=""/> inserts the contents of a given
+      HTTP GET parameter into the output XML tree.
+
+    + <php:postparameter name=""/> inserts the contents of a given
+      HTTP POST parameter into the output XML tree.
+
+    + <php:sessionvariable name=""/> inserts the contents of a given
+      session variable into the output XML tree.
 
 * Recursive operation can now be selectively turned off for
   overloaded namespaces, too.
@@ -49,6 +73,7 @@
   called statically.
 
 * Fixed recursive transformation of overloaded namespaces.
+]]>
     </notes>
     <filelist>
       <dir name="/" baseinstalldir="XML">
@@ -56,6 +81,7 @@
 
         <dir name="Transformer">
           <file role="php" name="Namespace.php"/>
+          <file role="php" name="PHP.php"/>
         </dir>
       </dir>
     </filelist>
