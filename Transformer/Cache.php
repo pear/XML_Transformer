@@ -51,18 +51,20 @@ class XML_Transformer_Cache extends XML_Transformer {
     }
 
     // }}}
-    // {{{ function transform($xml)
+    // {{{ function transform($xml, $cacheID = '')
 
     /**
     * Cached transformation a given XML string using
     * the registered PHP callbacks for overloaded tags.
     *
     * @param  string
+    * @param  string
     * @return string
     * @access public
     */
-    function transform($xml) {
-        $cacheID      = md5($xml);
+    function transform($xml, $cacheID = '') {
+        $cacheID = ($cacheID != '') ? $cacheID : md5($xml);
+
         $cachedResult = $this->_cache->get($cacheID, 'XML_Transformer');
 
         if ($cachedResult !== false) {
