@@ -461,7 +461,8 @@ class XML_Transformer {
               $cdata
             );
 
-            $recursion = $this->_callbackRegistry->overloadedNamespaces[$namespacePrefix]['recursiveOperation'];
+            $recursion = $this->_callbackRegistry->overloadedNamespaces[$namespacePrefix]['recursiveOperation'] &&
+                         isset($this->_elementStack[$this->_level-1]);
         } else {
             // No callback was registered for this element's
             // closing tag, copy it.
