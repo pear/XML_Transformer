@@ -6,10 +6,7 @@
   <description>
     With the XML/Transformer class one can easily bind PHP
     functionality to XML tags, thus transforming the input XML tree
-    into an output XML tree without the need for XSLT. Single XML
-    elements can be overloaded with PHP functions, methods and static
-    method calls, XML namespaces can be registered to be handled by
-    PHP classes.
+    into an output XML tree without the need for XSLT.
   </description>
   <maintainers>
     <maintainer>
