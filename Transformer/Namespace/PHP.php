@@ -37,12 +37,22 @@ require_once 'XML/Transformer/Namespace.php';
 *     <dd>foo = <php:getvariable name="foo"/></dd>
 *   </dl>
 *
+*   <php:namespace name="my">
+*    <php:define name="tag">
+*     <h1 align="$align">$content</h1>
+*    </php:define>
+*   </php:namespace>
+*
+*   <my:tag align="center">Some Text</my:tag>
+*
 * Output
 *
 *   <dl>
 *     <dd>Current time: 1032158587</dd>
 *     <dd>foo = bar</dd>
 *   </dl>
+*
+*   <h1 align="center">Some Text</h1>
 *
 * @author  Sebastian Bergmann <sb@sebastian-bergmann.de>
 *          Kristian Köhntopp <kris@koehntopp.de>
