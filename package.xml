@@ -43,11 +43,14 @@
 
   It is now possible, for instance, to return
   "<t1/><t2/>" from a closing tag's callback.
+    by Azundris (http://www.azundris.com)
 
 * Entities are no longer unescaped during recursion.
+    by Azundris (http://www.azundris.com)
 
 * Empty elements like "<br></br>" are now transformed
   into "<br/>".
+    by Azundris (http://www.azundris.com)
 
 * Refactored debug message system.
 
