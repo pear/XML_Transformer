@@ -75,6 +75,12 @@ class XML_Transformer {
     var $_caseFolding = false;
 
     /**
+    * @var    boolean
+    * @access private
+    */
+    var $_caseFoldingTo = CASE_UPPER;
+
+    /**
     * @var    array
     * @access private
     */
@@ -136,6 +142,7 @@ class XML_Transformer {
 
         $startup                     = isset($parameters['startup'])              ? $parameters['startup']              : true;
         $this->_caseFolding          = isset($parameters['caseFolding'])          ? $parameters['caseFolding']          : false;
+        $this->_caseFoldingTo        = isset($parameters['caseFoldingTo'])        ? $parameters['caseFoldingTo']        : CASE_UPPER;
         $overloadedElements          = isset($parameters['overloadedElements'])   ? $parameters['overloadedElements']   : array();
         $this->_overloadedNamespaces = isset($parameters['overloadedNamespaces']) ? $parameters['overloadedNamespaces'] : array();
         $this->_recursiveOperation   = isset($parameters['recursiveOperation'])   ? $parameters['recursiveOperation']   : true;
@@ -181,7 +188,7 @@ class XML_Transformer {
         $string = '';
 
         if ($this->_caseFolding) {
-            $attributes = array_change_key_case($attributes, CASE_UPPER);
+            $attributes = array_change_key_case($attributes, $this->_caseFoldingTo);
         }
 
         ksort($attributes);
