@@ -31,6 +31,8 @@
 <![CDATA[
 + Enabled the construction of nested transformers by allowing for multiple instances of XML_Transformer_CallbackRegistry. (Based upon a patch by Thomas Duffey <tduffey@homeboyz.org>)
 
+* XML_Transformer now uses a namespace-aware SAX parser. This partially addresses bug #2595.
+
 * XML entities are no longer replaced twice. (Patch by Thomas Duffey <tduffey@homeboyz.org>)
 ]]>
     </notes>
