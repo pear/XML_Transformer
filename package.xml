@@ -29,6 +29,16 @@
     <date>200Y-MM-DD</date>
     <notes>
 <![CDATA[
+* XML fragments are now handled more gracefully.
+
+  It is now possible, for instance, to return
+  "<t1/><t2/>" from a closing tag's callback.
+
+* Entities are no longer unescaped during recursion.
+
+* Empty elements like "<br></br>" are now transformed
+  into "<br/>".
+
 * Refactored debug message system.
 
 - Replaced XML_Transformer_Util::attributesToString()
