@@ -709,6 +709,7 @@ class XML_Transformer {
             $transformer = new XML_Transformer(
               array(
                 'caseFolding'          => $this->_caseFolding,
+                'caseFoldingTo'        => $this->_caseFoldingTo,
                 'overloadedElements'   => $this->_overloadedElements,
                 'overloadedNamespaces' => $this->_overloadedNamespaces,
                 'recursiveOperation'   => $this->_recursiveOperation,
