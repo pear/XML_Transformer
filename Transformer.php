@@ -214,9 +214,9 @@ class XML_Transformer {
           $stackdump .= sprintf(
             "level=%d\nelement=%s:%s\ncdata=%s\n\n",
             $i,
-            $this->_elementStack[$i],
-            XML_Transformer_Util::attributesToString($this->_attributesStack[$i]),
-            $this->_cdataStack[$i]
+            isset($this->_elementStack[$i])    ? $this->_elementStack[$i]                                              : '',
+            isset($this->_attributesStack[$i]) ? XML_Transformer_Util::attributesToString($this->_attributesStack[$i]) : '',
+            isset($this->_cdataStack[$i])      ? $this->_cdataStack[$i]                                                : ''
           );
         }
 
