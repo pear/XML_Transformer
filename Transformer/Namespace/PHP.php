@@ -113,8 +113,8 @@ class XML_Transformer_Namespace_PHP extends XML_Transformer_Namespace {
 
         $this->releaseLock();
 
-        $this->_namespaceClassDefinition .= sprintf(
-          'var $%s_attributes = array();
+        $this->_namespaceClassDefinition .= sprintf('
+          var $%s_attributes = array();
 
           function start_%s($att) {
               $this->%s_attributes = $att;
@@ -126,8 +126,9 @@ class XML_Transformer_Namespace_PHP extends XML_Transformer_Namespace {
               foreach ($this->%s_attributes as $__k => $__v) {
                   $$__k = $__v;
               }
-
-              return "%s";
+              
+              $str = "%s";
+              return $str;
           }',
 
           $this->_defineName,
