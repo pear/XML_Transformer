@@ -16,7 +16,6 @@
 // $Id$
 //
 
-require_once 'XML/Transformer/Util.php';
 require_once 'XML/Util.php';
 
 /**

@@ -17,7 +17,6 @@
 //
 
 require_once 'XML/Transformer/CallbackRegistry.php';
-require_once 'XML/Transformer/Util.php';
 require_once 'XML/Util.php';
 
 /**
@@ -196,6 +195,31 @@ class XML_Transformer {
     }
 
     // }}}
+    // {{{ function logMessage($logMessage, $target = 'error_log')
+
+    /**
+    * Sends an error message to a given target.
+    *
+    * @param  string
+    * @param  string
+    * @access public
+    * @static
+    */
+    function logMessage($logMessage, $target = 'error_log') {
+        switch ($target) {
+            case 'echo':
+            case 'print': {
+                print $logMessage;
+            }
+            break;
+
+            default: {
+                error_log($logMessage);
+            }
+        }
+    }
+
+    // }}}
     // {{{ function stackdump()
 
     /**
@@ -263,7 +287,7 @@ class XML_Transformer {
                 );
             }
         } else {
-            XML_Transformer_Util::logMessage(
+            $this->logMessage(
               $result,
               $this->_logTarget
             );
@@ -421,7 +445,7 @@ class XML_Transformer {
                 );
             }
 
-            XML_Transformer_Util::logMessage(
+            $this->logMessage(
               $errorMessage . "\n" . $this->stackdump(),
               $this->_logTarget
             );
@@ -713,7 +737,7 @@ class XML_Transformer {
     * @access private
     */
     function _debug($debugMessage) {
-        XML_Transformer_Util::logMessage(
+        $this->logMessage(
           $debugMessage,
           $this->_logTarget
         );

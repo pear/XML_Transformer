@@ -56,7 +56,6 @@
 
           <file role="php" name="CallbackRegistry.php"/>
           <file role="php" name="Namespace.php"/>
-          <file role="php" name="Util.php"/>
         </dir>
 
         <file role="php" name="Transformer.php"/>

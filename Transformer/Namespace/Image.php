@@ -17,7 +17,6 @@
 //
 
 require_once 'XML/Transformer/Namespace.php';
-require_once 'XML/Transformer/Util.php';
 require_once 'XML/Util.php';
 
 define('PEAR_XML_TRANSFORMER_IMAGE_FONTPATH', '/usr/X11R6/lib/X11/fonts/truetype');
