@@ -371,7 +371,10 @@ class XML_Transformer {
 
             $exml = preg_split('/\n/', $xml);
 
-            for ($i = $line-3; $i < sizeof($exml) && $i < $line+3; $i++) {
+            $start = ($line - 3 > 0)             ? $line - 3 : 0;
+            $end   = ($line + 3 < sizeof($exml)) ? $line + 3 : sizeof($exml);
+
+            for ($i = $start; $i < $end; $i++) {
                 $errorMessage .= sprintf(
                   "line %d: %s\n",
                   $i+1,
