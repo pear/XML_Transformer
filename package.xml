@@ -31,6 +31,9 @@
     <state>devel</state>
     <date>2002-XX-XX</date>
     <notes>
+* Resolved infinite recursion problem that arose when handlers
+  do not remove the tags of their assigned element from the input
+  XML document, but only work on it's sub-tree.
     </notes>
     <filelist>
       <dir name="/" baseinstalldir="XML">

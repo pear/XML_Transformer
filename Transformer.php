@@ -161,6 +161,12 @@ class XML_Transformer {
     */
     var $_started = false;
 
+    /**
+    * @var    string
+    * @access private
+    */
+    var $_lastProcessed = '';
+
     // }}}
     // {{{ function XML_Transformer($parameters = array())
 
@@ -179,6 +185,7 @@ class XML_Transformer {
 
         $this->_caseFolding        = isset($parameters['caseFolding'])        ? $parameters['caseFolding']        : false;
         $this->_caseFoldingTo      = isset($parameters['caseFoldingTo'])      ? $parameters['caseFoldingTo']      : CASE_UPPER;
+        $this->_lastProcessed      = isset($parameters['lastProcessed'])      ? $parameters['lastProcessed']      : '';
         $this->_recursiveOperation = isset($parameters['recursiveOperation']) ? $parameters['recursiveOperation'] : true;
         $this->_started            = isset($parameters['started'])            ? $parameters['started']            : false;
 
@@ -616,7 +623,8 @@ class XML_Transformer {
           $element
         );
 
-        if (isset($this->_overloadedNamespaces[$namespacePrefix])) {
+        if ($this->_lastProcessed != $element &&
+            isset($this->_overloadedNamespaces[$namespacePrefix])) {
             // The event is handled by a callback
             // that is registered for this namespace.
 
@@ -626,7 +634,8 @@ class XML_Transformer {
             );
         }
 
-        else if (isset($this->_overloadedElements[$element]['start'])) {
+        else if ($this->_lastProcessed != $element &&
+                 isset($this->_overloadedElements[$element]['start'])) {
             // The event is handled by a callback
             // that is registered for this element.
 
@@ -680,7 +689,8 @@ class XML_Transformer {
           $element
         );
 
-        if (isset($this->_overloadedNamespaces[$namespacePrefix])) {
+        if ($this->_lastProcessed != $element &&
+            isset($this->_overloadedNamespaces[$namespacePrefix])) {
             // The event is handled by a callback
             // that is registered for this namespace.
 
@@ -692,7 +702,8 @@ class XML_Transformer {
             $recursion = true;
         }
 
-        else if (isset($this->_overloadedElements[$element]['end'])) {
+        else if ($this->_lastProcessed != $element &&
+                 isset($this->_overloadedElements[$element]['end'])) {
             // The event is handled by a callback
             // that is registered for this element.
 
@@ -734,7 +745,8 @@ class XML_Transformer {
                 'overloadedNamespaces' => $this->_overloadedNamespaces,
                 'recursiveOperation'   => $this->_recursiveOperation,
                 'debug'                => false,
-                'started'              => true
+                'started'              => true,
+                'lastProcessed'        => $element
               )
             );
 
