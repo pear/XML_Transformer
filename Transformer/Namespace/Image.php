@@ -300,7 +300,8 @@ class XML_Transformer_Namespace_Image extends XML_Transformer_Namespace {
             $alt = $this->_createAlt($word);
 
             $r .= sprintf(
-              '<img:img src="%s" alt="%s" />',
+              '<%s:img src="%s" alt="%s" />',
+              $this->_prefix[0],
               $src,
               addslashes($alt)
             );
