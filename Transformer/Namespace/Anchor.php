@@ -177,17 +177,84 @@ class XML_Transformer_Namespace_Anchor extends XML_Transformer_Namespace {
     * @access public
     */
     function end_iref($cdata) {
-        if (!isset($this->_irefAttributes)) {
+        if (!isset($this->_irefAttributes['iref']))
             return '';
-        }
-        
-        $name = $this->_irefAttributes['iref'];
 
-        return sprintf(
-          '<a href='%s'>%s</a>',
-          XML_Transformer_Util::attributesToString($this->_anchorDatabase[$name]),
-          $cdata
+        $name = $this->_irefAttributes['iref'];
+        if (!isset($this->_anchorDatabase[$name]))
+            return sprintf('<span>(undefined reference %s)%s</span>',
+                $name,
+                $cdata
+            );
+
+        return sprintf('<a %s>%s</a>',
+            XML_Transformer_Util::attributesToString($this->_anchorDatabase[$name]),
+            $cdata
         );
+    }
+
+    // }}}
+    // {{{ function start_random($attributes)
+
+    /**
+    * @param  string
+    * @return string
+    * @access public
+    */
+    function start_random($attributes) {
+        return '';
+    }
+
+    // }}}
+    // {{{ function end_random($cdata)
+
+    /**
+    * @param  string
+    * @return string
+    * @access public
+    */
+    function end_random($cdata) {
+        srand((double)microtime()*1000000);
+
+        $keys = array_keys($this->_anchorDatabase);
+        $name = $keys[rand(0, count($keys)-1)];
+
+        return sprintf('<a %s>%s</a>',
+            XML_Transformer_Util::attributesToString($this->_anchorDatabase[$name]),
+            $cdata
+        );
+    }
+
+    // }}}
+
+    // {{{ function start_link($attributes)
+
+    /**
+    * @param  string
+    * @return string
+    * @access public
+    */
+    function start_link($attributes) {
+        if (!isset($attributes['name']))
+            return '';
+
+        $name = $attributes['name'];
+        unset($attributes['name']);
+
+        $this->addItem($name, $attributes);
+        return '';
+    }
+
+    // }}}
+    // {{{ function end_link($cdata)
+
+    /**
+    * @param  string
+    * @return string
+    * @access public
+    */
+    function end_link($cdata) {
+        return '';
     }
 
     // }}}
