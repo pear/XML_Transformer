@@ -36,6 +36,10 @@ require_once 'XML/Transformer/Namespace.php';
 *
 *   * <emphasis>
 *
+*   * <example>
+*
+*   * <figure>
+*
 *   * <filename>
 *
 *   * <firstname>
@@ -142,7 +146,31 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     * @var    array
     * @access private
     */
+    var $_currentExampleNumber = '';
+
+    /**
+    * @var    array
+    * @access private
+    */
+    var $_currentFigureNumber = '';
+
+    /**
+    * @var    array
+    * @access private
+    */
     var $_currentSectionNumber = '';
+
+    /**
+    * @var    array
+    * @access private
+    */
+    var $_examples = array();
+
+    /**
+    * @var    array
+    * @access private
+    */
+    var $_figures = array();
 
     /**
     * @var    array
@@ -156,6 +184,12 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
       'keyword' => '#005500',
       'string'  => '#550000'
     );
+
+    /**
+    * @var    array
+    * @access private
+    */
+    var $_ids = array();
 
     /**
     * @var    array
@@ -273,7 +307,11 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     function start_chapter($attributes) {
         $this->_startSection('chapter');
 
-        return '<div class="chapter">';
+        $id = $this->_setAnchorID(
+          isset($attributes['id']) ? $attributes['id'] : ''
+        );
+
+        return '<div class="chapter">' . $id;
     }
 
     // }}}
@@ -334,6 +372,70 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
         $this->_roles['emphasis'] = '';
 
         return $cdata;
+    }
+
+    // }}}
+    // {{{ function start_example($attributes)
+
+    /**
+    * @param  array
+    * @return string
+    * @access public
+    */
+    function start_example($attributes) {
+        $this->_startSection('example');
+
+        $id = $this->_setAnchorID(
+          isset($attributes['id']) ? $attributes['id'] : ''
+        );
+
+        return '<div class="example">' . $id;
+    }
+
+    // }}}
+    // {{{ function end_example($cdata)
+
+    /**
+    * @param  string
+    * @return string
+    * @access public
+    */
+    function end_example($cdata) {
+        $this->_endSection('example');
+
+        return $cdata . '</div>';
+    }
+
+    // }}}
+    // {{{ function start_figure($attributes)
+
+    /**
+    * @param  array
+    * @return string
+    * @access public
+    */
+    function start_figure($attributes) {
+        $this->_startSection('figure');
+
+        $id = $this->_setAnchorID(
+          isset($attributes['id']) ? $attributes['id'] : ''
+        );
+
+        return '<div class="figure">' . $id;
+    }
+
+    // }}}
+    // {{{ function end_figure($cdata)
+
+    /**
+    * @param  string
+    * @return string
+    * @access public
+    */
+    function end_figure($cdata) {
+        $this->_endSection('figure');
+
+        return $cdata . '</div>';
     }
 
     // }}}
@@ -603,7 +705,11 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     function start_section($attributes) {
         $this->_startSection('section');
 
-        return '<div class="section">';
+        $id = $this->_setAnchorID(
+          isset($attributes['id']) ? $attributes['id'] : ''
+        );
+
+        return '<div class="section">' . $id;
     }
 
     // }}}
@@ -657,6 +763,16 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
                 return '<h2>' . $this->_currentSectionNumber . '. ';
             }
             break;
+
+            case 'example': {
+                return '<h2>Example ' . $this->_currentExampleNumber;
+            }
+            break;
+
+            case 'figure': {
+                return '<h2>Figure ' . $this->_currentFigureNumber;
+            }
+            break;
         }
     }
 
@@ -677,6 +793,8 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
             break;
 
             case 'chapter':
+            case 'example':
+            case 'figure':
             case 'section': {
                 return trim($cdata) . '</h2>';
             }
@@ -713,35 +831,83 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     }
 
     // }}}
+    // {{{ function _setAnchorID($id)
+
+    /**
+    * @param  string
+    * @return string
+    * @access private
+    */
+    function _setAnchorID($id) {
+        if (!empty($id)) {
+            $this->_ids[] = $id;
+            $id           = '<a id="' . $id . '" />';
+        }
+
+        return $id;
+    }
+
+    // }}}
     // {{{ function _startSection($type)
 
     /**
     * @param  string
-    * @access public
+    * @access private
     */
     function _startSection($type) {
-        $this->_currentSectionNumber = '';
-
         array_push($this->_context, $type);
 
-        if (!isset($this->_sections[$type]['open'])) {
-            $this->_sections[$type]['open']  = 1;
-        } else {
-            $this->_sections[$type]['open']++;
-        }
+        switch ($type) {
+            case 'article':
+            case 'chapter':
+            case 'section': {
+                $this->_currentSectionNumber = '';
 
-        if (!isset($this->_sections[$type]['id'][$this->_sections[$type]['open']])) {
-            $this->_sections[$type]['id'][$this->_sections[$type]['open']] = 1;
-        } else {
-            $this->_sections[$type]['id'][$this->_sections[$type]['open']]++;
-        }
+                if (!isset($this->_sections[$type]['open'])) {
+                    $this->_sections[$type]['open'] = 1;
+                } else {
+                    $this->_sections[$type]['open']++;
+                }
 
-        for ($i = 1; $i <= $this->_sections[$type]['open']; $i++) {
-            if (!empty($this->_currentSectionNumber)) {
-                $this->_currentSectionNumber .= '.';
+                if (!isset($this->_sections[$type]['id'][$this->_sections[$type]['open']])) {
+                    $this->_sections[$type]['id'][$this->_sections[$type]['open']] = 1;
+                } else {
+                    $this->_sections[$type]['id'][$this->_sections[$type]['open']]++;
+                }
+
+                for ($i = 1; $i <= $this->_sections[$type]['open']; $i++) {
+                    if (!empty($this->_currentSectionNumber)) {
+                        $this->_currentSectionNumber .= '.';
+                    }
+
+                    $this->_currentSectionNumber .= $this->_sections[$type]['id'][$i];
+                }
             }
+            break;
 
-            $this->_currentSectionNumber .= $this->_sections[$type]['id'][$i];
+            case 'example': {
+                if (!isset($this->_examples[$this->_currentSectionNumber])) {
+                    $this->_examples[$this->_currentSectionNumber] = 1;
+                } else {
+                    $this->_examples[$this->_currentSectionNumber]++;
+                }
+
+                $this->_currentExampleNumber =
+                $this->_currentSectionNumber . '.' . $this->_examples[$this->_currentSectionNumber];
+            }
+            break;
+
+            case 'figure': {
+                if (!isset($this->_figures[$this->_currentFigureNumber])) {
+                    $this->_figures[$this->_currentSectionNumber] = 1;
+                } else {
+                    $this->_figures[$this->_currentSectionNumber]++;
+                }
+
+                $this->_currentFigureNumber =
+                $this->_currentSectionNumber . '.' . $this->_figures[$this->_currentSectionNumber];
+            }
+            break;
         }
     }
 
@@ -754,7 +920,15 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     */
     function _endSection($type) {
         array_pop($this->_context);
-        $this->_sections[$type]['open']--;
+
+        switch ($type) {
+            case 'article':
+            case 'chapter':
+            case 'section': {
+                $this->_sections[$type]['open']--;
+            }
+            break;
+        }
     }
 
     // }}}
