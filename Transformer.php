@@ -582,7 +582,7 @@ class XML_Transformer {
                 $object    = new $className;
 
                 $this->overloadNamespace(
-                  !empty($object->defaultNamespacePrefix) ? $object->defaultNamespacePrefix : $namespace;
+                  !empty($object->defaultNamespacePrefix) ? $object->defaultNamespacePrefix : $namespace,
                   $object
                 );
             }
