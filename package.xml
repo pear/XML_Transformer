@@ -24,9 +24,9 @@
   </maintainers>
   <license>PHP License</license>
   <release>
-    <version>0.7-dev</version>
-    <state>devel</state>
-    <date>2002-XX-XX</date>
+    <version>0.7</version>
+    <state>stable</state>
+    <date>2002-09-22</date>
     <notes>
 <![CDATA[
 + Added Anchor namespace handler.
