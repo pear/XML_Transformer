@@ -130,7 +130,7 @@ class XML_Transformer_Namespace_PHP extends XML_Transformer_Namespace {
               $this->_defineName,
               $this->_defineName,
               $this->_defineName,
-              $cdata
+              addslashes($cdata)
             );
         }
 
