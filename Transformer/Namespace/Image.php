@@ -66,72 +66,72 @@ class XML_Transformer_Namespace_Image extends XML_Transformer_Namespace {
     * @var    boolean
     * @access public
     */
-    var $defaultNamespacePrefix = 'img';
+    public $defaultNamespacePrefix = 'img';
 
     /**
     * @var    array
     * @access private
     */
-    var $_imgAttributes          = array();
+    private $imgAttributes = array();
 
     /**
     * @var    array
     * @access private
     */
-    var $_gtextAttributes        = array();
+    private $gtextAttributes = array();
 
     /**
     * @var    array
     * @access private
     */
-    var $_gtextDefaultAttributes = array();
+    private $gtextDefaultAttributes = array();
 
     // }}}
-    // {{{ function start_img($attributes)
+    // {{{ public function start_img($attributes)
 
     /**
     * @param  array
     * @return string
     * @access public
     */
-    function start_img($attributes) {
-        $this->_imgAttributes = $attributes;
+    public function start_img($attributes) {
+        $this->imgAttributes = $attributes;
 
         return '';
     }
 
     // }}}
-    // {{{ function end_img($cdata)
+    // {{{ public function end_img($cdata)
 
     /**
     * @param  string
     * @return string
     * @access public
     */
-    function end_img($cdata) {
-        $src = $this->_truePath($this->_imgAttributes['src']);
+    public function end_img($cdata) {
+        $src = $this->truePath($this->imgAttributes['src']);
 
         list($w, $h, $t, $whs) = getimagesize($src);
 
-        $this->_imgAttributes['height'] = $h;
-        $this->_imgAttributes['width']  = $w;
+        $this->imgAttributes['height'] = $h;
+        $this->imgAttributes['width']  = $w;
 
         return sprintf(
           '<img %s />',
-          XML_Util::attributesToString($this->_imgAttributes)
+          XML_Util::attributesToString($this->imgAttributes)
         );
     }
 
     // }}}
-    // {{{ start_gtext($attributes)
+    // {{{ public function start_gtext($attributes)
 
     /**
     * @param  array
     * @return string
     * @access public
     */
-    function start_gtext($attributes) {
-        foreach ($this->_gtextDefaultAttributes as $k => $v) {
+    public function start_gtext($attributes) {
+        foreach ($this->gtextDefaultAttributes as $k => $v) {
             if (! isset($attributes[$k])) {
                 $attributes[$k] = $v;
             }
@@ -141,26 +141,25 @@ class XML_Transformer_Namespace_Image extends XML_Transformer_Namespace {
             $attributes['font'] = PEAR_XML_TRANSFORMER_IMAGE_FONTPATH . '/' . $attributes['font'];
         }
   
-        $this->_gtextAttributes = $attributes;
+        $this->gtextAttributes = $attributes;
   
         return '';
     }
 
     // }}}
-    // {{{ function end_gtext($cdata)
+    // {{{ public function end_gtext($cdata)
 
     /**
     * @param  string
     * @return string
     * @access public
     */
-    function end_gtext($cdata) {
-	if(!is_file($this->_gtextAttributes['font']))
-          return '<span>font \"' .
-            $this->_gtextAttributes['font'] .
-            '" not found</span>';
+    public function end_gtext($cdata) {
+        if(!is_file($this->gtextAttributes['font'])) {
+            return '<span>font \"' . $this->gtextAttributes['font'] . '" not found</span>';
+        }
 
-        switch ($this->_gtextAttributes['split']) {
+        switch ($this->gtextAttributes['split']) {
             case 'word': {
                 $text = preg_split('/\s+/', $cdata);
 
@@ -191,17 +190,17 @@ class XML_Transformer_Namespace_Image extends XML_Transformer_Namespace {
         $r = '';
 
         foreach ($text as $index => $word) {
-            $baseline = $this->_baseline(
-              $this->_gtextAttributes['font'],
-              $this->_gtextAttributes['fontsize']
+            $baseline = $this->baseline(
+              $this->gtextAttributes['font'],
+              $this->gtextAttributes['fontsize']
             );
 
-            $src = $this->_createImage($word,$baseline);
-            $alt = $this->_createAlt($word);
+            $src = $this->createImage($word,$baseline);
+            $alt = $this->createAlt($word);
 
             $r .= sprintf(
               '<%simg src="%s" alt="%s" />',
-              ($this->_prefix[0] != '&MAIN') ? $this->_prefix[0] . ':' : '',
+              ($this->prefix[0] != '&MAIN') ? $this->prefix[0] . ':' : '',
               $src,
               addslashes($alt)
             );
@@ -211,33 +210,33 @@ class XML_Transformer_Namespace_Image extends XML_Transformer_Namespace {
     }
 
     // }}}
-    // {{{ function start_gtextdefault($attributes)
+    // {{{ public function start_gtextdefault($attributes)
 
     /**
     * @param  array
     * @return string
     * @access public
     */
-    function start_gtextdefault($attributes) {
-        $this->_gtextDefaultAttributes = $attributes;
+    public function start_gtextdefault($attributes) {
+        $this->gtextDefaultAttributes = $attributes;
 
         return '';
     }
 
     // }}}
-    // {{{ function end_gtextdefault()
+    // {{{ public function end_gtextdefault()
 
     /**
     * @param  string
     * @return string
     * @access public
     */
-    function end_gtextdefault() {
+    public function end_gtextdefault() {
         return '';
     }
 
     // }}}
-    // {{{ function _baseline($font, $size)
+    // {{{ private functionbaseline($font, $size)
 
     /**
     * @param  string
@@ -245,7 +244,7 @@ class XML_Transformer_Namespace_Image extends XML_Transformer_Namespace {
     * @return ImageTTFBBox
     * @access private
     */
-    function _baseline($font, $size) {
+    private functionbaseline($font, $size) {
         $r = ImageTTFBBox(
           $size,
           0,
@@ -257,14 +256,14 @@ class XML_Transformer_Namespace_Image extends XML_Transformer_Namespace {
     }
 
     // }}}
-    // {{{ function _colorString($color)
+    // {{{ private functioncolorString($color)
 
     /**
     * @param  integer
     * @return array
     * @access private
     */
-    function _colorString($color) {
+    private functioncolorString($color) {
         if (substr($color, 0, 1) == '#') {
             $color = substr($color, 1);
         }
@@ -277,23 +276,23 @@ class XML_Transformer_Namespace_Image extends XML_Transformer_Namespace {
     }
 
     // }}}
-    // {{{ function _createAlt($word)
+    // {{{ private functioncreateAlt($word)
 
     /**
     * @param  string
     * @return string
     * @access private
     */
-    function _createAlt($word) {
-        if (isset($this->_gtextAttributes['alt'])) {
-            return $this->_gtextAttributes['alt'];
+    private functioncreateAlt($word) {
+        if (isset($this->gtextAttributes['alt'])) {
+            return $this->gtextAttributes['alt'];
         }
 
         return strip_tags($word);
     }
 
     // }}}
-    // {{{ function _createImage($word, $baseline)
+    // {{{ private functioncreateImage($word, $baseline)
 
     /**
     * @param  string
@@ -301,25 +300,25 @@ class XML_Transformer_Namespace_Image extends XML_Transformer_Namespace {
     * @return string
     * @access private
     */
-    function _createImage($word, $baseline) {
-        $font         = isset($this->_gtextAttributes['font'])         ? $this->_gtextAttributes['font']         : 'arial.ttf';
-        $fh           = isset($this->_gtextAttributes['fontsize'])     ? $this->_gtextAttributes['fontsize']     : 12;
-        $bgcolor      = isset($this->_gtextAttributes['bgcolor'])      ? $this->_gtextAttributes['bgcolor']      : '#ffffff';
-        $fgcolor      = isset($this->_gtextAttributes['fgcolor'])      ? $this->_gtextAttributes['fgcolor']      : '#ffffff';
+    private functioncreateImage($word, $baseline) {
+        $font         = isset($this->gtextAttributes['font'])         ? $this->gtextAttributes['font']         : 'arial.ttf';
+        $fh           = isset($this->gtextAttributes['fontsize'])     ? $this->gtextAttributes['fontsize']     : 12;
+        $bgcolor      = isset($this->gtextAttributes['bgcolor'])      ? $this->gtextAttributes['bgcolor']      : '#ffffff';
+        $fgcolor      = isset($this->gtextAttributes['fgcolor'])      ? $this->gtextAttributes['fgcolor']      : '#ffffff';
 
-        $antialias    = isset($this->_gtextAttributes['antialias'])    ? $this->_gtextAttributes['antialias']    : 'yes';
-        $transparency = isset($this->_gtextAttributes['transparency']) ? $this->_gtextAttributes['transparency'] : 'yes';
-        $cacheable    = isset($this->_gtextAttributes['cacheable'])    ? $this->_gtextAttributes['cacheable']    : 'yes';
+        $antialias    = isset($this->gtextAttributes['antialias'])    ? $this->gtextAttributes['antialias']    : 'yes';
+        $transparency = isset($this->gtextAttributes['transparency']) ? $this->gtextAttributes['transparency'] : 'yes';
+        $cacheable    = isset($this->gtextAttributes['cacheable'])    ? $this->gtextAttributes['cacheable']    : 'yes';
 
-        $spacing      = isset($this->_gtextAttributes['spacing'])      ? $this->_gtextAttributes['spacing']      : 2;
-        $border       = isset($this->_gtextAttributes['border'])       ? $this->_gtextAttributes['border']       : 0;
-        $bordercolor  = isset($this->_gtextAttributes['bordercolor'])  ? $this->_gtextAttributes['bordercolor']  : '#ff0000';
+        $spacing      = isset($this->gtextAttributes['spacing'])      ? $this->gtextAttributes['spacing']      : 2;
+        $border       = isset($this->gtextAttributes['border'])       ? $this->gtextAttributes['border']       : 0;
+        $bordercolor  = isset($this->gtextAttributes['bordercolor'])  ? $this->gtextAttributes['bordercolor']  : '#ff0000';
 
         /* The cache name is derived from all attributes and cdata.
          * This is very conserative and may create to many cachefiles,
          * but better to err on the safe side.
          */
-        $cachefile = md5(XML_Util::attributesToString($this->_gtextAttributes) . ':' . $word) . '.png';
+        $cachefile = md5(XML_Util::attributesToString($this->gtextAttributes) . ':' . $word) . '.png';
         $cacheDir  = $_SERVER['DOCUMENT_ROOT']
                    . PEAR_XML_TRANSFORMER_IMAGE_cacheDir;
         $cacheName = "$cacheDir/$cachefile";
@@ -351,21 +350,21 @@ class XML_Transformer_Namespace_Image extends XML_Transformer_Namespace {
 
         $im = ImageCreate($www, $hhh);
 
-        list($r, $g, $b) = $this->_colorString($bgcolor);
+        list($r, $g, $b) = $this->colorString($bgcolor);
         $bg = ImageColorAllocate($im, $r, $g, $b);
 
         if ($transparency != 'no') {
             ImageColorTransparent($im, $bg);
         }
 
-        list($r, $g, $b) = $this->_colorString($fgcolor);
+        list($r, $g, $b) = $this->colorString($fgcolor);
         $fg = ImageColorAllocate($im, $r, $g, $b);
 
         if ($antialias == 'no') {
             $fg = -$fg;
         }
 
-        list($r, $g, $b) = $this->_colorString($bordercolor);
+        list($r, $g, $b) = $this->colorString($bordercolor);
         $bo = ImageColorAllocate($im, $r, $g, $b);
 
         ImageFilledRectangle($im, 0, 0, $www, $hhh, $bg);
@@ -398,14 +397,14 @@ class XML_Transformer_Namespace_Image extends XML_Transformer_Namespace {
     }
 
     // }}}
-    // {{{ function _truePath($path)
+    // {{{ private functiontruePath($path)
 
     /**
     * @param  string
     * @return string
     * @access private
     */
-    function _truePath($path) {
+    private functiontruePath($path) {
         if (php_sapi_name() == 'apache') {
             $uri = apache_lookup_uri($path);
 

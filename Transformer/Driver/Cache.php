@@ -34,10 +34,10 @@ class XML_Transformer_Driver_Cache extends XML_Transformer {
     * @var    object
     * @access private
     */
-    var $_cache = false;
+    private $cache = false;
 
     // }}}
-    // {{{ function XML_Transformer_Driver_Cache($parameters = array())
+    // {{{ public function __construct($parameters = array())
 
     /**
     * Constructor.
@@ -45,13 +45,13 @@ class XML_Transformer_Driver_Cache extends XML_Transformer {
     * @param  array
     * @access public
     */
-    function XML_Transformer_Driver_Cache($parameters = array()) {
-        $this->XML_Transformer($parameters);
-        $this->_cache = new Cache_Lite($parameters);
+    public function __construct($parameters = array()) {
+        parent::__construct($parameters);
+        $this->cache = new Cache_Lite($parameters);
     }
 
     // }}}
-    // {{{ function transform($xml, $cacheID = '')
+    // {{{ public function transform($xml, $cacheID = '')
 
     /**
     * Cached transformation a given XML string using
@@ -62,17 +62,17 @@ class XML_Transformer_Driver_Cache extends XML_Transformer {
     * @return string
     * @access public
     */
-    function transform($xml, $cacheID = '') {
+    public function transform($xml, $cacheID = '') {
         $cacheID = ($cacheID != '') ? $cacheID : md5($xml);
 
-        $cachedResult = $this->_cache->get($cacheID, 'XML_Transformer');
+        $cachedResult = $this->cache->get($cacheID, 'XML_Transformer');
 
         if ($cachedResult !== false) {
             return $cachedResult;
         }
 
         $result = parent::transform($xml);
-        $this->_cache->save($result, $cacheID, 'XML_Transformer');
+        $this->cache->save($result, $cacheID, 'XML_Transformer');
 
         return $result;
     }

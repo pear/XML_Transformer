@@ -65,10 +65,10 @@ class XML_Transformer_Driver_OutputBuffer extends XML_Transformer {
     * @var    boolean
     * @access private
     */
-    var $_started = false;
+    private $started = false;
 
     // }}}
-    // {{{ function XML_Transformer_Driver_OutputBuffer($parameters = array())
+    // {{{ public function __construct($parameters = array())
 
     /**
     * Constructor.
@@ -76,10 +76,10 @@ class XML_Transformer_Driver_OutputBuffer extends XML_Transformer {
     * @param  array
     * @access public
     */
-    function XML_Transformer_Driver_OutputBuffer($parameters = array()) {
-        $this->XML_Transformer($parameters);
+    public function __construct($parameters = array()) {
+        parent::__construct($parameters);
 
-        if (!empty($this->_callbackRegistry->overloadedNamespaces)) {
+        if (!empty($this->callbackRegistry->overloadedNamespaces)) {
             $this->start();
         }
     }
@@ -94,16 +94,16 @@ class XML_Transformer_Driver_OutputBuffer extends XML_Transformer {
     * @access public
     */
     function start() {
-        if (!$this->_started) {
+        if (!$this->started) {
             ob_start(
               array(
                 $this, 'transform'
               )
             );
 
-            $this->_started = true;
+            $this->started = true;
 
-            if ($this->_checkDebug()) {
+            if ($this->checkDebug()) {
                 $this->sendMessage(
                   'start: ' . serialize($this)
                 );

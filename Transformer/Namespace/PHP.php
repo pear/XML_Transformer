@@ -66,49 +66,49 @@ class XML_Transformer_Namespace_PHP extends XML_Transformer_Namespace {
     * @var    boolean
     * @access public
     */
-    var $defaultNamespacePrefix = 'php';
+    public $defaultNamespacePrefix = 'php';
 
     /**
     * @var    string
     * @access private
     */
-    var $_defineName;
+    private $defineName;
 
     /**
     * @var    string
     * @access private
     */
-    var $_namespace = 'define';
+    private $namespace = 'define';
 
     /**
     * @var    string
     * @access private
     */
-    var $_inNamespace = false;
+    private $inNamespace = false;
 
     /**
     * @var    string
     * @access private
     */
-    var $_namespaceClassDefinition = '';
+    private $namespaceClassDefinition = '';
 
     /**
     * @var    string
     * @access private
     */
-    var $_variable = '';
+    private $variable = '';
 
     // }}}
-    // {{{ function start_define($attributes)
+    // {{{ public function start_define($attributes)
 
     /**
     * @param  array
     * @return string
     * @access public
     */
-    function start_define($attributes) {
-        if ($this->_inNamespace) {
-            $this->_defineName = $attributes['name'];
+    public function start_define($attributes) {
+        if ($this->inNamespace) {
+            $this->defineName = $attributes['name'];
         }
         
         $this->getLock();
@@ -116,20 +116,20 @@ class XML_Transformer_Namespace_PHP extends XML_Transformer_Namespace {
     }
 
     // }}}
-    // {{{ function end_define($cdata)
+    // {{{ public function end_define($cdata)
 
     /**
     * @param  string
     * @return string
     * @access public
     */
-    function end_define($cdata) {
-        if (!$this->_inNamespace)
+    public function end_define($cdata) {
+        if (!$this->inNamespace)
             return '';
 
         $this->releaseLock();
 
-        $this->_namespaceClassDefinition .= sprintf('
+        $this->namespaceClassDefinition .= sprintf('
           var $%s_attributes = array();
 
           function start_%s($att) {
@@ -147,11 +147,11 @@ class XML_Transformer_Namespace_PHP extends XML_Transformer_Namespace {
               return $str;
           }',
 
-          $this->_defineName,
-          $this->_defineName,
-          $this->_defineName,
-          $this->_defineName,
-          $this->_defineName,
+          $this->defineName,
+          $this->defineName,
+          $this->defineName,
+          $this->defineName,
+          $this->defineName,
           addslashes($cdata)
         );
 
@@ -159,20 +159,20 @@ class XML_Transformer_Namespace_PHP extends XML_Transformer_Namespace {
     }
 
     // }}}
-    // {{{ function start_namespace($attributes)
+    // {{{ public function start_namespace($attributes)
 
     /**
     * @param  array
     * @return string
     * @access public
     */
-    function start_namespace($attributes) {
-        $this->_inNamespace = true;
-        $this->_namespace   = $attributes['name'];
+    public function start_namespace($attributes) {
+        $this->inNamespace = true;
+        $this->namespace   = $attributes['name'];
 
-        $classname = 'PEAR_XML_TRANSFORMER_NAMESPACE_PHP_' . $this->_namespace;
+        $classname = 'PEAR_XML_TRANSFORMER_NAMESPACE_PHP_' . $this->namespace;
 
-        $this->_namespaceClassDefinition = sprintf(
+        $this->namespaceClassDefinition = sprintf(
           'class %s extends XML_Transformer_Namespace {',
           $classname
         );
@@ -181,72 +181,72 @@ class XML_Transformer_Namespace_PHP extends XML_Transformer_Namespace {
     }
 
     // }}}
-    // {{{ function end_namespace($cdata)
+    // {{{ public function end_namespace($cdata)
 
     /**
     * @param  string
     * @return string
     * @access public
     */
-    function end_namespace($cdata) {
-        $classname = 'PEAR_XML_TRANSFORMER_NAMESPACE_PHP_' . $this->_namespace;
+    public function end_namespace($cdata) {
+        $classname = 'PEAR_XML_TRANSFORMER_NAMESPACE_PHP_' . $this->namespace;
 
-        eval($this->_namespaceClassDefinition . ' };');
-        $this->_namespaceClassDefinition = '';
+        eval($this->namespaceClassDefinition . ' };');
+        $this->namespaceClassDefinition = '';
 
-        $this->_transformer->overloadNamespace(
-          $this->_namespace,
+        $this->transformer->overloadNamespace(
+          $this->namespace,
           new $classname,
           true
         );
 
-        $this->_namespace   = '';
-        $this->_inNamespace = false;
+        $this->namespace   = '';
+        $this->inNamespace = false;
 
         return '';
     }
 
     // }}}
-    // {{{ function start_expr($attributes)
+    // {{{ public function start_expr($attributes)
 
     /**
     * @param  array
     * @return string
     * @access public
     */
-    function start_expr($attributes) {}
+    public function start_expr($attributes) {}
 
     // }}}
-    // {{{ function end_expr($cdata)
+    // {{{ public function end_expr($cdata)
 
     /**
     * @param  string
     * @return string
     * @access public
     */
-    function end_expr($cdata) {
+    public function end_expr($cdata) {
         return eval('return ' . $cdata . ';');
     }
 
     // }}}
-    // {{{ function start_logic($attributes)
+    // {{{ public function start_logic($attributes)
 
     /**
     * @param  array
     * @return string
     * @access public
     */
-    function start_logic($attributes) {}
+    public function start_logic($attributes) {}
 
     // }}}
-    // {{{ function end_logic($cdata)
+    // {{{ public function end_logic($cdata)
 
     /**
     * @param  string
     * @return string
     * @access public
     */
-    function end_logic($cdata) {
+    public function end_logic($cdata) {
         // This does not actually work in PHP 4.2.3, 
         // when using XML_Transformer_OutputBuffer.
         // It should, though.
@@ -258,197 +258,197 @@ class XML_Transformer_Namespace_PHP extends XML_Transformer_Namespace {
     }
 
     // }}}
-    // {{{ function start_get($attributes)
+    // {{{ public function start_get($attributes)
 
     /**
     * @param  array
     * @return string
     * @access public
     */
-    function start_get($attributes) {
+    public function start_get($attributes) {
         return isset($_GET[$attributes['name']]) ? $_GET[$attributes['name']] : '';
     }
 
     // }}}
-    // {{{ function end_get($cdata)
+    // {{{ public function end_get($cdata)
 
     /**
     * @param  string
     * @return string
     * @access public
     */
-    function end_get($cdata) {
+    public function end_get($cdata) {
         return $cdata;
     }
 
     // }}}
-    // {{{ function start_post($attributes)
+    // {{{ public function start_post($attributes)
 
     /**
     * @param  array
     * @return string
     * @access public
     */
-    function start_post($attributes) {
+    public function start_post($attributes) {
         return isset($_POST[$attributes['name']]) ? $_POST[$attributes['name']] : '';
     }
 
     // }}}
-    // {{{ function end_post($cdata)
+    // {{{ public function end_post($cdata)
 
     /**
     * @param  string
     * @return string
     * @access public
     */
-    function end_post($cdata) {
+    public function end_post($cdata) {
         return $cdata;
     }
 
     // }}}
-    // {{{ function start_cookie($attributes)
+    // {{{ public function start_cookie($attributes)
 
     /**
     * @param  array
     * @return string
     * @access public
     */
-    function start_cookie($attributes) {
+    public function start_cookie($attributes) {
         return isset($_COOKIE[$attributes['name']]) ? $_COOKIE[$attributes['name']] : '';
     }
 
     // }}}
-    // {{{ function end_cookie($cdata)
+    // {{{ public function end_cookie($cdata)
 
     /**
     * @param  string
     * @return string
     * @access public
     */
-    function end_cookie($cdata) {
+    public function end_cookie($cdata) {
         return $cdata;
     }
 
     // }}}
-    // {{{ function start_request($attributes)
+    // {{{ public function start_request($attributes)
 
     /**
     * @param  array
     * @return string
     * @access public
     */
-    function start_request($attributes) {
+    public function start_request($attributes) {
         return isset($_REQUEST[$attributes['name']]) ? $_REQUEST[$attributes['name']] : '';
     }
 
     // }}}
-    // {{{ function end_request($cdata)
+    // {{{ public function end_request($cdata)
 
     /**
     * @param  string
     * @return string
     * @access public
     */
-    function end_request($cdata) {
+    public function end_request($cdata) {
         return $cdata;
     }
-    // {{{ function start_server($attributes)
+    // {{{ public function start_server($attributes)
 
     /**
     * @param  array
     * @return string
     * @access public
     */
-    function start_server($attributes) {
+    public function start_server($attributes) {
         return isset($_SERVER[$attributes['name']]) ? $_SERVER[$attributes['name']] : '';
     }
 
     // }}}
-    // {{{ function end_server($cdata)
+    // {{{ public function end_server($cdata)
 
     /**
     * @param  string
     * @return string
     * @access public
     */
-    function end_server($cdata) {
+    public function end_server($cdata) {
         return $cdata;
     }
 
     // }}}
-    // {{{ function start_session($attributes)
+    // {{{ public function start_session($attributes)
 
     /**
     * @param  array
     * @return string
     * @access public
     */
-    function start_session($attributes) {
+    public function start_session($attributes) {
         return isset($_SESSION[$attributes['name']]) ? $_SESSION[$attributes['name']] : '';
     }
 
     // }}}
-    // {{{ function end_session($cdata)
+    // {{{ public function end_session($cdata)
 
     /**
     * @param  string
     * @return string
     * @access public
     */
-    function end_session($cdata) {
+    public function end_session($cdata) {
         return $cdata;
     }
 
     // }}}
-    // {{{ function start_variable($attributes)
+    // {{{ public function start_variable($attributes)
 
     /**
     * @param  array
     * @return string
     * @access public
     */
-    function start_variable($attributes) {
+    public function start_variable($attributes) {
         return isset($GLOBALS[$attributes['name']]) ? $GLOBALS[$attributes['name']] : '';
     }
 
     // }}}
-    // {{{ function end_variable($cdata)
+    // {{{ public function end_variable($cdata)
 
     /**
     * @param  string
     * @return string
     * @access public
     */
-    function end_variable($cdata) {
+    public function end_variable($cdata) {
         return $cdata;
     }
 
     // }}}
-    // {{{ function start_setvariable($attributes)
+    // {{{ public function start_setvariable($attributes)
 
     /**
     * @param  array
     * @return string
     * @access public
     */
-    function start_setvariable($attributes) {
-        $this->_variable = isset($attributes['name']) ? $attributes['name'] : '';
+    public function start_setvariable($attributes) {
+        $this->variable = isset($attributes['name']) ? $attributes['name'] : '';
 
         return '';
     }
 
     // }}}
-    // {{{ function end_setvariable($cdata)
+    // {{{ public function end_setvariable($cdata)
 
     /**
     * @param  string
     * @return string
     * @access public
     */
-    function end_setvariable($cdata) {
-        if ($this->_variable != '') {
-            $GLOBALS[$this->_variable] = $cdata;
-            $this->_variable = '';
+    public function end_setvariable($cdata) {
+        if ($this->variable != '') {
+            $GLOBALS[$this->variable] = $cdata;
+            $this->variable = '';
         }
 
         return '';

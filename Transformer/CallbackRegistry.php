@@ -31,13 +31,13 @@ class XML_Transformer_CallbackRegistry {
     * @var    array
     * @access public
     */
-    var $overloadedNamespaces = array();
+    public $overloadedNamespaces = array();
 
     /**
     * @var    boolean
     * @access private
     */
-    var $_locked = false;
+    private $locked = false;
 
     /**
     * If true, the transformation will continue recursively
@@ -47,10 +47,17 @@ class XML_Transformer_CallbackRegistry {
     * @var    boolean
     * @access private
     */
-    var $_recursiveOperation = true;
+    private $recursiveOperation = true;
+
+    /**
+    * @var    boolean
+    * @access private
+    * @static
+    */
+    private static $instance = null;
 
     // }}}
-    // {{{ function XML_Transformer_CallbackRegistry($recursiveOperation)
+    // {{{ public function __construct($recursiveOperation)
 
     /**
     * Constructor.
@@ -58,12 +65,12 @@ class XML_Transformer_CallbackRegistry {
     * @param  boolean
     * @access public
     */
-    function XML_Transformer_CallbackRegistry($recursiveOperation) {
-        $this->_recursiveOperation = $recursiveOperation;
+    public function __construct($recursiveOperation) {
+        $this->recursiveOperation = $recursiveOperation;
     }
 
     // }}}
-    // {{{ function &getInstance($recursiveOperation)
+    // {{{ public function getInstance($recursiveOperation)
 
     /**
     * Returns an instance of XML_Transformer_CallbackRegistry.
@@ -72,18 +79,16 @@ class XML_Transformer_CallbackRegistry {
     * @return XML_Transformer_CallbackRegistry
     * @access public
     */
-    function &getInstance($recursiveOperation) {
-        static $instance;
-
-        if (!isset($instance)) {
-            $instance = new XML_Transformer_CallbackRegistry($recursiveOperation);
+    public function getInstance($recursiveOperation) {
+        if (self::$instance == null) {
+            self::$instance = new XML_Transformer_CallbackRegistry($recursiveOperation);
         }
 
-        return $instance;
+        return self::$instance;
     }
 
     // }}}
-    // {{{ function overloadNamespace($namespacePrefix, &$object, $recursiveOperation = '')
+    // {{{ public function overloadNamespace($namespacePrefix, $object, $recursiveOperation = '')
 
     /**
     * Overloads an XML Namespace.
@@ -94,7 +99,7 @@ class XML_Transformer_CallbackRegistry {
     * @return mixed
     * @access public
     */
-    function overloadNamespace($namespacePrefix, &$object, $recursiveOperation = '') {
+    public function overloadNamespace($namespacePrefix, $object, $recursiveOperation = '') {
         if (!is_object($object)) {
             return sprintf(
               'Cannot overload namespace "%s", ' .
@@ -126,14 +131,14 @@ class XML_Transformer_CallbackRegistry {
         }
 
         $this->overloadedNamespaces[$namespacePrefix]['active']             = true;
-        $this->overloadedNamespaces[$namespacePrefix]['object']             = &$object;
-        $this->overloadedNamespaces[$namespacePrefix]['recursiveOperation'] = is_bool($recursiveOperation) ? $recursiveOperation : $this->_recursiveOperation;
+        $this->overloadedNamespaces[$namespacePrefix]['object']             = $object;
+        $this->overloadedNamespaces[$namespacePrefix]['recursiveOperation'] = is_bool($recursiveOperation) ? $recursiveOperation : $this->recursiveOperation;
 
         return true;
     }
 
     // }}}
-    // {{{ function unOverloadNamespace($namespacePrefix)
+    // {{{ public function unOverloadNamespace($namespacePrefix)
 
     /**
     * Reverts overloading of a given XML Namespace.
@@ -141,14 +146,14 @@ class XML_Transformer_CallbackRegistry {
     * @param  string
     * @access public
     */
-    function unOverloadNamespace($namespacePrefix) {
+    public function unOverloadNamespace($namespacePrefix) {
         if (isset($this->overloadedNamespaces[$namespacePrefix])) {
             unset($this->overloadedNamespaces[$namespacePrefix]);
         }
     }
 
     // }}}
-    // {{{ function isOverloadedNamespace($namespacePrefix)
+    // {{{ public function isOverloadedNamespace($namespacePrefix)
 
     /**
     * Returns true if a given namespace is overloaded,
@@ -158,14 +163,14 @@ class XML_Transformer_CallbackRegistry {
     * @return boolean
     * @access public
     */
-    function isOverloadedNamespace($namespacePrefix) {
+    public function isOverloadedNamespace($namespacePrefix) {
         return isset(
           $this->overloadedNamespaces[$namespacePrefix]
         );
     }
 
     // }}}
-    // {{{ function setRecursiveOperation($recursiveOperation)
+    // {{{ public function setRecursiveOperation($recursiveOperation)
 
     /**
     * Enables or disables the recursive operation.
@@ -173,14 +178,14 @@ class XML_Transformer_CallbackRegistry {
     * @param  boolean
     * @access public
     */
-    function setRecursiveOperation($recursiveOperation) {
+    public function setRecursiveOperation($recursiveOperation) {
         if (is_bool($recursiveOperation)) {
-            $this->_recursiveOperation = $recursiveOperation;
+            $this->recursiveOperation = $recursiveOperation;
         }
     }
 
     // }}}
-    // {{{ function function getLock($namespace)
+    // {{{ public function public function getLock($namespace)
 
     /**
     * Lock all namespace handlers except a given one.
@@ -190,8 +195,8 @@ class XML_Transformer_CallbackRegistry {
     * @access public
     * @see    releaseLock()
     */
-    function getLock($namespace) {
-        if (!$this->_locked) {
+    public function getLock($namespace) {
+        if (!$this->locked) {
             $namespacePrefixes = array_keys($this->overloadedNamespaces);
 
             foreach ($namespacePrefixes as $namespacePrefix) {
@@ -200,7 +205,7 @@ class XML_Transformer_CallbackRegistry {
                 }
             }
 
-            $this->_locked = true;
+            $this->locked = true;
 
             return true;
         }
@@ -209,7 +214,7 @@ class XML_Transformer_CallbackRegistry {
     }
 
     // }}}
-    // {{{ function releaseLock()
+    // {{{ public function releaseLock()
 
     /**
     * Releases a lock.
@@ -217,14 +222,14 @@ class XML_Transformer_CallbackRegistry {
     * @access public
     * @see    getLock()
     */
-    function releaseLock() {
+    public function releaseLock() {
         $namespacePrefixes = array_keys($this->overloadedNamespaces);
 
         foreach ($namespacePrefixes as $namespacePrefix) {
             $this->overloadedNamespaces[$namespacePrefix]['active'] = true;
         }
 
-        $this->_locked = false;
+        $this->locked = false;
     }
 
     // }}}

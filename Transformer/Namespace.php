@@ -30,7 +30,7 @@ require_once 'XML/Util.php';
 *   class Image extends XML_Transformer_Namespace {
 *       var $imageAttributes = array();
 *
-*       function truePath($path) {
+*       public function truePath($path) {
 *           if (php_sapi_name() == 'apache') {
 *               $r    = apache_lookup_uri($path);
 *               $path = $r->filename;
@@ -41,12 +41,12 @@ require_once 'XML/Util.php';
 *           return $path;
 *       }
 *
-*       function start_img($attributes) {
+*       public function start_img($attributes) {
 *           $this->imageAttributes = $attributes;
 *           return '';
 *       }
 *
-*       function end_img($cdata) {
+*       public function end_img($cdata) {
 *           $src = $this->truePath($this->imageAttributes['src']);
 *           list($w, $h, $t, $whs) = getimagesize($src);
 *
@@ -66,35 +66,35 @@ require_once 'XML/Util.php';
 * @version $Revision$
 * @access  public
 */
-class XML_Transformer_Namespace {
+abstract class XML_Transformer_Namespace {
     // {{{ Members
 
     /**
     * @var    string
     * @access public
     */
-    var $defaultNamespacePrefix = '';
+    public $defaultNamespacePrefix = '';
 
     /**
     * @var    boolean
     * @access public
     */
-    var $secondPassRequired = false;
+    public $secondPassRequired = false;
 
     /**
     * @var    array
     * @access private
     */
-    var $_prefix = array();
+    private $prefix = array();
 
     /**
     * @var    string
     * @access private
     */
-    var $_transformer = '';
+    private $transformer = '';
 
     // }}}
-    // {{{ function initObserver($prefix, &$object)
+    // {{{ public function initObserver($prefix, $object)
 
     /**
     * Called by XML_Transformer at initialization time.
@@ -106,13 +106,13 @@ class XML_Transformer_Namespace {
     * @param  object
     * @access public
     */
-    function initObserver($prefix, &$object) {
-      $this->_prefix[]    = $prefix;
-      $this->_transformer = $object;
+    public function initObserver($prefix, $object) {
+        $this->prefix[]    = $prefix;
+        $this->transformer = $object;
     }
 
     // }}}
-    // {{{ function startElement($element, $attributes)
+    // {{{ public function startElement($element, $attributes)
 
     /**
     * Wrapper for startElement handler.
@@ -122,7 +122,7 @@ class XML_Transformer_Namespace {
     * @return string
     * @access public
     */
-    function startElement($element, $attributes) {
+    public function startElement($element, $attributes) {
         $do = 'start_' . $element;
 
         if (method_exists($this, $do)) {
@@ -138,7 +138,7 @@ class XML_Transformer_Namespace {
     }
 
     // }}}
-    // {{{ function endElement($element, $cdata)
+    // {{{ public function endElement($element, $cdata)
 
     /**
     * Wrapper for endElement handler.
@@ -148,7 +148,7 @@ class XML_Transformer_Namespace {
     * @return array
     * @access public
     */
-    function endElement($element, $cdata) {
+    public function endElement($element, $cdata) {
         $do = 'end_' . $element;
 
         if (method_exists($this, $do)) {
@@ -167,7 +167,7 @@ class XML_Transformer_Namespace {
     }
 
     // }}}
-    // {{{ function function getLock()
+    // {{{ public function public function getLock()
 
     /**
     * Lock all other namespace handlers.
@@ -176,12 +176,12 @@ class XML_Transformer_Namespace {
     * @access public
     * @see    releaseLock()
     */
-    function getLock() {
-        return $this->_transformer->_callbackRegistry->getLock($this->_prefix[0]);
+    public function getLock() {
+        return $this->transformer->callbackRegistry->getLock($this->prefix[0]);
     }
 
     // }}}
-    // {{{ function releaseLock()
+    // {{{ public function releaseLock()
 
     /**
     * Releases a lock.
@@ -189,8 +189,8 @@ class XML_Transformer_Namespace {
     * @access public
     * @see    getLock()
     */
-    function releaseLock() {
-        $this->_transformer->_callbackRegistry->releaseLock();
+    public function releaseLock() {
+        $this->transformer->callbackRegistry->releaseLock();
     }
 
     // }}}
