@@ -35,7 +35,7 @@ require_once 'XML/Util.php';
  * <code>
  * <?php
  * $n = XML_Transformer_Namespace_Anchor;
- * $t->overloadNamespace("a", $n);
+ * $t->overloadNamespace("anchor", $n);
  *
  * $n->setDatabase(
  *       array(
@@ -46,7 +46,7 @@ require_once 'XML/Util.php';
  *       )
  * );
  * ?>
- * <p>The <a:iref iref="pear">PEAR Homepage</a:iref> is now online.</p>
+ * <p xmlns:anchor="anchor">The <anchor:iref iref="pear">PEAR Homepage</anchor:iref> is now online.</p>
  * </code>
  *
  * Output:
@@ -70,7 +70,7 @@ class XML_Transformer_Namespace_Anchor extends XML_Transformer_Namespace {
     * @var    boolean
     * @access public
     */
-    var $defaultNamespacePrefix = 'a';
+    var $defaultNamespacePrefix = 'anchor';
 
     /**
     * @var    array

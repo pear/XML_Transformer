@@ -32,30 +32,38 @@ require_once 'XML/Transformer/Namespace.php';
  * $t->overloadNamespace('php', new XML_Transformer_Namespace_PHP);
  * $t->start();
  * ?>
- * <dl>
- *   <dd>Current time: <php:expr>time()</php:expr></dd>
- *   <php:setvariable name="foo">bar</php:setvariable>
- *   <dd>foo = <php:getvariable name="foo"/></dd>
- * </dl>
+ * <html>
+ *   <body xmlns:php="php">
+ *     <dl>
+ *       <dd>Current time: <php:expr>time()</php:expr></dd>
+ *       <php:setvariable name="foo">bar</php:setvariable>
+ *       <dd>foo = <php:getvariable name="foo"/></dd>
+ *     </dl>
  *
- * <php:namespace name="my">
- *  <php:define name="tag">
- *   <h1 align="$align">$content</h1>
- *  </php:define>
- * </php:namespace>
+ *     <php:namespace name="my">
+ *       <php:define name="tag">
+ *         <h1 align="$align">$content</h1>
+ *       </php:define>
+ *     </php:namespace>
  *
- * <my:tag align="center">Some Text</my:tag>
+ *     <my:tag align="center">Some Text</my:tag>
+ *   </body>
+ * </html>
  * </code>
  *
  * Output
  *
  * <code>
- * <dl>
- *   <dd>Current time: 1032158587</dd>
- *   <dd>foo = bar</dd>
- * </dl>
+ * <html>
+ *   <body>
+ *     <dl>
+ *       <dd>Current time: 1032158587</dd>
+ *       <dd>foo = bar</dd>
+ *     </dl>
  *
- * <h1 align="center">Some Text</h1>
+ *     <h1 align="center">Some Text</h1>
+ *   </body>
+ * </html>
  * </code>
  *
  * @author      Sebastian Bergmann <sb@sebastian-bergmann.de>
