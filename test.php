@@ -20,7 +20,7 @@ require_once 'PHPUnit.php';
 require_once 'XML/Transformer.php';
 require_once 'XML/Transformer/Namespace.php';
 
-class Main extends XML_Transformer_Namespace {
+class TestNamespace extends XML_Transformer_Namespace {
     function start_body($attributes) {
         return '<body>text';
     }
@@ -52,7 +52,7 @@ class XML_Transformer_Test extends PHPUnit_TestCase {
 
         $t->overloadNamespace(
           '&MAIN',
-          new Main
+          new TestNamespace
         );
 
         $this->assertEquals(
@@ -69,7 +69,7 @@ class XML_Transformer_Test extends PHPUnit_TestCase {
 
         $t->overloadNamespace(
           '&MAIN',
-          new Main
+          new TestNamespace
         );
 
         $this->assertEquals(
@@ -86,7 +86,7 @@ class XML_Transformer_Test extends PHPUnit_TestCase {
 
         $t->overloadNamespace(
           '&MAIN',
-          new Main
+          new TestNamespace
         );
 
         $this->assertEquals(
