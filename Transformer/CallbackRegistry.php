@@ -63,15 +63,16 @@ class XML_Transformer_CallbackRegistry {
     }
 
     // }}}
-    // {{{ function &singleton($recursiveOperation)
+    // {{{ function &getInstance($recursiveOperation)
 
     /**
-    * Singleton.
+    * Returns an instance of XML_Transformer_CallbackRegistry.
     *
     * @param  boolean
+    * @return XML_Transformer_CallbackRegistry
     * @access public
     */
-    function &singleton($recursiveOperation) {
+    function &getInstance($recursiveOperation) {
         static $instance;
 
         if (!isset($instance)) {

@@ -154,7 +154,7 @@ class XML_Transformer {
 
         // Initialize callback registry.
 
-        $this->_callbackRegistry = &XML_Transformer_CallbackRegistry::singleton(
+        $this->_callbackRegistry = &XML_Transformer_CallbackRegistry::getInstance(
           $recursiveOperation
         );
 
