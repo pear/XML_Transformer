@@ -43,7 +43,9 @@
         <file role="php" name="Transformer.php"/>
 
         <dir name="Transformer">
+          <file role="php" name="CallbackRegistry.php"/>
           <file role="php" name="Namespace.php"/>
+          <file role="php" name="OutputBuffer.php"/>
           <file role="php" name="PHP.php"/>
         </dir>
       </dir>
