@@ -540,7 +540,7 @@ class XML_Transformer {
             $cdata .= '</' . $element . '>';
         }
 
-        if ($resursion &&
+        if ($recursion &&
             $this->_overloadedElements[$element]['recursiveOperation']
            )
         {
