@@ -459,7 +459,7 @@ class XML_Transformer {
 
         // Create XML parser, set parser options.
 
-        $parser = xml_parser_create_ns();
+        $parser = xml_parser_create();
 
         xml_set_object($parser, $this);
         xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, $this->_caseFolding);

@@ -33,8 +33,6 @@
 
 + Added collapseEmptyTagsMode parameter that controls the collapsing of empty tags and allows for the correct transforming of XHTML documents.
 
-* XML_Transformer now uses a namespace-aware SAX parser. This partially addresses bug #2595.
-
 * XML entities are no longer replaced twice. (Patch by Thomas Duffey <tduffey@homeboyz.org>)
 
 ! XML_Transformer now requires XML_Util-1.1.0.

@@ -33,7 +33,7 @@ require_once 'XML/Transformer/Namespace.php';
  * $t->start();
  * ?>
  * <html>
- *   <body xmlns:php="php">
+ *   <body>
  *     <dl>
  *       <dd>Current time: <php:expr>time()</php:expr></dd>
  *       <php:setvariable name="foo">bar</php:setvariable>

@@ -46,7 +46,7 @@ require_once 'XML/Util.php';
  *       )
  * );
  * ?>
- * <p xmlns:anchor="anchor">The <anchor:iref iref="pear">PEAR Homepage</anchor:iref> is now online.</p>
+ * <p>The <anchor:iref iref="pear">PEAR Homepage</anchor:iref> is now online.</p>
  * </code>
  *
  * Output:
