@@ -284,7 +284,7 @@ class XML_Transformer {
     * @access public
     */
     function canonicalName($name) {
-        if ($this->caseFoldingTo == CASE_UPPER) {
+        if ($this->_caseFoldingTo == CASE_UPPER) {
             return $this->_caseFolding ? strtoupper($name) : $name;
         } else {
             return $this->_caseFolding ? strtolower($name) : $name;
