@@ -31,10 +31,15 @@
     <state>stable</state>
     <date>2002-XX-XX</date>
     <notes>
++ Added a base class for namespace-handling transformer classes.
     </notes>
     <filelist>
       <dir name="/" baseinstalldir="XML">
         <file role="php" name="Transformer.php"/>
+
+        <dir name="Transformer">
+          <file role="php" name="Namespace.php"/>
+        </dir>
       </dir>
     </filelist>
     <deps>
