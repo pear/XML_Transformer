@@ -30,25 +30,33 @@
     <notes>
 <![CDATA[
 + Added Anchor namespace handler.
-  The Anchor namespace implements a database of indirect links.
-  These links can be maintained centrally in a single location,
-  and can be used using <a:iref iref="name">...</a>. Also,
+
+  The Anchor namespace handler implements a database of
+  indirect links. These links can be maintained centrally
+  in a single location, and can be used using
+
+    <a:iref iref="name">...</a>
+
   <a:random/> selects a single random link from the database.
 
 + Added Image namespace handler.
-  The Image namespace implements three tags:
 
-  <img:img/> is a replacement for XHTML's <img/> and automatically 
-  determines the size of the image. For this, the image must be
-  in a format that is understood by getimagesize().
+    + <img:img/> is a replacement for XHTML's <img/> and
+      automatically determines the size of the image.
+
+      For this, the image must be in a format that is
+      understood by getimagesize().
   
-  <img:gtext /> is a container that renders its contents as a PNG
-  graphics using ImageTTFText(). For this to work, a cache directory
-  below DocumentRoot that is writeable by the Webserver owner is
-  necessary. Default is /cache/gtext.
+    + <img:gtext /> is a container that renders its contents
+      as a PNG graphics using ImageTTFText().
+
+      For this to work, a cache directory below DocumentRoot
+      that is writeable by the Webserver owner is necessary.
+      The default is /cache/gtext.
   
-  <img:gtextdefault /> understands the same attributes as <img:gtext />
-  and supplies these to all subsequent calls of <img:gtext />.
+    + <img:gtextdefault /> understands the same attributes as
+      <img:gtext /> and supplies these to all subsequent calls
+      of <img:gtext />.
 
 + Namespace handlers can now use getLock() to disable other
   namespace handlers for the time of their transformation.
