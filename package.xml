@@ -37,6 +37,9 @@
         <file role="php">Transformer.php</file>
       </dir>
     </filelist>
+    <deps>
+      <dep type="php" rel="ge" version="4.2.0">
+    </deps>
   </release>
   <changelog>
     <release>
