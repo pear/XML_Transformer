@@ -32,6 +32,8 @@ require_once 'XML/Transformer/Namespace.php';
 *
 *   * <author>
 *
+*   * <book>
+*
 *   * <chapter>
 *
 *   * <emphasis>
@@ -315,23 +317,7 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     * @access public
     */
     function start_article($attributes) {
-        if (!$this->_secondPass) {
-            $id = $this->_startSection(
-              'article',
-              isset($attributes['id']) ? $attributes['id'] : ''
-            );
-
-            return '<article>' . $id;
-        } else {
-            return sprintf(
-              '<html><head><title>%s: %s</title><body><h1 class="title">%s: %s</h1>',
-
-              $this->_author,
-              $this->_title,
-              $this->_author,
-              $this->_title
-            );
-        }
+        return $this->_startDocument('article', $attributes);
     }
 
     // }}}
@@ -343,20 +329,7 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     * @access public
     */
     function end_article($cdata) {
-        if (!$this->_secondPass) {
-            $this->_endSection('article');
-
-            $this->_secondPass = true;
-
-            $cdata = $cdata . '</article>';
-        } else {
-            $cdata = $cdata . '</body></html>';
-        }
-
-        return array(
-          $cdata,
-          false
-        );
+        return $this->_endDocument('article', $cdata);
     }
 
     // }}}
@@ -379,6 +352,30 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     */
     function end_author($cdata) {
         $this->_author = trim(str_replace("\n", '', $cdata));
+    }
+
+    // }}}
+    // {{{ function start_book($attributes)
+
+    /**
+    * @param  array
+    * @return string
+    * @access public
+    */
+    function start_book($attributes) {
+        return $this->_startDocument('book', $attributes);
+    }
+
+    // }}}
+    // {{{ function end_book($cdata)
+
+    /**
+    * @param  string
+    * @return string
+    * @access public
+    */
+    function end_book($cdata) {
+        return $this->_endDocument('book', $cdata);
     }
 
     // }}}
@@ -967,6 +964,71 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     }
 
     // }}}
+    // {{{ function _startDocument($type, $attributes)
+
+    /**
+    * @param  string
+    * @param  array
+    * @return string
+    * @access private
+    */
+    function _startDocument($type, $attributes) {
+        if (!$this->_secondPass) {
+            $id = $this->_startSection(
+              $type,
+              isset($attributes['id']) ? $attributes['id'] : ''
+            );
+
+            return sprintf(
+              '<%s>%s',
+
+              $type,
+              $id
+            );
+        } else {
+            return sprintf(
+              '<html><head><title>%s: %s</title><body><h1 class="title">%s: %s</h1>',
+
+              $this->_author,
+              $this->_title,
+              $this->_author,
+              $this->_title
+            );
+        }
+    }
+
+    // }}}
+    // {{{ function _endDocument($type, $cdata)
+
+    /**
+    * @param  string
+    * @param  string
+    * @return string
+    * @access private
+    */
+    function _endDocument($type, $cdata) {
+        if (!$this->_secondPass) {
+            $this->_endSection($type);
+
+            $this->_secondPass = true;
+
+            $cdata = sprintf(
+              '%s</%s>',
+
+              $cdata,
+              $type
+            );
+        } else {
+            $cdata = $cdata . '</body></html>';
+        }
+
+        return array(
+          $cdata,
+          false
+        );
+    }
+
+    // }}}
     // {{{ function _startSection($type, $id)
 
     /**
@@ -980,6 +1042,7 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
 
         switch ($type) {
             case 'article':
+            case 'book':
             case 'chapter':
             case 'section': {
                 $this->_currentSectionNumber = '';
@@ -1050,6 +1113,7 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
 
         switch ($type) {
             case 'article':
+            case 'book':
             case 'chapter':
             case 'section': {
                 $this->_sections[$type]['open']--;
