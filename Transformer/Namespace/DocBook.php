@@ -66,55 +66,7 @@ require_once 'XML/Transformer/Namespace.php';
 *
 *   * <ulink>
 *
-* Example
-*
-*   <?php
-*   require_once 'XML/Transformer/Namespace/DocBook.php';
-*   require_once 'XML/Transformer/OutputBuffer.php';
-*
-*   $t = new XML_Transformer_OutputBuffer(
-*     array(
-*       'autoload' => 'DocBook'
-*     )
-*   );
-*
-*   echo $t->transform(implode('', file('article.xml')));
-*   ?>
-*   <article>
-*     <section>
-*       <title>
-*         Section One
-*       </title>
-*       <para>
-*         <emphasis role="bold">
-*           Bold Text.
-*         </emphasis>
-*       </para>
-*       <para>
-*         <ulink url="http://pear.php.net/">PEAR</ulink>
-*       </para>
-*     </section>
-*   </article>
-*
-* Output
-*
-*   <html>
-*     <body>
-*       <h2 class="title" style="clear: both">
-*         1. Section One
-*       </h2>
-*       <p>
-*         <b>
-*           Bold Text.
-*         </b>
-*       </p>
-*       <p>
-*         <a href="http://pear.php.net/">
-*           PEAR
-*         </a>
-*       </p>
-*     </body>
-*   </html>
+*   * <xref>
 *
 * @author  Sebastian Bergmann <sb@sebastian-bergmann.de>
 * @author  Kristian Köhntopp <kris@koehntopp.de>
@@ -131,7 +83,7 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     var $defaultNamespacePrefix = '&MAIN';
 
     /**
-    * @var    array
+    * @var    string
     * @access private
     */
     var $_author = '';
@@ -143,19 +95,19 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     var $_context = array();
 
     /**
-    * @var    array
+    * @var    string
     * @access private
     */
     var $_currentExampleNumber = '';
 
     /**
-    * @var    array
+    * @var    string
     * @access private
     */
     var $_currentFigureNumber = '';
 
     /**
-    * @var    array
+    * @var    string
     * @access private
     */
     var $_currentSectionNumber = '';
@@ -192,7 +144,7 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     var $_ids = array();
 
     /**
-    * @var    array
+    * @var    boolean
     * @access private
     */
     var $_roles = array();
@@ -201,13 +153,25 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     * @var    array
     * @access private
     */
-    var $_sections = array();
+    var $_processXref = false;
 
     /**
     * @var    array
     * @access private
     */
+    var $_sections = array();
+
+    /**
+    * @var    string
+    * @access private
+    */
     var $_title = '';
+
+    /**
+    * @var    array
+    * @access private
+    */
+    var $_xref = '';
 
     // }}}
     // {{{ function XML_Transformer_Namespace_DocBook($parameters = array())
@@ -255,9 +219,12 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     * @access public
     */
     function start_article($attributes) {
-        $this->_startSection('article');
+        $id = $this->_startSection(
+          'article',
+          isset($attributes['id']) ? $attributes['id'] : ''
+        );
 
-        return '<html><body>';
+        return '<html><body>' . $id;
     }
 
     // }}}
@@ -270,6 +237,8 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     */
     function end_article($cdata) {
         $this->_endSection('article');
+
+        $this->_processXref = true;
 
         return $cdata . '</body></html>';
     }
@@ -305,9 +274,8 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     * @access public
     */
     function start_chapter($attributes) {
-        $this->_startSection('chapter');
-
-        $id = $this->_setAnchorID(
+        $id = $this->_startSection(
+          'chapter',
           isset($attributes['id']) ? $attributes['id'] : ''
         );
 
@@ -383,9 +351,8 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     * @access public
     */
     function start_example($attributes) {
-        $this->_startSection('example');
-
-        $id = $this->_setAnchorID(
+        $id = $this->_startSection(
+          'example',
           isset($attributes['id']) ? $attributes['id'] : ''
         );
 
@@ -415,9 +382,8 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     * @access public
     */
     function start_figure($attributes) {
-        $this->_startSection('figure');
-
-        $id = $this->_setAnchorID(
+        $id = $this->_startSection(
+          'figure',
           isset($attributes['id']) ? $attributes['id'] : ''
         );
 
@@ -705,9 +671,8 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     * @access public
     */
     function start_section($attributes) {
-        $this->_startSection('section');
-
-        $id = $this->_setAnchorID(
+        $id = $this->_startSection(
+          'section',
           isset($attributes['id']) ? $attributes['id'] : ''
         );
 
@@ -787,10 +752,16 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     * @access public
     */
     function end_title($cdata) {
+        $cdata = trim($cdata);
+
+        if (!empty($this->_ids[sizeof($this->_ids)-1])) {
+            $this->_xref[$this->_ids[sizeof($this->_ids)-1]] = strip_tags($cdata);
+        }
+
         switch ($this->_context[sizeof($this->_context)-1]) {
             case 'article':
             case 'book': {
-                $this->_title = trim($cdata);
+                $this->_title = $cdata;
             }
             break;
 
@@ -798,12 +769,12 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
             case 'example':
             case 'figure':
             case 'section': {
-                return trim($cdata) . '</h2>';
+                return $cdata . '</h2>';
             }
             break;
 
             default: {
-                return trim($cdata);
+                return $cdata;
             }
         }
     }
@@ -833,31 +804,59 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     }
 
     // }}}
-    // {{{ function _setAnchorID($id)
+    // {{{ function start_xref($attributes)
+
+    /**
+    * @param  array
+    * @return string
+    * @access public
+    */
+    function start_xref($attributes) {
+        if ($this->_processXref) {
+            return sprintf(
+              '<a href="#%s">%s</a>',
+
+              isset($attributes['linkend'])               ? $attributes['linkend']               : '',
+              isset($this->_xref[$attributes['linkend']]) ? $this->_xref[$attributes['linkend']] : ''
+            );
+        } else {
+            return sprintf(
+              '<xref%s>',
+              XML_Transformer_Util::attributesToString($attributes)
+            );
+        }
+    }
+
+    // }}}
+    // {{{ function end_xref($cdata)
+
+    /**
+    * @param  string
+    * @return string
+    * @access public
+    */
+    function end_xref($cdata) {
+        if (!$this->_processXref) {
+            $cdata = $cdata . '</xref>';
+        }
+
+        return array(
+          $cdata,
+          false
+        );
+    }
+
+    // }}}
+    // {{{ function _startSection($type, $id)
 
     /**
     * @param  string
     * @return string
     * @access private
     */
-    function _setAnchorID($id) {
-        if (!empty($id)) {
-            $this->_ids[] = $id;
-            $id           = '<a id="' . $id . '" />';
-        }
-
-        return $id;
-    }
-
-    // }}}
-    // {{{ function _startSection($type)
-
-    /**
-    * @param  string
-    * @access private
-    */
-    function _startSection($type) {
+    function _startSection($type, $id) {
         array_push($this->_context, $type);
+        array_push($this->_ids,     $id);
 
         switch ($type) {
             case 'article':
@@ -911,6 +910,12 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
             }
             break;
         }
+
+        if (!empty($id)) {
+            $id = '<a id="' . $id . '" />';
+        }
+
+        return $id;
     }
 
     // }}}
