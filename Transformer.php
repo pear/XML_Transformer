@@ -403,17 +403,13 @@ class XML_Transformer {
             );
         }
 
-        // if the namespace object has a method initObserver,
-        // that method is automatically called with the
-        // registered namespace prefix and with a backpointer
-        // to the transformer, both of which are commonly
-        // needed in a namespace object.
+        // Call initObserver() on the object, if it exists.
 
         if (is_object($object) && method_exists($object, 'initObserver')) {
-          $object->initObserver(
-            $namespacePrefix,
-            $this
-          );
+            $object->initObserver(
+              $namespacePrefix,
+              $this
+            );
         }
     }
 
