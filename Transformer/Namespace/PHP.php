@@ -95,6 +95,7 @@ class XML_Transformer_Namespace_PHP extends XML_Transformer_Namespace {
             $this->_defineName = $attributes['name'];
         }
         
+        $this->getLock();
         return '';
     }
 
@@ -107,32 +108,35 @@ class XML_Transformer_Namespace_PHP extends XML_Transformer_Namespace {
     * @access public
     */
     function end_define($cdata) {
-        if ($this->_inNamespace) {
-            $this->_namespaceClassDefinition .= sprintf(
-              'var $%s_attributes = array();
+        if (!$this->_inNamespace)
+            return '';
 
-               function start_%s($att) {
-                  $this->%s_attributes = $att;
+        $this->releaseLock();
 
-                  return "";
-               }
+        $this->_namespaceClassDefinition .= sprintf(
+          'var $%s_attributes = array();
 
-               function end_%s($content) {
-                  foreach ($this->%s_attributes as $__k => $__v) {
-                      $$__k = $__v;
-                  }
+          function start_%s($att) {
+              $this->%s_attributes = $att;
 
-                  return "%s";
-               }',
+              return "";
+          }
 
-              $this->_defineName,
-              $this->_defineName,
-              $this->_defineName,
-              $this->_defineName,
-              $this->_defineName,
-              addslashes($cdata)
-            );
-        }
+          function end_%s($content) {
+              foreach ($this->%s_attributes as $__k => $__v) {
+                  $$__k = $__v;
+              }
+
+              return "%s";
+          }',
+
+          $this->_defineName,
+          $this->_defineName,
+          $this->_defineName,
+          $this->_defineName,
+          $this->_defineName,
+          addslashes($cdata)
+        );
 
         return '';
     }
