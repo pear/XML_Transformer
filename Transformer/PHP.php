@@ -105,7 +105,11 @@ class XML_Transformer_PHP extends XML_Transformer_Namespace {
     * @access public
     */
     function end_logic($cdata) {
-        // ...
+        ob_start();
+        eval($cdata);
+        $buffer = ob_get_contents();
+        ob_end_clean();
+        return $buffer;
     }
 
     // }}}
