@@ -69,26 +69,58 @@
 * @access  public
 */
 class XML_Transformer_Namespace {
+    // {{{ function startElement($element, $attributes)
+
+    /**
+    * Wrapper for startElement handler.
+    *
+    * @param  string
+    * @param  array
+    * @return string
+    * @access public
+    */
     function startElement($element, $attributes) {
-        $do = "start_$element";
+        $do = 'start_' . $element;
 
         if (method_exists($this, $do)) {
             return $this->$do($attributes);
         }
 
-        return "<!-- undefined: $element --><$element " .
-               XML_Transformer::attributesToString($attributes) .
-               ">";
+        return sprintf(
+          "<!-- undefined: %s --><%s %s>",
+
+          $element,
+          $element,
+          XML_Transformer::attributesToString($attributes)
+        );
     }
 
+    // }}}
+    // {{{ function endElement($element, $cdata)
+
+    /**
+    * Wrapper for endElement handler.
+    *
+    * @param  string
+    * @param  string
+    * @return string
+    * @access public
+    */
     function endElement($element, $cdata) {
-        $do = "end_$element";
+        $do = 'end_' . $element;
 
         if (method_exists($this, $do)) {
             return $this->$do($cdata);
         }
 
-        return "$cdata</$element>";
+        return sprintf(
+          '%s</%s>',
+
+          $cdata,
+          $element
+        );
     }
+
+    // }}}
 }
 ?>

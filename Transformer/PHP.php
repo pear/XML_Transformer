@@ -20,10 +20,10 @@
 // $Id$
 //
 
-#require_once 'XML/Transformer/Namespace.php';
+require_once 'XML/Transformer/Namespace.php';
 
 /**
-* ...
+* Handler for the PHP Namespace.
 *
 * @author  Sebastian Bergmann <sb@sebastian-bergmann.de>
 *          Kristian Köhntopp <kris@koehntopp.de>
@@ -31,58 +31,176 @@
 * @access  public
 */
 class XML_Transformer_PHP extends XML_Transformer_Namespace {
+    // {{{ Members
+
+    /**
+    * @var    string
+    * @access private
+    */
     var $_variable = '';
 
+    // }}}
+    // {{{ function start_expr($attributes)
+
+    /**
+    * @param  array
+    * @return string
+    * @access public
+    */
     function start_expr($attributes) {}
 
+    // }}}
+    // {{{ function end_expr($cdata)
+
+    /**
+    * @param  string
+    * @return string
+    * @access public
+    */
     function end_expr($cdata) {
         return eval('return ' . $cdata . ';');
     }
 
+    // }}}
+    // {{{ function start_logic($attributes)
+
+    /**
+    * @param  array
+    * @return string
+    * @access public
+    */
     function start_logic($attributes) {}
 
+    // }}}
+    // {{{ function end_logic($cdata)
+
+    /**
+    * @param  string
+    * @return string
+    * @access public
+    */
     function end_logic($cdata) {
         // ...
     }
 
+    // }}}
+    // {{{ function start_getparameter($attributes)
+
+    /**
+    * @param  array
+    * @return string
+    * @access public
+    */
     function start_getparameter($attributes) {
         return isset($_GET[$attributes['name']]) ? $_GET[$attributes['name']] : '';
     }
 
+    // }}}
+    // {{{ function end_getparameter($cdata)
+
+    /**
+    * @param  string
+    * @return string
+    * @access public
+    */
     function end_getparameter($cdata) {
         return $cdata;
     }
 
+    // }}}
+    // {{{ function start_postparameter($attributes)
+
+    /**
+    * @param  array
+    * @return string
+    * @access public
+    */
     function start_postparameter($attributes) {
         return isset($_POST[$attributes['name']]) ? $_POST[$attributes['name']] : '';
     }
 
+    // }}}
+    // {{{ function end_postparameter($cdata)
+
+    /**
+    * @param  string
+    * @return string
+    * @access public
+    */
     function end_postparameter($cdata) {
         return $cdata;
     }
 
+    // }}}
+    // {{{ function start_sessionvariable($attributes)
+
+    /**
+    * @param  array
+    * @return string
+    * @access public
+    */
     function start_sessionvariable($attributes) {
         return isset($_SESSION[$attributes['name']]) ? $_SESSION[$attributes['name']] : '';
     }
 
+    // }}}
+    // {{{ function end_sessionvariable($cdata)
+
+    /**
+    * @param  string
+    * @return string
+    * @access public
+    */
     function end_sessionvariable($cdata) {
         return $cdata;
     }
 
+    // }}}
+    // {{{ function start_getvariable($attributes)
+
+    /**
+    * @param  array
+    * @return string
+    * @access public
+    */
     function start_getvariable($attributes) {
         return isset($GLOBALS[$attributes['name']]) ? $GLOBALS[$attributes['name']] : '';
     }
 
+    // }}}
+    // {{{ function end_getvariable($cdata)
+
+    /**
+    * @param  string
+    * @return string
+    * @access public
+    */
     function end_getvariable($cdata) {
         return $cdata;
     }
 
+    // }}}
+    // {{{ function start_setvariable($attributes)
+
+    /**
+    * @param  array
+    * @return string
+    * @access public
+    */
     function start_setvariable($attributes) {
         $this->_variable = isset($attributes['name']) ? $attributes['name'] : '';
 
         return '';
     }
 
+    // }}}
+    // {{{ function end_setvariable($cdata)
+
+    /**
+    * @param  string
+    * @return string
+    * @access public
+    */
     function end_setvariable($cdata) {
         if ($this->_variable != '') {
             $GLOBALS[$this->_variable] = $cdata;
@@ -91,5 +209,7 @@ class XML_Transformer_PHP extends XML_Transformer_Namespace {
 
         return '';
     }
+
+    // }}}
 }
 ?>
