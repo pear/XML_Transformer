@@ -463,6 +463,40 @@ class XML_Transformer {
     }
 
     // }}}
+    // {{{ function setDefaultCallback($startHandler, $endHandler)
+
+    /**
+    * Registers default start and end handlers for elements that
+    * have no registered callbacks.
+    *
+    * @param  string
+    * @param  string
+    * @access public
+    */
+    function setDefaultCallback($startHandler, $endHandler) {
+        if ($startHandler = $this->_parseCallback($startHandler) &&
+            $endHandler = $this->_parseCallback($endHandler)) {
+            $this->_overloadedElements['&DEFAULT']['start'] = $startHandler;
+            $this->_overloadedElements['&DEFAULT']['end']   = $endHandler;
+        }
+    }
+
+    // }}}
+    // {{{ function unsetDefaultCallback()
+
+    /**
+    * Unsets default handlers for elements that have no
+    * registered callbacks.
+    *
+    * @access public
+    */
+    function unsetDefaultCallback() {
+        if (isset($this->_overloadedElements['&DEFAULT'])) {
+            unset($this->_overloadedElements['&DEFAULT']);
+        }
+    }
+
+    // }}}
     // {{{ function setCaseFolding($caseFolding)
 
     /**
@@ -650,6 +684,15 @@ class XML_Transformer {
             );
         }
 
+        else if (isset($this->_overloadedElements['&DEFAULT']['start'])) {
+            // The event is handled by the default callback.
+
+            $cdata = call_user_func(
+              $this->_overloadedElements['&DEFAULT']['start'],
+              $attributes
+            );
+        }
+
         else {
             // No callback was registered for this element's
             // opening tag, copy it.
@@ -723,6 +766,17 @@ class XML_Transformer {
             if ($this->_overloadedElements[$element]['recursiveOperation']) {
                 $recursion = true;
             }
+        }
+
+        else if (isset($this->_overloadedElements['&DEFAULT']['end'])) {
+            // The event is handled by the default callback.
+
+            $cdata = call_user_func(
+              $this->_overloadedElements['&DEFAULT']['end'],
+              $cdata
+            );
+
+            $recursion = true;
         }
 
         else {

@@ -31,6 +31,9 @@
     <state>stable</state>
     <date>2002-XX-XX</date>
     <notes>
++ Added methods setDefaultCallback() and unsetDefaultCallback() to
+  set/unset default callbacks for elements that are not overloaded.
+
 + Added a base class for namespace-handling transformer classes.
 
 + Removed canonicalName() method in favour of more general
