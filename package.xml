@@ -29,6 +29,8 @@
     <date>2002-XX-XX</date>
     <notes>
 <![CDATA[
++ Added Anchor and Image namespace handlers.
+
 + Namespace handlers can now use getLock() to disable other
   namespace handlers for the time of their transformation.
   releaseLock() is used to enable all namespace handlers
