@@ -139,7 +139,7 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     * @var    boolean
     * @access public
     */
-    var $secondPassRequired = true;
+    var $secondPassRequired = TRUE;
 
     /**
     * @var    string
@@ -212,7 +212,7 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     * @var    array
     * @access private
     */
-    var $_secondPass = false;
+    var $_secondPass = FALSE;
 
     /**
     * @var    array
@@ -280,7 +280,7 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
 
             return array(
               $cdata,
-              false
+              FALSE
             );
         }
     }
@@ -563,7 +563,7 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     function end_function($cdata) {
         return array(
           trim($cdata) . '</b></code>',
-          false
+          FALSE
         );
     }
 
@@ -734,7 +734,7 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
                     ' ',
                     highlight_string($cdata, 1)
                   ),
-                  false
+                  FALSE
                 );
             }
             break;
@@ -742,7 +742,7 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
             default: {
                 $cdata = array(
                   $cdata . '</code>',
-                  false
+                  FALSE
                 );
             }
         }
@@ -936,7 +936,7 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
 
         return array(
           $cdata,
-          false
+          FALSE
         );
     }
 
@@ -987,7 +987,7 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
         if (!$this->_secondPass) {
             $this->_endSection($type);
 
-            $this->_secondPass = true;
+            $this->_secondPass = TRUE;
 
             $cdata = sprintf(
               '%s</%s>',
@@ -1001,7 +1001,7 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
 
         return array(
           $cdata,
-          false
+          FALSE
         );
     }
 

@@ -39,17 +39,17 @@ class XML_Transformer_CallbackRegistry {
     * @var    boolean
     * @access private
     */
-    var $_locked = false;
+    var $_locked = FALSE;
 
     /**
-    * If true, the transformation will continue recursively
+    * If TRUE, the transformation will continue recursively
     * until the XML contains no more overloaded elements.
     * Can be overrided on a per-element basis.
     *
     * @var    boolean
     * @access private
     */
-    var $_recursiveOperation = true;
+    var $_recursiveOperation = TRUE;
 
     // }}}
     // {{{ function XML_Transformer_CallbackRegistry($recursiveOperation)
@@ -127,11 +127,11 @@ class XML_Transformer_CallbackRegistry {
             );
         }
 
-        $this->overloadedNamespaces[$namespacePrefix]['active']             = true;
+        $this->overloadedNamespaces[$namespacePrefix]['active']             = TRUE;
         $this->overloadedNamespaces[$namespacePrefix]['object']             = &$object;
         $this->overloadedNamespaces[$namespacePrefix]['recursiveOperation'] = is_bool($recursiveOperation) ? $recursiveOperation : $this->_recursiveOperation;
 
-        return true;
+        return TRUE;
     }
 
     // }}}
@@ -153,8 +153,8 @@ class XML_Transformer_CallbackRegistry {
     // {{{ function isOverloadedNamespace($namespacePrefix)
 
     /**
-    * Returns true if a given namespace is overloaded,
-    * false otherwise.
+    * Returns TRUE if a given namespace is overloaded,
+    * FALSE otherwise.
     *
     * @param  string
     * @return boolean
@@ -202,12 +202,12 @@ class XML_Transformer_CallbackRegistry {
                 }
             }
 
-            $this->_locked = true;
+            $this->_locked = TRUE;
 
-            return true;
+            return TRUE;
         }
 
-        return false;
+        return FALSE;
     }
 
     // }}}
@@ -223,10 +223,10 @@ class XML_Transformer_CallbackRegistry {
         $namespacePrefixes = array_keys($this->overloadedNamespaces);
 
         foreach ($namespacePrefixes as $namespacePrefix) {
-            $this->overloadedNamespaces[$namespacePrefix]['active'] = true;
+            $this->overloadedNamespaces[$namespacePrefix]['active'] = TRUE;
         }
 
-        $this->_locked = false;
+        $this->_locked = FALSE;
     }
 
     // }}}

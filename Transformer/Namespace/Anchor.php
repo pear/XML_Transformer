@@ -96,7 +96,7 @@ class XML_Transformer_Namespace_Anchor extends XML_Transformer_Namespace {
     function setDatabase($db) {
         $this->_anchorDatabase = $db;
 
-        return true;
+        return TRUE;
     }
 
     // }}}
@@ -126,7 +126,7 @@ class XML_Transformer_Namespace_Anchor extends XML_Transformer_Namespace {
     function addItem($item, $attr) {
         $this->_anchorDatabase[$item] = $attr;
 
-        return true;
+        return TRUE;
     }
 
     // }}}
@@ -141,11 +141,11 @@ class XML_Transformer_Namespace_Anchor extends XML_Transformer_Namespace {
     */
     function dropItem($item) {
         if (!isset($this->_anchorDatabase[$item]))
-            return false;
+            return FALSE;
 
         unset($this->_anchorDatabase[$item]);
 
-        return true;
+        return TRUE;
     }
 
     // }}}
@@ -160,7 +160,7 @@ class XML_Transformer_Namespace_Anchor extends XML_Transformer_Namespace {
     */
     function getItem($item) {
         if (!isset($this->_anchorDatabase[$item])) {
-            return false;
+            return FALSE;
         }
 
         return $this->_anchorDatabase[$item];

@@ -83,7 +83,7 @@ class XML_Transformer_Namespace {
     * @var    boolean
     * @access public
     */
-    var $secondPassRequired = false;
+    var $secondPassRequired = FALSE;
 
     /**
     * @var    array
@@ -166,7 +166,7 @@ class XML_Transformer_Namespace {
             $cdata,
             $element
           ),
-          false
+          FALSE
         );
     }
 

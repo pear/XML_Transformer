@@ -36,7 +36,7 @@ class XML_Transformer_Driver_Cache extends XML_Transformer {
     * @var    object
     * @access private
     */
-    var $_cache = false;
+    var $_cache = FALSE;
 
     // }}}
     // {{{ function XML_Transformer_Driver_Cache($parameters = array())
@@ -69,7 +69,7 @@ class XML_Transformer_Driver_Cache extends XML_Transformer {
 
         $cachedResult = $this->_cache->get($cacheID, 'XML_Transformer');
 
-        if ($cachedResult !== false) {
+        if ($cachedResult !== FALSE) {
             return $cachedResult;
         }
 

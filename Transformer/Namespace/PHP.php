@@ -90,7 +90,7 @@ class XML_Transformer_Namespace_PHP extends XML_Transformer_Namespace {
     * @var    string
     * @access private
     */
-    var $_inNamespace = false;
+    var $_inNamespace = FALSE;
 
     /**
     * @var    string
@@ -173,7 +173,7 @@ class XML_Transformer_Namespace_PHP extends XML_Transformer_Namespace {
     * @access public
     */
     function start_namespace($attributes) {
-        $this->_inNamespace = true;
+        $this->_inNamespace = TRUE;
         $this->_namespace   = $attributes['name'];
 
         $classname = 'PEAR_XML_TRANSFORMER_NAMESPACE_PHP_' . $this->_namespace;
@@ -203,11 +203,11 @@ class XML_Transformer_Namespace_PHP extends XML_Transformer_Namespace {
         $this->_transformer->overloadNamespace(
           $this->_namespace,
           new $classname,
-          true
+          TRUE
         );
 
         $this->_namespace   = '';
-        $this->_inNamespace = false;
+        $this->_inNamespace = FALSE;
 
         return '';
     }

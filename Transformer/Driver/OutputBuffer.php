@@ -71,7 +71,7 @@ class XML_Transformer_Driver_OutputBuffer extends XML_Transformer {
     * @var    boolean
     * @access private
     */
-    var $_started = false;
+    var $_started = FALSE;
 
     // }}}
     // {{{ function XML_Transformer_Driver_OutputBuffer($parameters = array())
@@ -107,7 +107,7 @@ class XML_Transformer_Driver_OutputBuffer extends XML_Transformer {
               )
             );
 
-            $this->_started = true;
+            $this->_started = TRUE;
 
             if ($this->_checkDebug()) {
                 $this->sendMessage(

@@ -104,7 +104,7 @@ class XML_Transformer_Namespace_Widget extends XML_Transformer_Namespace {
     }
 
     // }}}
-    // {{{ function _imagePlaceholder($h = false, $w = false)
+    // {{{ function _imagePlaceholder($h = FALSE, $w = FALSE)
 
     /**
     * Create a placeholder image of $h pixel height and $w pixel width
@@ -114,12 +114,12 @@ class XML_Transformer_Namespace_Widget extends XML_Transformer_Namespace {
     * @return string
     * @access private
     */
-    function _imagePlaceholder($h = false, $w = false) {
-        if ($h === false) {
+    function _imagePlaceholder($h = FALSE, $w = FALSE) {
+        if ($h === FALSE) {
             $h = isset($this->_oboxAttributes['outlinewidth']) ? $this->_oboxAttributes['outlinewidth'] : 1;
         }
 
-        if ($w === false) {
+        if ($w === FALSE) {
             $w = $h;
         }
 
