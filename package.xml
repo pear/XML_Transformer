@@ -29,6 +29,10 @@
     <date>2002-XX-XX</date>
     <notes>
 <![CDATA[
++ Added a caching version of the XML_Transformer that uses
+  the Cache_Lite PEAR package to cache the result of XML
+  transformations.
+
 + Added automatic loading of namespace handlers that are
   stored in the XML/Transformer/Namespace directory.
 
@@ -90,6 +94,7 @@
             <file role="php" name="PHP.php"/>
           </dir>
 
+          <file role="php" name="Cache.php"/>
           <file role="php" name="CallbackRegistry.php"/>
           <file role="php" name="Namespace.php"/>
           <file role="php" name="OutputBuffer.php"/>
