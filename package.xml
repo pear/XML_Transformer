@@ -36,8 +36,11 @@
 + Removed canonicalName() method in favour of more general
   canonicalizeAttributes() method.
 
-* Attributes are now canonicalize on-the-fly, and not at
-  serialization which can be too late.
+* Recursive operation can now be selectively turned off for
+  overloaded namespaces, too.
+
+* Attributes are now canonicalized on-the-fly, rather than at
+  the time of their serialization which can be too late.
 
 * Fixed recursive transformation of overloaded namespaces.
     </notes>

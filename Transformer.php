@@ -386,22 +386,24 @@ class XML_Transformer {
     }
 
     // }}}
-    // {{{ function overloadNamespace($namespacePrefix, &$object)
+    // {{{ function overloadNamespace($namespacePrefix, &$object, $recursiveOperation = '')
 
     /**
     * Overloads an XML Namespace.
     *
     * @param  string
     * @param  object
+    * @param  boolean
     * @access public
     */
-    function overloadNamespace($namespacePrefix, &$object) {
+    function overloadNamespace($namespacePrefix, &$object, $recursiveOperation = '') {
         $namespacePrefix = $this->canonicalize($namespacePrefix);
 
         if (is_object($object) &&
             method_exists($object, 'startElement') &&
             method_exists($object, 'endElement')) {
-            $this->_overloadedNamespaces[$namespacePrefix] = &$object;
+            $this->_overloadedNamespaces[$namespacePrefix]['object']             = &$object;
+            $this->_overloadedNamespaces[$namespacePrefix]['recursiveOperation'] = is_bool($recursiveOperation) ? $recursiveOperation : $this->_recursiveOperation;
         } else {
             $this->_handle_error(
               'Cannot overload namespace "' .
@@ -434,8 +436,8 @@ class XML_Transformer {
     function unOverloadNamespace($namespacePrefix) {
         $namespacePrefix = $this->canonicalize($namespacePrefix);
 
-        if (isset($this->_overloadedNamespaces[$namespacePrefix])) {
-            unset($this->_overloadedNamespaces[$namespacePrefix]);
+        if (isset($this->_overloadedNamespaces[$namespacePrefix]['object'])) {
+            unset($this->_overloadedNamespaces[$namespacePrefix]['object']);
 
             return true;
         } else {
@@ -601,12 +603,13 @@ class XML_Transformer {
     * @access private
     */
     function _startElement($parser, $element, $attributes) {
-        $attributes      = $this->canonicalize($attributes);
-        $element         = $this->canonicalize($element);
-        $namespacePrefix = '';
+        $attributes = $this->canonicalize($attributes);
+        $element    = $this->canonicalize($element);
 
         if (strstr($element, ':')) {
             list($namespacePrefix, $qElement) = explode(':', $element);
+        } else {
+            $namespacePrefix = '';
         }
 
         // Push element's name and attributes onto the stack.
@@ -626,11 +629,11 @@ class XML_Transformer {
         );
 
         if ($this->_lastProcessed != $element &&
-            isset($this->_overloadedNamespaces[$namespacePrefix])) {
+            isset($this->_overloadedNamespaces[$namespacePrefix]['object'])) {
             // The event is handled by a callback
             // that is registered for this namespace.
 
-            $cdata = $this->_overloadedNamespaces[$namespacePrefix]->startElement(
+            $cdata = $this->_overloadedNamespaces[$namespacePrefix]['object']->startElement(
               $qElement,
               $attributes
             );
@@ -672,13 +675,14 @@ class XML_Transformer {
     * @access private
     */
     function _endElement($parser, $element) {
-        $cdata           = $this->_cdataStack[$this->_level];
-        $element         = $this->canonicalize($element);
-        $namespacePrefix = '';
-        $recursion       = false;
+        $cdata     = $this->_cdataStack[$this->_level];
+        $element   = $this->canonicalize($element);
+        $recursion = false;
 
         if (strstr($element, ':')) {
             list($namespacePrefix, $qElement) = explode(':', $element);
+        } else {
+            $namespacePrefix = '';
         }
 
         $this->_debug(
@@ -692,16 +696,18 @@ class XML_Transformer {
         );
 
         if ($this->_lastProcessed != $element &&
-            isset($this->_overloadedNamespaces[$namespacePrefix])) {
+            isset($this->_overloadedNamespaces[$namespacePrefix]['object'])) {
             // The event is handled by a callback
             // that is registered for this namespace.
 
-            $cdata = $this->_overloadedNamespaces[$namespacePrefix]->endElement(
+            $cdata = $this->_overloadedNamespaces[$namespacePrefix]['object']->endElement(
               $qElement,
               $cdata
             );
 
-            $recursion = true;
+            if ($this->_overloadedNamespaces[$namespacePrefix]['recursiveOperation']) {
+                $recursion = true;
+            }
         }
 
         else if ($this->_lastProcessed != $element &&
@@ -714,7 +720,9 @@ class XML_Transformer {
               $cdata
             );
 
-            $recursion = true;
+            if ($this->_overloadedElements[$element]['recursiveOperation']) {
+                $recursion = true;
+            }
         }
 
         else {
@@ -724,9 +732,7 @@ class XML_Transformer {
             $cdata .= '</' . $element . '>';
         }
 
-        if ($recursion &&
-            (isset($this->_overloadedNamespaces[$namespacePrefix]) ||
-             $this->_overloadedElements[$element]['recursiveOperation'])) {
+        if ($recursion) {
             // Recursively process this transformation's result.
 
             $this->_debug(
