@@ -383,12 +383,12 @@ class XML_Transformer_Namespace_PHP extends XML_Transformer_Namespace {
     * @return string
     * @access public
     */
-    function start_sessionvariable($attributes) {
+    function start_session($attributes) {
         return isset($_SESSION[$attributes['name']]) ? $_SESSION[$attributes['name']] : '';
     }
 
     // }}}
-    // {{{ function end_sessionvariable($cdata)
+    // {{{ function end_session($cdata)
 
     /**
     * @param  string
