@@ -482,15 +482,16 @@ class XML_Transformer {
         $this->_elementStack[$this->_level]    = $element;
         $this->_attributesStack[$this->_level] = $attributes;
 
-        $this->_debug(
-          sprintf(
-            'startElement[%d]: %s %s',
-            $this->_level,
-            $element,
-            XML_Transformer_Util::attributesToString($attributes)
-          ),
-          $element
-        );
+        if ($this->_checkDebug($element)) {
+            $this->_debug(
+              sprintf(
+                'startElement[%d]: %s %s',
+                $this->_level,
+                $element,
+                XML_Transformer_Util::attributesToString($attributes)
+              )
+            );
+        }
 
         if ($process &&
             isset($this->_callbackRegistry->overloadedNamespaces[$namespacePrefix]['active'])) {
@@ -565,14 +566,15 @@ class XML_Transformer {
         if ($recursion) {
             // Recursively process this transformation's result.
 
-            $this->_debug(
-              sprintf(
-                'start recursion[%d]: %s',
-                $this->_level,
-                $cdata
-              ),
-              '&RECURSE'
-            );
+            if ($this->_checkDebug('&RECURSE')) {
+                $this->_debug(
+                  sprintf(
+                    'start recursion[%d]: %s',
+                    $this->_level,
+                    $cdata
+                  )
+                );
+            }
 
             $transformer = new XML_Transformer(
               array(
@@ -584,25 +586,27 @@ class XML_Transformer {
 
             $cdata = $transformer->transform($cdata);
 
-            $this->_debug(
-              sprintf(
-                'end recursion[%d]: %s',
-                $this->_level,
-                $cdata
-              ),
-              '&RECURSE'
-            );
+            if ($this->_checkDebug('&RECURSE')) {
+                $this->_debug(
+                  sprintf(
+                    'end recursion[%d]: %s',
+                    $this->_level,
+                    $cdata
+                  )
+                );
+            }
         }
 
-        $this->_debug(
-          sprintf(
-            'endElement[%d]: %s (with cdata=%s)',
-            $this->_level,
-            $element,
-            $this->_cdataStack[$this->_level]
-          ),
-          $element
-        );
+        if ($this->_checkDebug($element)) {
+            $this->_debug(
+              sprintf(
+                'endElement[%d]: %s (with cdata=%s)',
+                $this->_level,
+                $element,
+                $this->_cdataStack[$this->_level]
+              )
+            );
+        }
 
         // Move result of this transformation step to
         // the parent's CDATA section.
@@ -621,15 +625,16 @@ class XML_Transformer {
     * @access private
     */
     function _characterData($parser, $cdata) {
-      $this->_debug(
-        sprintf(
-          'cdata [%d]: %s + %s',
-          $this->_level,
-          $this->_cdataStack[$this->_level],
-          $cdata
-        ),
-        '&CDATA'
-      );
+      if ($this->_checkDebug('&CDATA')) {
+          $this->_debug(
+            sprintf(
+              'cdata [%d]: %s + %s',
+              $this->_level,
+              $this->_cdataStack[$this->_level],
+              $cdata
+            )
+          );
+      }
 
       $this->_cdataStack[$this->_level] .= $cdata;
     }
@@ -681,6 +686,27 @@ class XML_Transformer {
     }
 
     // }}}
+    // {{{ function _checkDebug($currentElement = '')
+
+    /**
+    * Checks whether a debug message should be printed
+    * for the current event.
+    *
+    * @param  string
+    * @return boolean
+    * @access private
+    */
+    function _checkDebug($currentElement = '') {
+        if ($this->_debug &&
+            (empty($this->_debugFilter) ||
+             isset($this->_debugFilter[$currentElement]))) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // }}}
     // {{{ function _debug($debugMessage, $currentElement = '')
 
     /**
@@ -689,15 +715,11 @@ class XML_Transformer {
     * @param  string
     * @access private
     */
-    function _debug($debugMessage, $currentElement = '') {
-        if ($this->_debug &&
-            (empty($this->_debugFilter) ||
-             isset($this->_debugFilter[$currentElement]))) {
-            XML_Transformer_Util::logMessage(
-              $debugMessage,
-              $this->_logTarget
-            );
-        }
+    function _debug($debugMessage) {
+        XML_Transformer_Util::logMessage(
+          $debugMessage,
+          $this->_logTarget
+        );
     }
 
     // }}}

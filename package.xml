@@ -29,7 +29,8 @@
     <date>2003-05-06</date>
     <notes>
 <![CDATA[
-Bugfix release.
+* Performance improvements due to changes in the
+  debug mode.
 ]]>
     </notes>
     <filelist>
@@ -62,6 +63,16 @@ Bugfix release.
     </deps>
   </release>
   <changelog>
+    <release>
+      <version>0.8.1</version>
+      <state>stable</state>
+      <date>2003-05-06</date>
+      <notes>
+<![CDATA[
+* Bugfix release.
+]]>
+      </notes>
+    </release>
     <release>
       <version>0.8</version>
       <state>stable</state>
