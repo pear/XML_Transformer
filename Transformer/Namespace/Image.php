@@ -25,7 +25,6 @@ define(PEAR_XML_TRANSFORMER_IMAGE_cacheDir, '/cache/gtext');
 /**
 * Handler for the Image Namespace.
 *
-*
 * Example:
 *
 *   <?php
@@ -61,35 +60,205 @@ define(PEAR_XML_TRANSFORMER_IMAGE_cacheDir, '/cache/gtext');
 * @access  public
 */
 class XML_Transformer_Namespace_Image extends XML_Transformer_Namespace {
+    // {{{ Members
+
     /**
     * @var    boolean
     * @access public
     */
     var $defaultNamespacePrefix = 'img';
 
-    var $img_attributes          = array();
-    var $gtext_attributes        = array();
-    var $gtextdefault_attributes = array();
+    /**
+    * @var    array
+    * @access private
+    */
+    var $_imgAttributes          = array();
 
-    function _truepath($p) {
-        if (php_sapi_name() == 'apache') {
-            $r    = apache_lookup_uri($p);
-            $path = $r->filename;
-        } else {
-            $path = $_SERVER['DOCUMENT_ROOT'] . "/$p";
-        }
+    /**
+    * @var    array
+    * @access private
+    */
+    var $_gtextAttributes        = array();
 
-        return $path;
+    /**
+    * @var    array
+    * @access private
+    */
+    var $_gtextDefaultAttributes = array();
+
+    // }}}
+    // {{{ function start_img($attributes)
+
+    /**
+    * @param  array
+    * @return string
+    * @access public
+    */
+    function start_img($attributes) {
+        $this->_imgAttributes = $attributes;
+
+        return '';
     }
 
-    function _createAlt($word) {
-        if (isset($this->gtext_attributes['alt'])) {
-            return $this->gtext_attributes['alt'];
-        }
+    // }}}
+    // {{{ function end_img($cdata)
 
-        return $word;
+    /**
+    * @param  string
+    * @return string
+    * @access public
+    */
+    function end_img($cdata) {
+        $src = $this->_truePath($this->_imgAttributes['src']);
+
+        list($w, $h, $t, $whs) = getimagesize($src);
+
+        $this->_imgAttributes['height'] = $h;
+        $this->_imgAttributes['width']  = $w;
+
+        return sprintf(
+          '<img %s />',
+          XML_Transformer_Util::attributesToString($this->_imgAttributes)
+        );
     }
 
+    // }}}
+    // {{{ start_gtext($attributes)
+
+    /**
+    * @param  array
+    * @return string
+    * @access public
+    */
+    function start_gtext($attributes) {
+        foreach ($this->_gtextDefaultAttributes as $k => $v) {
+            if (! isset($attributes[$k])) {
+                $attributes[$k] = $v;
+            }
+        }
+
+        if (!file_exists($attributes['font'])) {
+            $attributes['font'] = PEAR_XML_TRANSFORMER_IMAGE_FONTPATH . '/' . $attributes['font'];
+        }
+  
+        $this->_gtextAttributes = $attributes;
+  
+        return '';
+    }
+
+    // }}}
+    // {{{ function end_gtext($cdata)
+
+    /**
+    * @param  string
+    * @return string
+    * @access public
+    */
+    function end_gtext($cdata) {
+        switch ($this->_gtextAttributes['split']) {
+            case 'word': {
+                $text = preg_split('/\s+/', $cdata);
+
+                foreach ($text as $index => $word) {
+                    if ($index) {
+                        $text[$index] = " $word";
+                    }
+                }
+            }
+            break;
+
+            case 'char': {
+                $text = preg_split('//', $cdata);
+
+                foreach ($text as $index => $word) {
+                    if ($word == ' ' || $word == '') {
+                        $text[$index] = chr(160);
+                    }
+                }
+            }
+            break;
+
+            default: {
+                $text = array(0 => $cdata);
+            }
+        }
+
+        $r = '';
+
+        foreach ($text as $index => $word) {
+            $baseline = $this->_baseline(
+              $this->_gtextAttributes['font'],
+              $this->_gtextAttributes['fontsize']
+            );
+
+            $src = $this->_createImage($word,$baseline);
+            $alt = $this->_createAlt($word);
+
+            $r .= sprintf(
+              '<%s:img src="%s" alt="%s" />',
+              $this->_prefix[0],
+              $src,
+              addslashes($alt)
+            );
+        }
+
+        return "<span>$r</span>";
+    }
+
+    // }}}
+    // {{{ function start_gtextdefault($attributes)
+
+    /**
+    * @param  array
+    * @return string
+    * @access public
+    */
+    function start_gtextdefault($attributes) {
+        $this->_gtextDefaultAttributes = $attributes;
+
+        return '';
+    }
+
+    // }}}
+    // {{{ function end_gtextdefault()
+
+    /**
+    * @param  string
+    * @return string
+    * @access public
+    */
+    function end_gtextdefault() {
+        return '';
+    }
+
+    // }}}
+    // {{{ function _baseline($font, $size)
+
+    /**
+    * @param  string
+    * @param  integer
+    * @return ImageTTFBBox
+    * @access private
+    */
+    function _baseline($font, $size) {
+        $r = ImageTTFBBox(
+          $size,
+          0,
+          $font,
+          'Gg§_|ÖÄÜßQqPp'
+        );
+
+        return $r[1];
+    }
+
+    // }}}
+    // {{{ function _colorString($color)
+
+    /**
+    * @param  integer
+    * @return array
+    * @access private
+    */
     function _colorString($color) {
         if (substr($color, 0, 1) == '#') {
             $color = substr($color, 1);
@@ -102,36 +271,50 @@ class XML_Transformer_Namespace_Image extends XML_Transformer_Namespace {
         return array($r, $g, $b);
     }
 
-    function _baseline($font, $size) {
-        $r = ImageTTFBBox(
-          $size,
-          0,
-          $font,
-          'Gg§_|ÖÄÜßQqPp'
-        );
+    // }}}
+    // {{{ function _createAlt($word)
 
-        return $r[1];
+    /**
+    * @param  string
+    * @return string
+    * @access private
+    */
+    function _createAlt($word) {
+        if (isset($this->_gtextAttributes['alt'])) {
+            return $this->_gtextAttributes['alt'];
+        }
+
+        return $word;
     }
 
+    // }}}
+    // {{{ function _createImage($word, $baseline)
+
+    /**
+    * @param  string
+    * @param  integer
+    * @return string
+    * @access private
+    */
     function _createImage($word, $baseline) {
-        $font         = isset($this->gtext_attributes['font'])         ? $this->gtext_attributes['font']         : 'arial.ttf';
-        $fh           = isset($this->gtext_attributes['fontsize'])     ? $this->gtext_attributes['fontsize']     : 12;
-        $bgcolor      = isset($this->gtext_attributes['bgcolor'])      ? $this->gtext_attributes['bgcolor']      : '#ffffff';
-        $fgcolor      = isset($this->gtext_attributes['fgcolor'])      ? $this->gtext_attributes['fgcolor']      : '#ffffff';
+        $font         = isset($this->_gtextAttributes['font'])         ? $this->_gtextAttributes['font']         : 'arial.ttf';
+        $fh           = isset($this->_gtextAttributes['fontsize'])     ? $this->_gtextAttributes['fontsize']     : 12;
+        $bgcolor      = isset($this->_gtextAttributes['bgcolor'])      ? $this->_gtextAttributes['bgcolor']      : '#ffffff';
+        $fgcolor      = isset($this->_gtextAttributes['fgcolor'])      ? $this->_gtextAttributes['fgcolor']      : '#ffffff';
 
-        $antialias    = isset($this->gtext_attributes['antialias'])    ? $this->gtext_attributes['antialias']    : 'yes';
-        $transparency = isset($this->gtext_attributes['transparency']) ? $this->gtext_attributes['transparency'] : 'yes';
-        $cacheable    = isset($this->gtext_attributes['cacheable'])    ? $this->gtext_attributes['cacheable']    : 'yes';
+        $antialias    = isset($this->_gtextAttributes['antialias'])    ? $this->_gtextAttributes['antialias']    : 'yes';
+        $transparency = isset($this->_gtextAttributes['transparency']) ? $this->_gtextAttributes['transparency'] : 'yes';
+        $cacheable    = isset($this->_gtextAttributes['cacheable'])    ? $this->_gtextAttributes['cacheable']    : 'yes';
 
-        $spacing      = isset($this->gtext_attributes['spacing'])      ? $this->gtext_attributes['spacing']      : 2;
-        $border       = isset($this->gtext_attributes['border'])       ? $this->gtext_attributes['border']       : 0;
-        $bordercolor  = isset($this->gtext_attributes['bordercolor'])  ? $this->gtext_attributes['bordercolor']  : '#ff0000';
+        $spacing      = isset($this->_gtextAttributes['spacing'])      ? $this->_gtextAttributes['spacing']      : 2;
+        $border       = isset($this->_gtextAttributes['border'])       ? $this->_gtextAttributes['border']       : 0;
+        $bordercolor  = isset($this->_gtextAttributes['bordercolor'])  ? $this->_gtextAttributes['bordercolor']  : '#ff0000';
 
         /* The cache name is derived from all attributes and cdata.
          * This is very conserative and may create to many cachefiles,
          * but better to err on the safe side.
          */
-        $cachefile = md5(XML_Transformer_Util::attributesToString($this->gtext_attributes) . ':' . $word) . '.png';
+        $cachefile = md5(XML_Transformer_Util::attributesToString($this->_gtextAttributes) . ':' . $word) . '.png';
         $cacheDir  = $_SERVER['DOCUMENT_ROOT']
                    . PEAR_XML_TRANSFORMER_IMAGE_cacheDir;
         $cacheName = "$cacheDir/$cachefile";
@@ -209,127 +392,25 @@ class XML_Transformer_Namespace_Image extends XML_Transformer_Namespace {
         return $cacheURL;
     }
 
-    /* <img:img />
-     *   src=...  -- src of the image, must be getimagesize() compatible
-     *            -- all other attributes are copied
-     */
-    function start_img($attributes) {
-        $this->img_attributes = $attributes;
+    // }}}
+    // {{{ function _truePath($path)
 
-        return '';
-    }
+    /**
+    * @param  string
+    * @return string
+    * @access private
+    */
+    function _truePath($path) {
+        if (php_sapi_name() == 'apache') {
+            $uri = apache_lookup_uri($path);
 
-    function end_img($cdata) {
-        $src = $this->_truepath($this->img_attributes['src']);
-
-        list($w, $h, $t, $whs) = getimagesize($src);
-        $this->img_attributes['height'] = $h;
-        $this->img_attributes['width']  = $w;
-
-        return sprintf(
-          '<img %s />',
-          XML_Transformer_Util::attributesToString($this->img_attributes)
-        );
-    }
-
-    /* <img:gtext  />
-     *   alt=...        -- set alt attribute of generated img (default: automatic)
-     *   split= ...     -- set to none, word, char
-     *   antialias=...  -- yes or no (default: yes)
-     *   transparency=..-- yes or no (default: yes)
-     *   cacheable=...  -- yes or no (default: yes)
-     *
-     *   bgcolor=...    -- specifiy color to use as background
-     *   fgcolor=...    -- specify color to use as textcolor
-     *
-     *   font=..        -- specify font to use
-     *   fontsize=...   -- specify font size to use
-     *
-     *   spacing=...    -- specify x pixels of spacing around the text
-     *   border=...     -- draw a border of x pixels around the text
-     *   bordercolor=...-- color to use for border
-     */
-    function start_gtext($attributes) {
-        foreach ($this->gtextdefault_attributes as $k => $v) {
-            if (! isset($attributes[$k])) {
-                $attributes[$k] = $v;
-            }
+            return $uri->filename;
+        } else {
+            return $_SERVER['DOCUMENT_ROOT'] . '/' . $path;
         }
-
-        if (!file_exists($attributes['font'])) {
-            $attributes['font'] = PEAR_XML_TRANSFORMER_IMAGE_FONTPATH . '/' . $attributes['font'];
-        }
-  
-        $this->gtext_attributes = $attributes;
-  
-        return '';
     }
 
-    function end_gtext($cdata) {
-        switch ($this->gtext_attributes['split']) {
-            case 'word': {
-                $text = preg_split('/\s+/', $cdata);
-
-                foreach ($text as $index => $word) {
-                    if ($index) {
-                        $text[$index] = " $word";
-                    }
-                }
-            }
-            break;
-
-            case 'char': {
-                $text = preg_split('//', $cdata);
-
-                foreach ($text as $index => $word) {
-                    if ($word == ' ' || $word == '') {
-                        $text[$index] = chr(160);
-                    }
-                }
-            }
-            break;
-
-            default: {
-                $text = array(0 => $cdata);
-            }
-        }
-
-        $r = '';
-
-        foreach ($text as $index => $word) {
-            $baseline = $this->_baseline(
-              $this->gtext_attributes['font'],
-              $this->gtext_attributes['fontsize']
-            );
-
-            $src = $this->_createImage($word,$baseline);
-            $alt = $this->_createAlt($word);
-
-            $r .= sprintf(
-              '<%s:img src="%s" alt="%s" />',
-              $this->_prefix[0],
-              $src,
-              addslashes($alt)
-            );
-        }
-
-        return "<span>$r</span>";
-    }
-
-    /*
-     * <img:gtextdefaults />
-     *
-     * as <img:gtext />, stores attributes as defaults for gtext.
-     */
-    function start_gtextdefault($attributes) {
-        $this->gtextdefault_attributes = $attributes;
-
-        return '';
-    }
-
-    function end_gtextdefault() {
-        return '';
-    }
+    // }}}
 }
 
 /*

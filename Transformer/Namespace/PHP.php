@@ -102,7 +102,7 @@ class XML_Transformer_Namespace_PHP extends XML_Transformer_Namespace {
     // {{{ function start_define($attributes)
 
     /**
-    * @param  string
+    * @param  array
     * @return string
     * @access public
     */
@@ -162,7 +162,7 @@ class XML_Transformer_Namespace_PHP extends XML_Transformer_Namespace {
     // {{{ function start_namespace($attributes)
 
     /**
-    * @param  string
+    * @param  array
     * @return string
     * @access public
     */
