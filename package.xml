@@ -53,7 +53,7 @@
 * Improved debugging information.
 
 * The target to which error messages and debugging information
-  is beeing sent can now be configured using setLogTarget().
+  are beeing sent can now be configured using setLogTarget().
 
   The default target is the error.log.
 ]]>
