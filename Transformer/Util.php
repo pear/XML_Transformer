@@ -62,8 +62,9 @@ class XML_Transformer_Util {
     */
     function logMessage($logMessage, $target = 'error_log') {
         switch ($target) {
-            case 'echo': {
-                echo $logMessage;
+            case 'echo':
+            case 'print': {
+                print $logMessage;
             }
             break;
 
