@@ -3,7 +3,7 @@
 // +---------------------------------------------------------------------------+
 // | PEAR :: XML :: Transformer                                                |
 // +---------------------------------------------------------------------------+
-// | Copyright (c) 2002-2004 Sebastian Bergmann <sb@sebastian-bergmann.de> and |
+// | Copyright (c) 2002-2005 Sebastian Bergmann <sb@sebastian-bergmann.de> and |
 // |                         Kristian Köhntopp <kris@koehntopp.de>.            |
 // +---------------------------------------------------------------------------+
 // | This source file is subject to version 3.00 of the PHP License,           |
@@ -28,7 +28,7 @@ require_once 'XML/Transformer/Tests/TransformerTest.php';
 /**
  * @author      Sebastian Bergmann <sb@sebastian-bergmann.de>
  * @author      Kristian Köhntopp <kris@koehntopp.de>
- * @copyright   Copyright &copy; 2002-2004 Sebastian Bergmann <sb@sebastian-bergmann.de> and Kristian Köhntopp <kris@koehntopp.de>
+ * @copyright   Copyright &copy; 2002-2005 Sebastian Bergmann <sb@sebastian-bergmann.de> and Kristian Köhntopp <kris@koehntopp.de>
  * @license     http://www.php.net/license/3_0.txt The PHP License, Version 3.0
  * @category    XML
  * @package     XML_Transformer
