@@ -618,17 +618,80 @@ Example:
 
 This executes $GLOBALS['a'] = 10.
 
-2.5 XML_Transformer_Driver_Cache
+2.5 Output Drivers
 
-* TODO (sb)
+XML_Transformer is designed to be used as a bare class by calling the
+transform() method. That call can be easily wrapped into output buffer
+handlers, caches or other more complicated setups.
 
-2.6 XML_Transformer_Driver_OutputBuffer
+We provide two standard setups for XML_Transformer as subclasses to the
+transformer class: One using PEAR's Cache_Lite to cache transformation
+results, and one using PHP's output buffering functions with a callback
+to transform XML on the fly.
 
-* TODO (sb)
+2.5.1 XML_Transformer_Driver_Cache
+
+This subclass of XML_Transformer requires PHP's Cache_Lite to be installed.
+All parameters of the constructor are passed to XML_Transformer as well
+as to Cache_Lite, their parameter names magically being nonoverlapping.
+
+It overrides XML_Transformer's transform() method with
+
+  function transform($xml, $cacheID = '')
+
+The cacheID is a unique identifier for the $xml string that is to be
+transformed. It may be the md5 hash of the name and date of the file
+that provided the $xml string. If no cacheID is being provided, the
+method uses md5($xml) internally as a cacheID.
+
+The method will look up content for this cacheID, and if there is none,
+will perform the transformation and save the result under this cacheID.
+
+Normal transformation results are being returned.
+
+2.5.2 XML_Transformer_Driver_OutputBuffer
+
+This subclass of XML_Transformer uses PHP's Output Buffering mechanism to catch
+theoutput of a script, transforms it, and outputs the
+result.
+
+Example:
+  <?php
+
+    require_once 'XML/Transformer/Driver/OutputBuffer.php';
+    require_once 'XML/Transformer/Namespace.php';
+
+    class Main extends XML_Transformer_Namespace {
+        function start_bold($attributes) {
+            return '<b>';
+        }
+
+        function end_bold($cdata) {
+            return $cdata . '</b>';
+        }
+    }
+
+    $t = new XML_Transformer_Driver_OutputBuffer(
+      array(
+        'overloadedNamespaces' => array(
+          '&MAIN' => new Main
+        )
+      )
+    );
+    ?>
+    <bold>text</bold>
+
+  Output
+
+    <b>text</b>
+
+Normally, you'd have all the PHP code in an auto_prepend_file and store the 
+plainXHTML (here: <b>text</b>) in .html files. Then you map PHP so that .html
+files arebeing processed. Magically all the XML in there is being transformed.
 
 3. Debugging
 
-* TODO (kk) entire section
+* TODO entire section
 
 3.1 The debugging filter
 
