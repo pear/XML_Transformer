@@ -20,136 +20,112 @@ require_once 'XML/Transformer/Namespace.php';
 require_once 'XML/Util.php';
 
 /**
-* DocBook Namespace Handler.
-*
-* This namespace handler provides transformations to render a subset of
-* the popular DocBook/XML markup (http://www.docbook.org/) into HTML.
-*
-* Transformations for the following DocBook tags are implemented:
-*
-*   * <artheader>
-*
-*   * <article>
-*
-*   * <author>
-*
-*   * <book>
-*
-*   * <chapter>
-*
-*   * <emphasis>
-*
-*   * <example>
-*
-*   * <figure>
-*
-*   * <filename>
-*
-*   * <firstname>
-*
-*   * <function>
-*
-*   * <graphic>
-*
-*   * <itemizedlist>
-*
-*   * <listitem>
-*
-*   * <orderedlist>
-*
-*   * <para>
-*
-*   * <programlisting>
-*
-*   * <section>
-*
-*   * <surname>
-*
-*   * <title>
-*
-*   * <ulink>
-*
-*   * <xref>
-*
-* Example
-*
-*   <?php
-*   require_once 'XML/Transformer/Driver/OutputBuffer.php';
-*   $t = new XML_Transformer_Driver_OutputBuffer(
-*     array(
-*       'autoload' => 'DocBook'
-*     )
-*   );
-*   ?>
-*   <article>
-*     <artheader>
-*       <title>
-*         An Article
-*       </title>
-*       <author>
-*         <firstname>
-*           Sebastian
-*         </firstname>
-*         <surname>
-*           Bergmann
-*         </surname>
-*       </author>
-*     </artheader>
-*
-*     <section id="foo">
-*       <title>
-*         Section One
-*       </title>
-*     </section>
-*
-*     <section id="bar">
-*       <title>
-*         Section Two
-*       </title>
-*
-*       <para>
-*         <xref linkend="foo" />
-*       </para>
-*     </section>
-*   </article>
-*
-* Output
-*
-*   <html>
-*     <head>
-*       <title>
-*         Sebastian Bergmann: An Article
-*       </title>
-*     </head>
-*     <body>
-*       <h1 class="title">
-*         Sebastian Bergmann: An Article
-*       </h1>
-*       <div class="section">
-*         <a id="foo"></a>
-*         <h2 class="title">
-*           1. Section One
-*         </h2>
-*       </div>
-*       <div class="section">
-*         <a id="bar"></a>
-*         <h2 class="title">
-*           2. Section Two
-*         </h2>
-*         <p>
-*           <a href="#foo">
-*             1. Section One
-*           </a>
-*         </p>
-*       </div>
-*     </body>
-*   </html>
-*
-* @author  Sebastian Bergmann <sb@sebastian-bergmann.de>
-* @author  Kristian Köhntopp <kris@koehntopp.de>
-* @version $Revision$
-* @access  public
-*/
+ * DocBook Namespace Handler.
+ *
+ * This namespace handler provides transformations to render a subset of
+ * the popular DocBook/XML markup (http://www.docbook.org/) into HTML.
+ *
+ * Transformations for the following DocBook tags are implemented:
+ *
+ *   - <artheader>
+ *   - <article>
+ *   - <author>
+ *   - <book>
+ *   - <chapter>
+ *   - <emphasis>
+ *   - <example>
+ *   - <figure>
+ *   - <filename>
+ *   - <firstname>
+ *   - <function>
+ *   - <graphic>
+ *   - <itemizedlist>
+ *   - <listitem>
+ *   - <orderedlist>
+ *   - <para>
+ *   - <programlisting>
+ *   - <section>
+ *   - <surname>
+ *   - <title>
+ *   - <ulink>
+ *   - <xref>
+ *
+ * Example
+ *
+ * <code>
+ * <?php
+ * require_once 'XML/Transformer/Driver/OutputBuffer.php';
+ * $t = new XML_Transformer_Driver_OutputBuffer(
+ *   array(
+ *     'autoload' => 'DocBook'
+ *   )
+ * );
+ * ?>
+ * <article>
+ *   <artheader>
+ *     <title>An Article</title>
+ *
+ *     <author>
+ *       <firstname>Sebastian</firstname>
+ *       <surname>Bergmann</surname>
+ *     </author>
+ *   </artheader>
+ *
+ *   <section id="foo">
+ *     <title>Section One</title>
+ *   </section>
+ *
+ *   <section id="bar">
+ *     <title>Section Two</title>
+ *
+ *     <para>
+ *       <xref linkend="foo" />
+ *     </para>
+ *   </section>
+ * </article>
+ * </code>
+ *
+ * Output
+ *
+ * <code>
+ * <html>
+ *   <head>
+ *     <title>
+ *       Sebastian Bergmann: An Article
+ *     </title>
+ *   </head>
+ *   <body>
+ *     <h1 class="title">
+ *       Sebastian Bergmann: An Article
+ *     </h1>
+ *     <div class="section">
+ *       <a id="foo"></a>
+ *       <h2 class="title">
+ *         1. Section One
+ *       </h2>
+ *     </div>
+ *     <div class="section">
+ *       <a id="bar"></a>
+ *       <h2 class="title">
+ *         2. Section Two
+ *       </h2>
+ *       <p>
+ *         <a href="#foo">
+ *           1. Section One
+ *         </a>
+ *       </p>
+ *     </div>
+ *   </body>
+ * </html>
+ * </code>
+ *
+ * @author      Sebastian Bergmann <sb@sebastian-bergmann.de>
+ * @author      Kristian Köhntopp <kris@koehntopp.de>
+ * @copyright   Copyright &copy; 2002-2004 Sebastian Bergmann <sb@sebastian-bergmann.de> and Kristian Köhntopp <kris@koehntopp.de>
+ * @license     http://www.php.net/license/3_0.txt The PHP License, Version 3.0
+ * @category    XML
+ * @package     XML_Transformer
+ */
 class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     // {{{ Members
 

@@ -19,17 +19,18 @@
 require_once 'XML/Transformer/Namespace.php';
 
 /**
-* Handler for the Widget Namespace.
-*
-* Implements <widget:obox /> similar to http://docs.roxen.com/roxen/2.2/creator/text/obox.tag.
-* Implements <widget:oboxtitle> as counterpart to <obox><title>..</title></obox> in Roxen.
-*
-*
-* @author  Sebastian Bergmann <sb@sebastian-bergmann.de>
-* @author  Kristian Köhntopp <kris@koehntopp.de>
-* @version $Revision$
-* @access  public
-*/
+ * Handler for the Widget Namespace.
+ *
+ * Implements <widget:obox /> similar to http://docs.roxen.com/roxen/2.2/creator/text/obox.tag.
+ * Implements <widget:oboxtitle> as counterpart to <obox><title>..</title></obox> in Roxen.
+ *
+ * @author      Sebastian Bergmann <sb@sebastian-bergmann.de>
+ * @author      Kristian Köhntopp <kris@koehntopp.de>
+ * @copyright   Copyright &copy; 2002-2004 Sebastian Bergmann <sb@sebastian-bergmann.de> and Kristian Köhntopp <kris@koehntopp.de>
+ * @license     http://www.php.net/license/3_0.txt The PHP License, Version 3.0
+ * @category    XML
+ * @package     XML_Transformer
+ */
 class XML_Transformer_Namespace_Widget extends XML_Transformer_Namespace {
     // {{{ Members
     

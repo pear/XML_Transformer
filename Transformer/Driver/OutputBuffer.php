@@ -18,46 +18,52 @@
 
 require_once 'XML/Transformer.php';
 
-/**
-* Uses PHP's Output Buffering mechanism to catch the
-* output of a script, transforms it, and outputs the
-* result.
-*
-* Example
-*
-*   <?php
-*   require_once 'XML/Transformer/Driver/OutputBuffer.php';
-*   require_once 'XML/Transformer/Namespace.php';
-*
-*   class Main extends XML_Transformer_Namespace {
-*       function start_bold($attributes) {
-*           return '<b>';
-*       }
-*
-*       function end_bold($cdata) {
-*           return $cdata . '</b>';
-*       }
-*   }
-*
-*   $t = new XML_Transformer_Driver_OutputBuffer(
-*     array(
-*       'overloadedNamespaces' => array(
-*         '&MAIN' => new Main
-*       )
-*     )
-*   );
-*   ?>
-*   <bold>text</bold>
-*
-* Output
-*
-*   <b>text</b>
-*
-* @author  Sebastian Bergmann <sb@sebastian-bergmann.de>
-* @author  Kristian Köhntopp <kris@koehntopp.de>
-* @version $Revision$
-* @access  public
-*/
+ /**
+ * Uses PHP's Output Buffering mechanism to catch the
+ * output of a script, transforms it, and outputs the
+ * result.
+ *
+ * Example
+ *
+ * <code>
+ * <?php
+ * require_once 'XML/Transformer/Driver/OutputBuffer.php';
+ * require_once 'XML/Transformer/Namespace.php';
+ *
+ * class Main extends XML_Transformer_Namespace {
+ *     function start_bold($attributes) {
+ *         return '<b>';
+ *     }
+ *
+ *     function end_bold($cdata) {
+ *         return $cdata . '</b>';
+ *     }
+ * }
+ *
+ * $t = new XML_Transformer_Driver_OutputBuffer(
+ *   array(
+ *     'overloadedNamespaces' => array(
+ *       '&MAIN' => new Main
+ *     )
+ *   )
+ * );
+ * ?>
+ * <bold>text</bold>
+ * </code>
+ *
+ * Output
+ *
+ * <code>
+ * <b>text</b>
+ * </code>
+ *
+ * @author      Sebastian Bergmann <sb@sebastian-bergmann.de>
+ * @author      Kristian Köhntopp <kris@koehntopp.de>
+ * @copyright   Copyright &copy; 2002-2004 Sebastian Bergmann <sb@sebastian-bergmann.de> and Kristian Köhntopp <kris@koehntopp.de>
+ * @license     http://www.php.net/license/3_0.txt The PHP License, Version 3.0
+ * @category    XML
+ * @package     XML_Transformer
+ */
 class XML_Transformer_Driver_OutputBuffer extends XML_Transformer {
     // {{{ Members
 

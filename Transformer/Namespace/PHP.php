@@ -19,46 +19,52 @@
 require_once 'XML/Transformer/Namespace.php';
 
 /**
-* Handler for the PHP Namespace.
-*
-* Example
-*
-*   <?php
-*   require_once 'XML/Transformer_OutputBuffer.php';
-*   require_once 'XML/Transformer/Namespace/PHP.php';
-*
-*   $t = new XML_Transformer_OutputBuffer;
-*   $t->overloadNamespace('php', new XML_Transformer_Namespace_PHP);
-*   $t->start();
-*   ?>
-*   <dl>
-*     <dd>Current time: <php:expr>time()</php:expr></dd>
-*     <php:setvariable name="foo">bar</php:setvariable>
-*     <dd>foo = <php:getvariable name="foo"/></dd>
-*   </dl>
-*
-*   <php:namespace name="my">
-*    <php:define name="tag">
-*     <h1 align="$align">$content</h1>
-*    </php:define>
-*   </php:namespace>
-*
-*   <my:tag align="center">Some Text</my:tag>
-*
-* Output
-*
-*   <dl>
-*     <dd>Current time: 1032158587</dd>
-*     <dd>foo = bar</dd>
-*   </dl>
-*
-*   <h1 align="center">Some Text</h1>
-*
-* @author  Sebastian Bergmann <sb@sebastian-bergmann.de>
-* @author  Kristian Köhntopp <kris@koehntopp.de>
-* @version $Revision$
-* @access  public
-*/
+ * Handler for the PHP Namespace.
+ *
+ * Example
+ *
+ * <code>
+ * <?php
+ * require_once 'XML/Transformer_OutputBuffer.php';
+ * require_once 'XML/Transformer/Namespace/PHP.php';
+ *
+ * $t = new XML_Transformer_OutputBuffer;
+ * $t->overloadNamespace('php', new XML_Transformer_Namespace_PHP);
+ * $t->start();
+ * ?>
+ * <dl>
+ *   <dd>Current time: <php:expr>time()</php:expr></dd>
+ *   <php:setvariable name="foo">bar</php:setvariable>
+ *   <dd>foo = <php:getvariable name="foo"/></dd>
+ * </dl>
+ *
+ * <php:namespace name="my">
+ *  <php:define name="tag">
+ *   <h1 align="$align">$content</h1>
+ *  </php:define>
+ * </php:namespace>
+ *
+ * <my:tag align="center">Some Text</my:tag>
+ * </code>
+ *
+ * Output
+ *
+ * <code>
+ * <dl>
+ *   <dd>Current time: 1032158587</dd>
+ *   <dd>foo = bar</dd>
+ * </dl>
+ *
+ * <h1 align="center">Some Text</h1>
+ * </code>
+ *
+ * @author      Sebastian Bergmann <sb@sebastian-bergmann.de>
+ * @author      Kristian Köhntopp <kris@koehntopp.de>
+ * @copyright   Copyright &copy; 2002-2004 Sebastian Bergmann <sb@sebastian-bergmann.de> and Kristian Köhntopp <kris@koehntopp.de>
+ * @license     http://www.php.net/license/3_0.txt The PHP License, Version 3.0
+ * @category    XML
+ * @package     XML_Transformer
+ */
 class XML_Transformer_Namespace_PHP extends XML_Transformer_Namespace {
     // {{{ Members
 

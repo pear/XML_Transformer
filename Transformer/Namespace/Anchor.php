@@ -19,45 +19,50 @@
 require_once 'XML/Transformer/Namespace.php';
 require_once 'XML/Util.php';
 
-/**
-* Handler for the Anchor Namespace.
-*
-* This namespace maintains an anchor database, a database of
-* named links. These links can be referenced using the iref
-* tag within this namespace.
-*
-* This allows for a central storage of links, changing links
-* need only be changed in one locations. Designers can reference
-* the link through the symbolic name.
-*
-* Example:
-*
-* ...
-*   $n = XML_Transformer_Namespace_Anchor;
-*   $t->overloadNamespace("a", $n);
-*
-*   $n->setDatabase(
-*         array(
-*           "pear" => array(
-*             "href"  => "http://pear.php.net",
-*             "title" => "PEAR Homepage"
-*           )
-*         )
-*   );
-* ?>
-* <p>The <a:iref iref="pear">PEAR Homepage</a:iref> is now online.</p>
-*
-*
-* Output:
-* <p>The <a href="http://www.pear.net" title="PEAR Homepage">PEAR
-* Homepage</a> is now online.</p>
-*
-*
-* @author  Sebastian Bergmann <sb@sebastian-bergmann.de>
-* @author  Kristian Köhntopp <kris@koehntopp.de>
-* @version $Revision$
-* @access  public
-*/
+ /**
+ * Handler for the Anchor Namespace.
+ *
+ * This namespace maintains an anchor database, a database of
+ * named links. These links can be referenced using the iref
+ * tag within this namespace.
+ *
+ * This allows for a central storage of links, changing links
+ * need only be changed in one locations. Designers can reference
+ * the link through the symbolic name.
+ *
+ * Example:
+ *
+ * <code>
+ * <?php
+ * $n = XML_Transformer_Namespace_Anchor;
+ * $t->overloadNamespace("a", $n);
+ *
+ * $n->setDatabase(
+ *       array(
+ *         "pear" => array(
+ *           "href"  => "http://pear.php.net",
+ *           "title" => "PEAR Homepage"
+ *         )
+ *       )
+ * );
+ * ?>
+ * <p>The <a:iref iref="pear">PEAR Homepage</a:iref> is now online.</p>
+ * </code>
+ *
+ * Output:
+ *
+ * <code>
+ * <p>The <a href="http://www.pear.net" title="PEAR Homepage">PEAR
+ * Homepage</a> is now online.</p>
+ * </code>
+ *
+ * @author      Sebastian Bergmann <sb@sebastian-bergmann.de>
+ * @author      Kristian Köhntopp <kris@koehntopp.de>
+ * @copyright   Copyright &copy; 2002-2004 Sebastian Bergmann <sb@sebastian-bergmann.de> and Kristian Köhntopp <kris@koehntopp.de>
+ * @license     http://www.php.net/license/3_0.txt The PHP License, Version 3.0
+ * @category    XML
+ * @package     XML_Transformer
+ */
 class XML_Transformer_Namespace_Anchor extends XML_Transformer_Namespace {
     // {{{ Members
 

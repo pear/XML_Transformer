@@ -20,17 +20,19 @@ require_once 'XML/Transformer/CallbackRegistry.php';
 require_once 'XML/Util.php';
 
 /**
-* XML Transformations in PHP.
-*
-* With this class one can easily bind PHP functionality to XML tags,
-* thus transforming an XML input tree into another XML tree without
-* the need for XSLT.
-*
-* @author  Sebastian Bergmann <sb@sebastian-bergmann.de>
-* @author  Kristian Köhntopp <kris@koehntopp.de>
-* @version $Revision$
-* @access  public
-*/
+ * XML Transformations in PHP.
+ *
+ * With this class one can easily bind PHP functionality to XML tags,
+ * thus transforming an XML input tree into another XML tree without
+ * the need for XSLT.
+ *
+ * @author      Sebastian Bergmann <sb@sebastian-bergmann.de>
+ * @author      Kristian Köhntopp <kris@koehntopp.de>
+ * @copyright   Copyright &copy; 2002-2004 Sebastian Bergmann <sb@sebastian-bergmann.de> and Kristian Köhntopp <kris@koehntopp.de>
+ * @license     http://www.php.net/license/3_0.txt The PHP License, Version 3.0
+ * @category    XML
+ * @package     XML_Transformer
+ */
 class XML_Transformer {
     // {{{ Members
 
