@@ -83,6 +83,40 @@
   </release>
   <changelog>
     <release>
+      <version>1.0.1</version>
+      <state>stable</state>
+      <date>2004-03-16</date>
+      <notes>
+<![CDATA[
+* The collapsing of empty tags (<foo></foo>) into their
+  short-tag (<foo />) equivalent has been made optional
+  and is disabled by default to restore backwards
+  compatibility with XML_Transformer versions prior to
+  0.9.0.
+]]>
+      </notes>
+    </release>
+    <release>
+      <version>1.0.0</version>
+      <state>stable</state>
+      <date>2004-03-15</date>
+      <notes>
+<![CDATA[
+* No functional changes since XML_Transformer-0.9.1.
+]]>
+      </notes>
+    </release>
+    <release>
+      <version>0.9.1</version>
+      <state>stable</state>
+      <date>2004-03-02</date>
+      <notes>
+<![CDATA[
+* Fixed E_NOTICE in XML/Transformer.php.
+]]>
+      </notes>
+    </release>
+    <release>
       <version>0.9.0</version>
       <state>stable</state>
       <date>2004-02-06</date>
