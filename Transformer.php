@@ -396,7 +396,7 @@ class XML_Transformer {
         // Push element's name and attributes onto the stack.
 
         $this->_level++;
-        $this->_elementStack[$this->_level]    = $qElement;
+        $this->_elementStack[$this->_level]    = $element;
         $this->_attributesStack[$this->_level] = $attributes;
 
         $this->_debug(
