@@ -29,9 +29,15 @@ class XML_Transformer_CallbackRegistry {
 
     /**
     * @var    array
-    * @access private
+    * @access public
     */
     var $overloadedNamespaces = array();
+
+    /**
+    * @var    boolean
+    * @access private
+    */
+    var $_locked = false;
 
     /**
     * If true, the transformation will continue recursively
@@ -91,6 +97,7 @@ class XML_Transformer_CallbackRegistry {
         if (is_object($object) &&
             method_exists($object, 'startElement') &&
             method_exists($object, 'endElement')) {
+            $this->overloadedNamespaces[$namespacePrefix]['active']             = true;
             $this->overloadedNamespaces[$namespacePrefix]['object']             = &$object;
             $this->overloadedNamespaces[$namespacePrefix]['recursiveOperation'] = is_bool($recursiveOperation) ? $recursiveOperation : $this->_recursiveOperation;
         } else {
@@ -147,6 +154,50 @@ class XML_Transformer_CallbackRegistry {
     function setRecursiveOperation($recursiveOperation) {
         if (is_bool($recursiveOperation)) {
             $this->_recursiveOperation = $recursiveOperation;
+        }
+    }
+
+    // }}}
+    // {{{ function function getLock($namespace)
+
+    /**
+    * Lock all namespace handlers except a given one.
+    *
+    * @string namespace
+    * @return boolean
+    * @access public
+    * @see    releaseLock()
+    */
+    function getLock($namespace) {
+        if (!$this->_locked) {
+            $namespacePrefixes = array_keys($this->overloadedNamespaces);
+
+            foreach ($namespacePrefixes as $namespacePrefix) {
+                if ($namespacePrefix != $namespace) {
+                    unset($this->overloadedNamespaces[$i]['active']);
+                }
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    // }}}
+    // {{{ function releaseLock()
+
+    /**
+    * Releases a lock.
+    *
+    * @access public
+    * @see    getLock()
+    */
+    function releaseLock() {
+        $namespacePrefixes = array_keys($this->overloadedNamespaces);
+
+        foreach ($namespacePrefixes as $namespacePrefix) {
+            $this->overloadedNamespaces[$i]['active'] = true;
         }
     }
 

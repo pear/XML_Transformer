@@ -415,7 +415,7 @@ class XML_Transformer {
         );
 
         if ($process &&
-            isset($this->_callbackRegistry->overloadedNamespaces[$namespacePrefix])) {
+            isset($this->_callbackRegistry->overloadedNamespaces[$namespacePrefix]['active'])) {
             // The event is handled by a callback
             // that is registered for this namespace.
 
@@ -457,7 +457,7 @@ class XML_Transformer {
         XML_Transformer_Util::qualifiedElement($element);
 
         if ($process &&
-            isset($this->_callbackRegistry->overloadedNamespaces[$namespacePrefix])) {
+            isset($this->_callbackRegistry->overloadedNamespaces[$namespacePrefix]['active'])) {
             // The event is handled by a callback
             // that is registered for this namespace.
 

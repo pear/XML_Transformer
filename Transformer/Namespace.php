@@ -152,6 +152,33 @@ class XML_Transformer_Namespace {
     }
 
     // }}}
+    // {{{ function function getLock()
+
+    /**
+    * Lock all other namespace handlers.
+    *
+    * @return boolean
+    * @access public
+    * @see    releaseLock()
+    */
+    function getLock() {
+        return $this->_transformer->_callbackRegistry->getLock($this->_prefix[0]);
+    }
+
+    // }}}
+    // {{{ function releaseLock()
+
+    /**
+    * Releases a lock.
+    *
+    * @access public
+    * @see    getLock()
+    */
+    function releaseLock() {
+        $this->_transformer->_callbackRegistry->releaseLock();
+    }
+
+    // }}}
 }
 
 /*
