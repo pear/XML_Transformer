@@ -20,7 +20,7 @@
 * Callback Registry.
 *
 * @author  Sebastian Bergmann <sb@sebastian-bergmann.de>
-*          Kristian Köhntopp <kris@koehntopp.de>
+* @author  Kristian Köhntopp <kris@koehntopp.de>
 * @version $Revision$
 * @access  public
 */

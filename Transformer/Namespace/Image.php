@@ -55,7 +55,7 @@ define(PEAR_XML_TRANSFORMER_IMAGE_cacheDir, '/cache/gtext');
 *              src="/cache/gtext/8b91aee0403c5cdccc1dd96bd4f49fbb.png" /></span>
 *
 * @author  Sebastian Bergmann <sb@sebastian-bergmann.de>
-*          Kristian Köhntopp <kris@koehntopp.de>
+* @author  Kristian Köhntopp <kris@koehntopp.de>
 * @version $Revision$
 * @access  public
 */

@@ -55,7 +55,7 @@ require_once 'XML/Transformer/Namespace.php';
 *   <h1 align="center">Some Text</h1>
 *
 * @author  Sebastian Bergmann <sb@sebastian-bergmann.de>
-*          Kristian Köhntopp <kris@koehntopp.de>
+* @author  Kristian Köhntopp <kris@koehntopp.de>
 * @version $Revision$
 * @access  public
 */
