@@ -17,6 +17,7 @@
 //
 
 require_once 'XML/Transformer/Namespace.php';
+require_once 'XML/Util.php';
 
 /**
 * DocBook Namespace Handler.
@@ -284,7 +285,7 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
         if (!$this->_secondPass) {
             return sprintf(
               '<artheader%s>',
-              XML_Transformer_Util::attributesToString($attributes)
+              XML_Util::attributesToString($attributes)
             );
         }
     }
@@ -939,7 +940,7 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
         } else {
             return sprintf(
               '<xref%s>',
-              XML_Transformer_Util::attributesToString($attributes)
+              XML_Util::attributesToString($attributes)
             );
         }
     }

@@ -24,13 +24,15 @@
   </maintainers>
   <license>PHP License</license>
   <release>
-    <version>0.8.2</version>
-    <state>stable</state>
-    <date>2003-09-11</date>
+    <version>0.9.0-dev</version>
+    <state>devel</state>
+    <date>200Y-MM-DD</date>
     <notes>
 <![CDATA[
-* Performance improvements due to changes in the
-  debug mode.
+- Removed XML_Transformer_Util::attributesToString()
+  method in favour of XML_Util::attributesToString().
+
+! The XML_Util package is now required.
 ]]>
     </notes>
     <filelist>
@@ -60,9 +62,21 @@
     <deps>
       <dep type="php" rel="ge" version="4.2.0" />
       <dep type="ext" rel="has">xml</dep>
+      <dep type="pkg" rel="has">XML_Util</dep>
     </deps>
   </release>
   <changelog>
+    <release>
+      <version>0.8.2</version>
+      <state>stable</state>
+      <date>2003-09-11</date>
+      <notes>
+<![CDATA[
+* Performance improvements due to changes in the
+  debug mode.
+]]>
+      </notes>
+    </release>
     <release>
       <version>0.8.1</version>
       <state>stable</state>

@@ -25,31 +25,6 @@
 * @access  public
 */
 class XML_Transformer_Util {
-    // {{{ function attributesToString($attributes)
-
-    /**
-    * Returns string representation of attributes array.
-    *
-    * @param  array
-    * @return string
-    * @access public
-    * @static
-    */
-    function attributesToString($attributes) {
-        $string = '';
-
-        if (is_array($attributes)) {
-            ksort($attributes);
-
-            foreach ($attributes as $key => $value) {
-                $string .= ' ' . $key . '="' . $value . '"';
-            }
-        }
-
-        return $string;
-    }
-
-    // }}}
     // {{{ function logMessage($logMessage, $target = 'error_log')
 
     /**

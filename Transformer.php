@@ -18,6 +18,7 @@
 
 require_once 'XML/Transformer/CallbackRegistry.php';
 require_once 'XML/Transformer/Util.php';
+require_once 'XML/Util.php';
 
 /**
 * XML Transformations in PHP.
@@ -214,9 +215,9 @@ class XML_Transformer {
           $stackdump .= sprintf(
             "level=%d\nelement=%s:%s\ncdata=%s\n\n",
             $i,
-            isset($this->_elementStack[$i])    ? $this->_elementStack[$i]                                              : '',
-            isset($this->_attributesStack[$i]) ? XML_Transformer_Util::attributesToString($this->_attributesStack[$i]) : '',
-            isset($this->_cdataStack[$i])      ? $this->_cdataStack[$i]                                                : ''
+            isset($this->_elementStack[$i])    ? $this->_elementStack[$i]                                  : '',
+            isset($this->_attributesStack[$i]) ? XML_Util::attributesToString($this->_attributesStack[$i]) : '',
+            isset($this->_cdataStack[$i])      ? $this->_cdataStack[$i]                                    : ''
           );
         }
 
@@ -488,7 +489,7 @@ class XML_Transformer {
                 'startElement[%d]: %s %s',
                 $this->_level,
                 $element,
-                XML_Transformer_Util::attributesToString($attributes)
+                XML_Util::attributesToString($attributes)
               )
             );
         }
@@ -509,7 +510,7 @@ class XML_Transformer {
             $cdata = sprintf(
               '<%s%s>',
               $element,
-              XML_Transformer_Util::attributesToString($attributes)
+              XML_Util::attributesToString($attributes)
             );
         }
 

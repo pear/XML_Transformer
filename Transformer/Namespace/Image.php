@@ -18,6 +18,7 @@
 
 require_once 'XML/Transformer/Namespace.php';
 require_once 'XML/Transformer/Util.php';
+require_once 'XML/Util.php';
 
 define('PEAR_XML_TRANSFORMER_IMAGE_FONTPATH', '/usr/X11R6/lib/X11/fonts/truetype');
 define('PEAR_XML_TRANSFORMER_IMAGE_cacheDir', '/cache/gtext');
@@ -118,7 +119,7 @@ class XML_Transformer_Namespace_Image extends XML_Transformer_Namespace {
 
         return sprintf(
           '<img %s />',
-          XML_Transformer_Util::attributesToString($this->_imgAttributes)
+          XML_Util::attributesToString($this->_imgAttributes)
         );
     }
 
@@ -314,7 +315,7 @@ class XML_Transformer_Namespace_Image extends XML_Transformer_Namespace {
          * This is very conserative and may create to many cachefiles,
          * but better to err on the safe side.
          */
-        $cachefile = md5(XML_Transformer_Util::attributesToString($this->_gtextAttributes) . ':' . $word) . '.png';
+        $cachefile = md5(XML_Util::attributesToString($this->_gtextAttributes) . ':' . $word) . '.png';
         $cacheDir  = $_SERVER['DOCUMENT_ROOT']
                    . PEAR_XML_TRANSFORMER_IMAGE_cacheDir;
         $cacheName = "$cacheDir/$cachefile";

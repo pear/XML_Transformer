@@ -102,21 +102,7 @@ XML_Transformer_Util. As such, it does not have any instances at all, but
 provides functionality, which can be used by XML_Transformer or your own 
 classes.
 
-We offer the attributesToString() method, which returns a hash of tag attributes 
-(key, value) as a string that can be added to your output.
-
-  $att = array(
-    'a' => 'blah',
-    'b' => 'yak'
-  );
-
-  echo XML_Transformer_Util::attributesToString($att);
-
-  /* prints
-   *   a='blah' b='yak'
-   */
-
-Another method, qualifiedElement(), takes a tag name or possibly a namespace:tag 
+The qualifiedElement() method takes a tag name or possibly a namespace:tag 
 combination and returns an array of namespace and tag name. If the tag name has 
 no namespace, the namespace is returned as '&MAIN'.
 

@@ -17,6 +17,7 @@
 //
 
 require_once 'XML/Transformer/Namespace.php';
+require_once 'XML/Util.php';
 
 /**
 * Handler for the Anchor Namespace.
@@ -194,7 +195,7 @@ class XML_Transformer_Namespace_Anchor extends XML_Transformer_Namespace {
             );
 
         return sprintf('<a %s>%s</a>',
-            XML_Transformer_Util::attributesToString($this->_anchorDatabase[$name]),
+            XML_Util::attributesToString($this->_anchorDatabase[$name]),
             $cdata
         );
     }
@@ -227,7 +228,7 @@ class XML_Transformer_Namespace_Anchor extends XML_Transformer_Namespace {
         $name = $keys[$pos];
 
         return sprintf('<a %s>%s</a>',
-            XML_Transformer_Util::attributesToString($this->_anchorDatabase[$name]),
+            XML_Util::attributesToString($this->_anchorDatabase[$name]),
             $cdata
         );
     }
