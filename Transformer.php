@@ -139,6 +139,7 @@ class XML_Transformer {
         $this->_caseFolding   = isset($parameters['caseFolding'])   ? $parameters['caseFolding']   : false;
         $this->_caseFoldingTo = isset($parameters['caseFoldingTo']) ? $parameters['caseFoldingTo'] : CASE_UPPER;
         $this->_lastProcessed = isset($parameters['lastProcessed']) ? $parameters['lastProcessed'] : '';
+        $this->_logTarget     = isset($parameters['logTarget'])     ? $parameters['logTarget']     : 'error_log';
 
         $autoload             = isset($parameters['autoload'])             ? $parameters['autoload']             : false;
         $overloadedNamespaces = isset($parameters['overloadedNamespaces']) ? $parameters['overloadedNamespaces'] : array();
