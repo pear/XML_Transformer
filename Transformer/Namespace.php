@@ -30,15 +30,30 @@
 *   require_once 'XML/Transformer/Namespace.php';
 *
 *   class Image extends XML_Transformer_Namespace {
-*       var $imageAttributes;
+*       var $imageAttributes = array();
 *
-*       function start_img($imageAttributes) {
-*           $this->imageAttributes = $imageAttributes;
-*           return "";
+*       function truePath($path) {
+*           if (php_sapi_name() == 'apache') {
+*               $r    = apache_lookup_uri($path);
+*               $path = $r->filename;
+*           } else {
+*               $path = $_SERVER['DOCUMENT_ROOT'] . "/$path";
+*           }
+*
+*           return $path;
+*       }
+*
+*       function start_img($attributes) {
+*           $this->imageAttributes = $attributes;
+*           return '';
 *       }
 *
 *       function end_img($cdata) {
-*           // do something
+*           $src = $this->truePath($this->imageAttributes['SRC']);
+*           list($w, $h, $t, $whs) = getimagesize($src);
+*
+*           $this->imageAttributes['HEIGHT'] = $w;
+*           $this->imageAttributes['WIDTH']  = $h;
 *
 *           return sprintf(
 *             '<img %s/>',
