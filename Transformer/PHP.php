@@ -97,35 +97,37 @@ class XML_Transformer_PHP extends XML_Transformer_Namespace {
     * @access public
     */
     function end_define($cdata) {
-      $classname = '_PEAR_XML_Transformer_PHP_' . $this->_defineName;
+        $classname = '_PEAR_XML_Transformer_PHP_' . $this->_defineName;
 
-      $str = sprintf(
-        'class %s extends XML_Transformer_Namespace {
-          var $attributes = array();
+        $str = sprintf(
+          'class %s extends XML_Transformer_Namespace {
+            var $attributes = array();
 
-          function start_%s($att) {
-            $this->attributes = $att;
-
-            return "";
-          }
-
-          function end_%s($content) {
-            foreach ($this->attributes as $__k => $__v) {
-              $$__k = $__v;
+            function start_%s($att) {
+              $this->attributes = $att;
+  
+              return "";
             }
 
-            return "%s";
-          }
-        };',$classname,
-           $this->_defineName,
-           $this->_defineName,
-           $cdata
-      );
+            function end_%s($content) {
+              foreach ($this->attributes as $__k => $__v) {
+                $$__k = $__v;
+              }
 
-      eval($str);
-      $this->_transformer->overloadNamespace($this->_namespace, new $classname, true);
+              return "%s";
+            }
+          };',
 
-      return '';
+          $classname,
+          $this->_defineName,
+          $this->_defineName,
+          $cdata
+        );
+
+        eval($str);
+        $this->_transformer->overloadNamespace($this->_namespace, new $classname, true);
+
+        return '';
     }
 
     // }}}
