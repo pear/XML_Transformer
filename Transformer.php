@@ -472,10 +472,8 @@ class XML_Transformer {
     function _startElement($parser, $element, $attributes) {
         $attributes = $this->canonicalize($attributes);
         $element    = $this->canonicalize($element);
+        $qElement   = XML_Util::splitQualifiedName($element, '&MAIN');
         $process    = $this->_lastProcessed != $element;
-
-        list($namespacePrefix, $qElement) =
-        XML_Transformer_Util::qualifiedElement($element);
 
         // Push element's name and attributes onto the stack.
 
@@ -495,12 +493,12 @@ class XML_Transformer {
         }
 
         if ($process &&
-            isset($this->_callbackRegistry->overloadedNamespaces[$namespacePrefix]['active'])) {
+            isset($this->_callbackRegistry->overloadedNamespaces[$qElement['namespace']]['active'])) {
             // The event is handled by a callback
             // that is registered for this namespace.
 
-            $cdata = $this->_callbackRegistry->overloadedNamespaces[$namespacePrefix]['object']->startElement(
-              $qElement,
+            $cdata = $this->_callbackRegistry->overloadedNamespaces[$qElement['namespace']]['object']->startElement(
+              $qElement['localPart'],
               $attributes
             );
         } else {
@@ -530,19 +528,17 @@ class XML_Transformer {
     function _endElement($parser, $element) {
         $cdata     = $this->_cdataStack[$this->_level];
         $element   = $this->canonicalize($element);
+        $qElement  = XML_Util::splitQualifiedName($element, '&MAIN');
         $process   = $this->_lastProcessed != $element;
         $recursion = false;
 
-        list($namespacePrefix, $qElement) =
-        XML_Transformer_Util::qualifiedElement($element);
-
         if ($process &&
-            isset($this->_callbackRegistry->overloadedNamespaces[$namespacePrefix]['active'])) {
+            isset($this->_callbackRegistry->overloadedNamespaces[$qElement['namespace']]['active'])) {
             // The event is handled by a callback
             // that is registered for this namespace.
 
-            $result = $this->_callbackRegistry->overloadedNamespaces[$namespacePrefix]['object']->endElement(
-              $qElement,
+            $result = $this->_callbackRegistry->overloadedNamespaces[$qElement['namespace']]['object']->endElement(
+              $qElement['localPart'],
               $cdata
             );
 
@@ -556,7 +552,7 @@ class XML_Transformer {
 
             $recursion = $reparse &&
                          isset($this->_elementStack[$this->_level-1]) &&
-                         $this->_callbackRegistry->overloadedNamespaces[$namespacePrefix]['recursiveOperation'];
+                         $this->_callbackRegistry->overloadedNamespaces[$qElement['namespace']]['recursiveOperation'];
         } else {
             // No callback was registered for this element's
             // closing tag, copy it.

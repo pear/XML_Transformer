@@ -50,26 +50,6 @@ class XML_Transformer_Util {
     }
 
     // }}}
-    // {{{ function qualifiedElement($element)
-
-    /**
-    * Returns namespace and qualified element name
-    * for a given element.
-    *
-    * @param  string
-    * @return array
-    * @access public
-    * @static
-    */
-    function qualifiedElement($element) {
-        if (strstr($element, ':')) {
-            return explode(':', $element);
-        } else {
-            return array('&MAIN', $element);
-        }
-    }
-
-    // }}}
 }
 
 /*

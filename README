@@ -95,25 +95,7 @@ on. XML_Transformer_CallbackRegistry is a Singleton, and the instance is
 maintained automatically by XML_Transformer. You never use it directly.
 
 
-2.3 XML_Transformer_Util
-
-The other auxiliary class is actually only a collection of static methods, 
-XML_Transformer_Util. As such, it does not have any instances at all, but 
-provides functionality, which can be used by XML_Transformer or your own 
-classes.
-
-The qualifiedElement() method takes a tag name or possibly a namespace:tag 
-combination and returns an array of namespace and tag name. If the tag name has 
-no namespace, the namespace is returned as '&MAIN'.
-
-  list($namespace, $element ) = XML_Transformer_Util::qualifiedElement('img');
-
-  /*
-   * returns array('&MAIN', 'img');
-   */
-
-
-2.4 XML_Transformer_Namespace
+2.3 XML_Transformer_Namespace
 
 Using XML_Transformer, all transformations are specified for namespaces. You may 
 specifiy transformations for the empty namespace, that is, you may transform 
@@ -196,7 +178,7 @@ generate indicies or other data collections. If this is needed, the namespace
 should set secondPassRequired to true (default: false).
 
 
-2.4.1 Using autoloading
+2.3.1 Using autoloading
 
 We have supplied a number of subclasses to XML_Transformer_Namespace. These 
 reside in a directory "./Transformer/Namespace" relative to the directory of the 
@@ -243,7 +225,7 @@ Limitations of autoloading:
   You must specify autoloading as a flag to the constructor.
 
 
-2.5 supplied XML_Transformer Namespaces
+2.4 supplied XML_Transformer Namespaces
 
 All namespaces we supply are derived from XML_Transformer_Namespace and subject 
 to the limitations and interfaces of this baseclass.
@@ -275,7 +257,7 @@ namespace classes at run-time. This is not a recommended practice, but probably
 interesting code.
 
 
-2.5.1 XML_Transformer_Namespace_Anchor
+2.4.1 XML_Transformer_Namespace_Anchor
 
 The Anchor namespace implements a number of tags that create indirect named 
 links (URNs): The link is specified by name, and the actual link location and 
@@ -285,7 +267,7 @@ that selects a random link is supplied.
 The default namespace prefix for this Namespace is "a".
 
 
-2.5.1.1 Link database
+2.4.1.1 Link database
 
 The link database is maintained internally as an array, _anchorDatabase and is 
 accessible through the setDatabase($db) and $db = getDatabase() accessor 
@@ -330,7 +312,7 @@ kind of attributes ("href", "title", ...) stored in the database. All attributes
 will be reproduced "as is" on the generated links.
 
 
-2.5.1.2 The <a:iref> tag
+2.4.1.2 The <a:iref> tag
 
 The <a:iref iref="name" /> container will look the given name up in the database 
 and produce a HTML <a /> container. The attributes find in the link database 
@@ -347,7 +329,7 @@ Result:
 Homepage</a>
 
 
-2.5.1.3 The <a:random> tag
+2.4.1.3 The <a:random> tag
 
 The <a:random /> container will select a random name from the database and link 
 to it. The contents of the <a:random /> become the contents of the generated
@@ -362,7 +344,7 @@ Result:
 <a href="http://www.php.net" title="PHP Homepage">A random link</a>
 
 
-2.5.1.4 The <a:link> tag
+2.4.1.4 The <a:link> tag
 
 The link tag will add a link to the database, and vanishes (generates no 
 output). The name attribute to link will define the link name, the other 
@@ -379,13 +361,13 @@ Result:
 The link is added to the database. No output is being generated.
 
 
-2.5.2 XML_Transformer_Namespace_DocBook
+2.4.2 XML_Transformer_Namespace_DocBook
 
 
 * TODO (sb)
 
 
-2.5.3 XML_Transformer_Namespace_Image
+2.4.3 XML_Transformer_Namespace_Image
 
 The Image namespace implements a number of tags that are loosely related to 
 images. At the moment there is a tag that autogenerates height/width attributes 
@@ -394,7 +376,7 @@ and another tag that turns its content text into a PNG with that text.
 The default namespace prefix for this namespace is "img".
 
 
-2.5.3.1 The <img> tag.
+2.4.3.1 The <img> tag.
 
 This tag will generate a <img /> tag with the original attributes, and will add 
 width and height attributes if possible.
@@ -408,7 +390,7 @@ Result:
 <img alt="blah" height="168" src="somepng.png" width="320" />
 
 
-2.5.3.2 The <gtext> tag
+2.4.3.2 The <gtext> tag
 
 Gtext is short for graphical text. The tag will take its content and turn it 
 into a single PNG or a series of PNGs using ImageTTFText() internally.
@@ -514,7 +496,7 @@ Example:
   <img:gtext split="char">Alphabet Soup!</img:gtext>
 
 
-2.5.3.3 The <gtextdefault> tag
+2.4.3.3 The <gtextdefault> tag
 
 <img:gtextdefault /> takes all attributes of <img:gtext /> and stores them. 
 These attributes are then supplied to all subsequent <img:gtext /> calls. They 
@@ -527,15 +509,15 @@ Example:
 See above, <img:gtext /> for an example.
 
 
-2.5.4 XML_Transformer_Namespace_PHP
+2.4.4 XML_Transformer_Namespace_PHP
 
-2.5.5 XML_Transformer_Namespace_Widget
+2.4.5 XML_Transformer_Namespace_Widget
 
-2.6 XML_Transformer_Driver_Cache
+2.5 XML_Transformer_Driver_Cache
 
 * TODO (sb)
 
-2.7 XML_Transformer_Driver_OutputBuffer
+2.6 XML_Transformer_Driver_OutputBuffer
 
 * TODO (sb)
 
