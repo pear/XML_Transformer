@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <!DOCTYPE package SYSTEM "http://pear.php.net/dtd/package-1.0">
 <package version="1.0">
-  <name>XML_Transformer2</name>
+  <name>XML_Transformer</name>
   <summary>XML Transformations in PHP</summary>
   <description>
     With the XML/Transformer class one can easily bind PHP
@@ -24,24 +24,16 @@
   </maintainers>
   <license>PHP License</license>
   <release>
-    <version>2.0.0-dev</version>
-    <state>devel</state>
-    <date>200Y-MM-DD</date>
+    <version>1.0.1</version>
+    <state>stable</state>
+    <date>2004-03-16</date>
     <notes>
 <![CDATA[
-* Refactored using PHP 5 syntax.
-
-* Variable access tags in the PHP Namespace have been
-  renamed. Tag names such as <php:getparameter/> are
-  hard to type, and have been used inconsistently
-  as well (<php:getparameter/>, but <php:cookievariable/>).
-
-  We break compatibility NOW and provide NO backward
-  compatibility interface (you can trivially write your
-  own, if you absolutely need it) in order to encourage
-  the use of the new names thus speeding up migration.
-
-! PHP 5.0.0 (or higher) is now required.
+* The collapsing of empty tags (<foo></foo>) into their
+  short-tag (<foo />) equivalent has been made optional
+  and is disabled by default to restore backwards
+  compatibility with XML_Transformer versions prior to
+  0.9.0.
 ]]>
     </notes>
     <filelist>
@@ -60,14 +52,6 @@
             <file role="php" name="Widget.php"/>
           </dir>
 
-          <dir name="Tests">
-            <dir name="Namespace">
-              <file role="php" name="AllTests.php"/>
-            </dir>
-
-            <file role="php" name="AllTests.php"/>
-          </dir>
-
           <file role="php" name="CallbackRegistry.php"/>
           <file role="php" name="Namespace.php"/>
         </dir>
@@ -76,26 +60,12 @@
       </dir>
     </filelist>
     <deps>
-      <dep type="php" rel="ge" version="5.0.0" />
+      <dep type="php" rel="ge" version="4.2.0" />
       <dep type="ext" rel="has">xml</dep>
       <dep type="pkg" rel="ge" version="0.5.1">XML_Util</dep>
     </deps>
   </release>
   <changelog>
-    <release>
-      <version>1.0.1</version>
-      <state>stable</state>
-      <date>2004-03-16</date>
-      <notes>
-<![CDATA[
-* The collapsing of empty tags (<foo></foo>) into their
-  short-tag (<foo />) equivalent has been made optional
-  and is disabled by default to restore backwards
-  compatibility with XML_Transformer versions prior to
-  0.9.0.
-]]>
-      </notes>
-    </release>
     <release>
       <version>1.0.0</version>
       <state>stable</state>

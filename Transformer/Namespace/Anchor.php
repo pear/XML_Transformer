@@ -65,21 +65,21 @@ class XML_Transformer_Namespace_Anchor extends XML_Transformer_Namespace {
     * @var    boolean
     * @access public
     */
-    public $defaultNamespacePrefix = 'a';
+    var $defaultNamespacePrefix = 'a';
 
     /**
     * @var    array
     * @access private
     */
-    private $anchorDatabase = array();
+    var $_anchorDatabase = array();
 
     /**
     * @var    array
     * @access private
     */
-    private $irefAttributes = array();
+    var $_irefAttributes = array();
 
-    // {{{ public function setDatabase($db)
+    // {{{ function setDatabase($db)
 
     /**
     * Install a complete link database array.
@@ -88,14 +88,14 @@ class XML_Transformer_Namespace_Anchor extends XML_Transformer_Namespace {
     * @return boolean
     * @access public
     */
-    public function setDatabase($db) {
-        $this->anchorDatabase = $db;
+    function setDatabase($db) {
+        $this->_anchorDatabase = $db;
 
         return true;
     }
 
     // }}}
-    // {{{ public function getDatabase($db)
+    // {{{ function getDatabase($db)
 
     /**
     * Return the link database array.
@@ -103,12 +103,12 @@ class XML_Transformer_Namespace_Anchor extends XML_Transformer_Namespace {
     * @return array
     * @access public
     */
-    public function getDatabase() {
-        return $this->anchorDatabase;
+    function getDatabase() {
+        return $this->_anchorDatabase;
     }
 
     // }}}
-    // {{{ public function addItem($item, $attr)
+    // {{{ function addItem($item, $attr)
 
     /**
     * Add an item $item with the attributes $attr to the link database array.
@@ -118,14 +118,14 @@ class XML_Transformer_Namespace_Anchor extends XML_Transformer_Namespace {
     * @return boolean
     * @access public
     */
-    public function addItem($item, $attr) {
-        $this->anchorDatabase[$item] = $attr;
+    function addItem($item, $attr) {
+        $this->_anchorDatabase[$item] = $attr;
 
         return true;
     }
 
     // }}}
-    // {{{ public function dropItem($item)
+    // {{{ function dropItem($item)
 
     /**
     * Drop an item $item drom the link database array.
@@ -134,17 +134,17 @@ class XML_Transformer_Namespace_Anchor extends XML_Transformer_Namespace {
     * @return boolean
     * @access public
     */
-    function public dropItem($item) {
-        if (!isset($this->anchorDatabase[$item]))
+    function dropItem($item) {
+        if (!isset($this->_anchorDatabase[$item]))
             return false;
 
-        unset($this->anchorDatabase[$item]);
+        unset($this->_anchorDatabase[$item]);
 
         return true;
     }
 
     // }}}
-    // {{{ public function getItem($item)
+    // {{{ function getItem($item)
 
     /**
     * Get an item $item from the link database array.
@@ -153,95 +153,95 @@ class XML_Transformer_Namespace_Anchor extends XML_Transformer_Namespace {
     * @return mixed
     * @access public
     */
-    public function getItem($item) {
-        if (!isset($this->anchorDatabase[$item])) {
+    function getItem($item) {
+        if (!isset($this->_anchorDatabase[$item])) {
             return false;
         }
 
-        return $this->anchorDatabase[$item];
+        return $this->_anchorDatabase[$item];
     }
 
     // }}}
-    // {{{ public function start_iref($attributes)
+    // {{{ function start_iref($attributes)
 
     /**
     * @param  array
     * @return string
     * @access public
     */
-    public function start_iref($attributes) {
-        $this->irefAttributes = $attributes;
+    function start_iref($attributes) {
+        $this->_irefAttributes = $attributes;
 
         return '';
     }
 
     // }}}
-    // {{{ public function end_iref($cdata)
+    // {{{ function end_iref($cdata)
 
     /**
     * @param  string
     * @return string
     * @access public
     */
-    public function end_iref($cdata) {
-        if (!isset($this->irefAttributes['iref']))
+    function end_iref($cdata) {
+        if (!isset($this->_irefAttributes['iref']))
             return '';
 
-        $name = $this->irefAttributes['iref'];
-        if (!isset($this->anchorDatabase[$name]))
+        $name = $this->_irefAttributes['iref'];
+        if (!isset($this->_anchorDatabase[$name]))
             return sprintf('<span>(undefined reference %s)%s</span>',
                 $name,
                 $cdata
             );
 
         return sprintf('<a %s>%s</a>',
-            XML_Util::attributesToString($this->anchorDatabase[$name]),
+            XML_Util::attributesToString($this->_anchorDatabase[$name]),
             $cdata
         );
     }
 
     // }}}
-    // {{{ public function start_random($attributes)
+    // {{{ function start_random($attributes)
 
     /**
     * @param  array
     * @return string
     * @access public
     */
-    public function start_random($attributes) {
+    function start_random($attributes) {
         return '';
     }
 
     // }}}
-    // {{{ public function end_random($cdata)
+    // {{{ function end_random($cdata)
 
     /**
     * @param  string
     * @return string
     * @access public
     */
-    public function end_random($cdata) {
+    function end_random($cdata) {
         srand((double)microtime()*1000000);
 
-        $keys = array_keys($this->anchorDatabase);
+        $keys = array_keys($this->_anchorDatabase);
         $pos  = rand(0, count($keys)-1);
         $name = $keys[$pos];
 
         return sprintf('<a %s>%s</a>',
-            XML_Util::attributesToString($this->anchorDatabase[$name]),
+            XML_Util::attributesToString($this->_anchorDatabase[$name]),
             $cdata
         );
     }
 
     // }}}
-    // {{{ public function start_link($attributes)
+    // {{{ function start_link($attributes)
 
     /**
     * @param  array
     * @return string
     * @access public
     */
-    public function start_link($attributes) {
+    function start_link($attributes) {
         if (!isset($attributes['name']))
             return '';
 
@@ -253,14 +253,14 @@ class XML_Transformer_Namespace_Anchor extends XML_Transformer_Namespace {
     }
 
     // }}}
-    // {{{ public function end_link($cdata)
+    // {{{ function end_link($cdata)
 
     /**
     * @param  string
     * @return string
     * @access public
     */
-    public function end_link($cdata) {
+    function end_link($cdata) {
         return '';
     }
 

@@ -157,61 +157,61 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     * @var    string
     * @access public
     */
-    public $defaultNamespacePrefix = '&MAIN';
+    var $defaultNamespacePrefix = '&MAIN';
 
     /**
     * @var    boolean
     * @access public
     */
-    public $secondPassRequired = true;
+    var $secondPassRequired = true;
 
     /**
     * @var    string
     * @access private
     */
-    private $author = '';
+    var $_author = '';
 
     /**
     * @var    array
     * @access private
     */
-    private $context = array();
+    var $_context = array();
 
     /**
     * @var    string
     * @access private
     */
-    private $currentExampleNumber = '';
+    var $_currentExampleNumber = '';
 
     /**
     * @var    string
     * @access private
     */
-    private $currentFigureNumber = '';
+    var $_currentFigureNumber = '';
 
     /**
     * @var    string
     * @access private
     */
-    private $currentSectionNumber = '';
+    var $_currentSectionNumber = '';
 
     /**
     * @var    array
     * @access private
     */
-    private $examples = array();
+    var $_examples = array();
 
     /**
     * @var    array
     * @access private
     */
-    private $figures = array();
+    var $_figures = array();
 
     /**
     * @var    array
     * @access private
     */
-    private $highlightColors = array(
+    var $_highlightColors = array(
       'bg'      => '#ffffff',
       'comment' => '#ba8370',
       'default' => '#113d73',
@@ -224,65 +224,65 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     * @var    array
     * @access private
     */
-    private $ids = array();
+    var $_ids = array();
 
     /**
     * @var    boolean
     * @access private
     */
-    private $roles = array();
+    var $_roles = array();
 
     /**
     * @var    array
     * @access private
     */
-    private $secondPass = false;
+    var $_secondPass = false;
 
     /**
     * @var    array
     * @access private
     */
-    private $sections = array();
+    var $_sections = array();
 
     /**
     * @var    string
     * @access private
     */
-    private $title = '';
+    var $_title = '';
 
     /**
     * @var    array
     * @access private
     */
-    private $xref = '';
+    var $_xref = '';
 
     // }}}
-    // {{{ public function __construct($parameters = array())
+    // {{{ function XML_Transformer_Namespace_DocBook($parameters = array())
 
     /**
     * @param  array
     * @access public
     */
-    public function __construct($parameters = array()) {
+    function XML_Transformer_Namespace_DocBook($parameters = array()) {
         if (isset($parameters['highlightColors'])) {
-            $this->highlightColors = $parameters['highlightColors'];
+            $this->_highlightColors = $parameters['highlightColors'];
         }
 
-        foreach ($this->highlightColors as $highlight => $color) {
+        foreach ($this->_highlightColors as $highlight => $color) {
             ini_set('highlight.' . $highlight, $color);
         }
     }
 
     // }}}
-    // {{{ public function start_artheader($attributes)
+    // {{{ function start_artheader($attributes)
 
     /**
     * @param  array
     * @return string
     * @access public
     */
-    public function start_artheader($attributes) {
-        if (!$this->secondPass) {
+    function start_artheader($attributes) {
+        if (!$this->_secondPass) {
             return sprintf(
               '<artheader%s>',
               XML_Util::attributesToString($attributes)
@@ -291,15 +291,15 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     }
 
     // }}}
-    // {{{ public function end_artheader($cdata)
+    // {{{ function end_artheader($cdata)
 
     /**
     * @param  string
     * @return string
     * @access public
     */
-    public function end_artheader($cdata) {
-        if (!$this->secondPass) {
+    function end_artheader($cdata) {
+        if (!$this->_secondPass) {
             $cdata = $cdata . '</artheader>';
 
             return array(
@@ -310,85 +310,85 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     }
 
     // }}}
-    // {{{ public function start_article($attributes)
+    // {{{ function start_article($attributes)
 
     /**
     * @param  array
     * @return string
     * @access public
     */
-    public function start_article($attributes) {
-        return $this->startDocument('article', $attributes);
+    function start_article($attributes) {
+        return $this->_startDocument('article', $attributes);
     }
 
     // }}}
-    // {{{ public function end_article($cdata)
+    // {{{ function end_article($cdata)
 
     /**
     * @param  string
     * @return string
     * @access public
     */
-    public function end_article($cdata) {
-        return $this->endDocument('article', $cdata);
+    function end_article($cdata) {
+        return $this->_endDocument('article', $cdata);
     }
 
     // }}}
-    // {{{ public function start_author($attributes)
+    // {{{ function start_author($attributes)
 
     /**
     * @param  array
     * @return string
     * @access public
     */
-    public function start_author($attributes) {}
+    function start_author($attributes) {}
 
     // }}}
-    // {{{ public function end_author($cdata)
+    // {{{ function end_author($cdata)
 
     /**
     * @param  string
     * @return string
     * @access public
     */
-    public function end_author($cdata) {
-        $this->author = trim(str_replace("\n", '', $cdata));
+    function end_author($cdata) {
+        $this->_author = trim(str_replace("\n", '', $cdata));
     }
 
     // }}}
-    // {{{ public function start_book($attributes)
+    // {{{ function start_book($attributes)
 
     /**
     * @param  array
     * @return string
     * @access public
     */
-    public function start_book($attributes) {
-        return $this->startDocument('book', $attributes);
+    function start_book($attributes) {
+        return $this->_startDocument('book', $attributes);
     }
 
     // }}}
-    // {{{ public function end_book($cdata)
+    // {{{ function end_book($cdata)
 
     /**
     * @param  string
     * @return string
     * @access public
     */
-    public function end_book($cdata) {
-        return $this->endDocument('book', $cdata);
+    function end_book($cdata) {
+        return $this->_endDocument('book', $cdata);
     }
 
     // }}}
-    // {{{ public function start_chapter($attributes)
+    // {{{ function start_chapter($attributes)
 
     /**
     * @param  array
     * @return string
     * @access public
     */
-    public function start_chapter($attributes) {
-        $id = $this->startSection(
+    function start_chapter($attributes) {
+        $id = $this->_startSection(
           'chapter',
           isset($attributes['id']) ? $attributes['id'] : ''
         );
@@ -397,75 +397,75 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     }
 
     // }}}
-    // {{{ public function end_chapter($cdata)
+    // {{{ function end_chapter($cdata)
 
     /**
     * @param  string
     * @return string
     * @access public
     */
-    public function end_chapter($cdata) {
-        $this->endSection('chapter');
+    function end_chapter($cdata) {
+        $this->_endSection('chapter');
 
         return $cdata . '</div>';
     }
 
     // }}}
-    // {{{ public function start_emphasis($attributes)
+    // {{{ function start_emphasis($attributes)
 
     /**
     * @param  array
     * @return string
     * @access public
     */
-    public function start_emphasis($attributes) {
+    function start_emphasis($attributes) {
         $emphasisRole = isset($attributes['role']) ? $attributes['role'] : '';
 
         switch($emphasisRole) {
             case 'bold':
             case 'strong': {
-                $this->roles['emphasis'] = 'b';
+                $this->_roles['emphasis'] = 'b';
             }
             break;
 
             default: {
-                $this->roles['emphasis'] = 'i';
+                $this->_roles['emphasis'] = 'i';
             }
         }
 
-        return '<' . $this->roles['emphasis'] . '>';
+        return '<' . $this->_roles['emphasis'] . '>';
     }
 
     // }}}
-    // {{{ public function end_emphasis($cdata)
+    // {{{ function end_emphasis($cdata)
 
     /**
     * @param  string
     * @return string
     * @access public
     */
-    public function end_emphasis($cdata) {
+    function end_emphasis($cdata) {
         $cdata = sprintf(
           '%s</%s>',
           $cdata,
-          $this->roles['emphasis']
+          $this->_roles['emphasis']
         );
 
-        $this->roles['emphasis'] = '';
+        $this->_roles['emphasis'] = '';
 
         return $cdata;
     }
 
     // }}}
-    // {{{ public function start_example($attributes)
+    // {{{ function start_example($attributes)
 
     /**
     * @param  array
     * @return string
     * @access public
     */
-    public function start_example($attributes) {
-        $id = $this->startSection(
+    function start_example($attributes) {
+        $id = $this->_startSection(
           'example',
           isset($attributes['id']) ? $attributes['id'] : ''
         );
@@ -474,29 +474,29 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     }
 
     // }}}
-    // {{{ public function end_example($cdata)
+    // {{{ function end_example($cdata)
 
     /**
     * @param  string
     * @return string
     * @access public
     */
-    public function end_example($cdata) {
-        $this->endSection('example');
+    function end_example($cdata) {
+        $this->_endSection('example');
 
         return $cdata . '</div>';
     }
 
     // }}}
-    // {{{ public function start_figure($attributes)
+    // {{{ function start_figure($attributes)
 
     /**
     * @param  array
     * @return string
     * @access public
     */
-    public function start_figure($attributes) {
-        $id = $this->startSection(
+    function start_figure($attributes) {
+        $id = $this->_startSection(
           'figure',
           isset($attributes['id']) ? $attributes['id'] : ''
         );
@@ -505,86 +505,86 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     }
 
     // }}}
-    // {{{ public function end_figure($cdata)
+    // {{{ function end_figure($cdata)
 
     /**
     * @param  string
     * @return string
     * @access public
     */
-    public function end_figure($cdata) {
-        $this->endSection('figure');
+    function end_figure($cdata) {
+        $this->_endSection('figure');
 
         return $cdata . '</div>';
     }
 
     // }}}
-    // {{{ public function start_filename($attributes)
+    // {{{ function start_filename($attributes)
 
     /**
     * @param  array
     * @return string
     * @access public
     */
-    public function start_filename($attributes) {
+    function start_filename($attributes) {
         return '<tt>';
     }
 
     // }}}
-    // {{{ public function end_filename($cdata)
+    // {{{ function end_filename($cdata)
 
     /**
     * @param  string
     * @return string
     * @access public
     */
-    public function end_filename($cdata) {
+    function end_filename($cdata) {
         return trim($cdata) . '</tt>';
     }
 
     // }}}
-    // {{{ public function start_firstname($attributes)
+    // {{{ function start_firstname($attributes)
 
     /**
     * @param  array
     * @return string
     * @access public
     */
-    public function start_firstname($attributes) {}
+    function start_firstname($attributes) {}
 
     // }}}
-    // {{{ public function end_firstname($cdata)
+    // {{{ function end_firstname($cdata)
 
     /**
     * @param  string
     * @return string
     * @access public
     */
-    public function end_firstname($cdata) {
+    function end_firstname($cdata) {
         return trim($cdata);
     }
 
     // }}}
-    // {{{ public function start_function($attributes)
+    // {{{ function start_function($attributes)
 
     /**
     * @param  array
     * @return string
     * @access public
     */
-    public function start_function($attributes) {
+    function start_function($attributes) {
         return '<code><b>';
     }
 
     // }}}
-    // {{{ public function end_function($cdata)
+    // {{{ function end_function($cdata)
 
     /**
     * @param  string
     * @return string
     * @access public
     */
-    public function end_function($cdata) {
+    function end_function($cdata) {
         return array(
           trim($cdata) . '</b></code>',
           false
@@ -592,14 +592,14 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     }
 
     // }}}
-    // {{{ public function start_graphic($attributes)
+    // {{{ function start_graphic($attributes)
 
     /**
     * @param  array
     * @return string
     * @access public
     */
-    public function start_graphic($attributes) {
+    function start_graphic($attributes) {
         return sprintf(
           '<img alt="%s" border="0" src="%s"%s%s/>',
 
@@ -611,125 +611,125 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     }
 
     // }}}
-    // {{{ public function end_graphic($cdata)
+    // {{{ function end_graphic($cdata)
 
     /**
     * @param  string
     * @return string
     * @access public
     */
-    public function end_graphic($cdata) {
+    function end_graphic($cdata) {
         return $cdata;
     }
 
     // }}}
-    // {{{ public function start_itemizedlist($attributes)
+    // {{{ function start_itemizedlist($attributes)
 
     /**
     * @param  array
     * @return string
     * @access public
     */
-    public function start_itemizedlist($attributes) {
+    function start_itemizedlist($attributes) {
         return '<ul>';
     }
 
     // }}}
-    // {{{ public function end_itemizedlist($cdata)
+    // {{{ function end_itemizedlist($cdata)
 
     /**
     * @param  string
     * @return string
     * @access public
     */
-    public function end_itemizedlist($cdata) {
+    function end_itemizedlist($cdata) {
         return $cdata . '</ul>';
     }
 
     // }}}
-    // {{{ public function start_listitem($attributes)
+    // {{{ function start_listitem($attributes)
 
     /**
     * @param  array
     * @return string
     * @access public
     */
-    public function start_listitem($attributes) {
+    function start_listitem($attributes) {
         return '<li>';
     }
 
     // }}}
-    // {{{ public function end_listitem($cdata)
+    // {{{ function end_listitem($cdata)
 
     /**
     * @param  string
     * @return string
     * @access public
     */
-    public function end_listitem($cdata) {
+    function end_listitem($cdata) {
         return $cdata . '</li>';
     }
 
     // }}}
-    // {{{ public function start_orderedlist($attributes)
+    // {{{ function start_orderedlist($attributes)
 
     /**
     * @param  array
     * @return string
     * @access public
     */
-    public function start_orderedlist($attributes) {
+    function start_orderedlist($attributes) {
         return '<ol>';
     }
 
     // }}}
-    // {{{ public function end_orderedlist($cdata)
+    // {{{ function end_orderedlist($cdata)
 
     /**
     * @param  string
     * @return string
     * @access public
     */
-    public function end_orderedlist($cdata) {
+    function end_orderedlist($cdata) {
         return $cdata . '</ol>';
     }
 
     // }}}
-    // {{{ public function start_para($attributes)
+    // {{{ function start_para($attributes)
 
     /**
     * @param  array
     * @return string
     * @access public
     */
-    public function start_para($attributes) {
+    function start_para($attributes) {
         return '<p>';
     }
 
     // }}}
-    // {{{ public function end_para($cdata)
+    // {{{ function end_para($cdata)
 
     /**
     * @param  string
     * @return string
     * @access public
     */
-    public function end_para($cdata) {
+    function end_para($cdata) {
         return $cdata . '</p>';
     }
 
     // }}}
-    // {{{ public function start_programlisting($attributes)
+    // {{{ function start_programlisting($attributes)
 
     /**
     * @param  array
     * @return string
     * @access public
     */
-    public function start_programlisting($attributes) {
-        $this->roles['programlisting'] = isset($attributes['role']) ? $attributes['role'] : '';
+    function start_programlisting($attributes) {
+        $this->_roles['programlisting'] = isset($attributes['role']) ? $attributes['role'] : '';
 
-        switch ($this->roles['programlisting']) {
+        switch ($this->_roles['programlisting']) {
             case 'php': {
                 return '';
             }
@@ -742,15 +742,15 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     }
 
     // }}}
-    // {{{ public function end_programlisting($cdata)
+    // {{{ function end_programlisting($cdata)
 
     /**
     * @param  string
     * @return mixed
     * @access public
     */
-    public function end_programlisting($cdata) {
-        switch ($this->roles['programlisting']) {
+    function end_programlisting($cdata) {
+        switch ($this->_roles['programlisting']) {
             case 'php': {
                 $cdata = array(
                   str_replace(
@@ -771,21 +771,21 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
             }
         }
 
-        $this->roles['programlisting'] = '';
+        $this->_roles['programlisting'] = '';
 
         return $cdata;
     }
 
     // }}}
-    // {{{ public function start_section($attributes)
+    // {{{ function start_section($attributes)
 
     /**
     * @param  array
     * @return string
     * @access public
     */
-    public function start_section($attributes) {
-        $id = $this->startSection(
+    function start_section($attributes) {
+        $id = $this->_startSection(
           'section',
           isset($attributes['id']) ? $attributes['id'] : ''
         );
@@ -794,88 +794,88 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     }
 
     // }}}
-    // {{{ public function end_section($cdata)
+    // {{{ function end_section($cdata)
 
     /**
     * @param  string
     * @return string
     * @access public
     */
-    public function end_section($cdata) {
-        $this->endSection('section');
+    function end_section($cdata) {
+        $this->_endSection('section');
 
         return $cdata . '</div>';
     }
 
     // }}}
-    // {{{ public function start_surname($attributes)
+    // {{{ function start_surname($attributes)
 
     /**
     * @param  array
     * @return string
     * @access public
     */
-    public function start_surname($attributes) {}
+    function start_surname($attributes) {}
 
     // }}}
-    // {{{ public function end_surname($cdata)
+    // {{{ function end_surname($cdata)
 
     /**
     * @param  string
     * @return string
     * @access public
     */
-    public function end_surname($cdata) {
+    function end_surname($cdata) {
         return trim($cdata);
     }
 
     // }}}
-    // {{{ public function start_title($attributes)
+    // {{{ function start_title($attributes)
 
     /**
     * @param  array
     * @return string
     * @access public
     */
-    public function start_title($attributes) {
-        switch ($this->context[sizeof($this->context)-1]) {
+    function start_title($attributes) {
+        switch ($this->_context[sizeof($this->_context)-1]) {
             case 'chapter':
             case 'section': {
-                return '<h2 class="title">' . $this->currentSectionNumber . '. ';
+                return '<h2 class="title">' . $this->_currentSectionNumber . '. ';
             }
             break;
 
             case 'example': {
-                return '<h3 class="title">Example ' . $this->currentExampleNumber;
+                return '<h3 class="title">Example ' . $this->_currentExampleNumber;
             }
             break;
 
             case 'figure': {
-                return '<h3 class="title">Figure ' . $this->currentFigureNumber;
+                return '<h3 class="title">Figure ' . $this->_currentFigureNumber;
             }
             break;
         }
     }
 
     // }}}
-    // {{{ public function end_title($cdata)
+    // {{{ function end_title($cdata)
 
     /**
     * @param  string
     * @return string
     * @access public
     */
-    public function end_title($cdata) {
+    function end_title($cdata) {
         $cdata = trim($cdata);
 
-        if (!empty($this->ids[sizeof($this->ids)-1])) {
-            $this->xref[$this->ids[sizeof($this->ids)-1]] = strip_tags($cdata);
+        if (!empty($this->_ids[sizeof($this->_ids)-1])) {
+            $this->_xref[$this->_ids[sizeof($this->_ids)-1]] = strip_tags($cdata);
         }
 
-        switch ($this->context[sizeof($this->context)-1]) {
+        switch ($this->_context[sizeof($this->_context)-1]) {
             case 'article':
             case 'book': {
-                $this->title = $cdata;
+                $this->_title = $cdata;
             }
             break;
 
@@ -898,44 +898,44 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     }
 
     // }}}
-    // {{{ public function start_ulink($attributes)
+    // {{{ function start_ulink($attributes)
 
     /**
     * @param  array
     * @return string
     * @access public
     */
-    public function start_ulink($attributes) {
+    function start_ulink($attributes) {
         return '<a href="' . $attributes['url'] . '">';
     }
 
     // }}}
-    // {{{ public function end_ulink($cdata)
+    // {{{ function end_ulink($cdata)
 
     /**
     * @param  string
     * @return string
     * @access public
     */
-    public function end_ulink($cdata) {
+    function end_ulink($cdata) {
         return $cdata . '</a>';
     }
 
     // }}}
-    // {{{ public function start_xref($attributes)
+    // {{{ function start_xref($attributes)
 
     /**
     * @param  array
     * @return string
     * @access public
     */
-    public function start_xref($attributes) {
-        if ($this->secondPass) {
+    function start_xref($attributes) {
+        if ($this->_secondPass) {
             return sprintf(
               '<a href="#%s">%s</a>',
 
               isset($attributes['linkend'])               ? $attributes['linkend']               : '',
-              isset($this->xref[$attributes['linkend']]) ? $this->xref[$attributes['linkend']] : ''
+              isset($this->_xref[$attributes['linkend']]) ? $this->_xref[$attributes['linkend']] : ''
             );
         } else {
             return sprintf(
@@ -946,15 +946,15 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     }
 
     // }}}
-    // {{{ public function end_xref($cdata)
+    // {{{ function end_xref($cdata)
 
     /**
     * @param  string
     * @return string
     * @access public
     */
-    public function end_xref($cdata) {
-        if (!$this->secondPass) {
+    function end_xref($cdata) {
+        if (!$this->_secondPass) {
             $cdata = $cdata . '</xref>';
         }
 
@@ -965,7 +965,7 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     }
 
     // }}}
-    // {{{ private function startDocument($type, $attributes)
+    // {{{ function _startDocument($type, $attributes)
 
     /**
     * @param  string
@@ -973,9 +973,9 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     * @return string
     * @access private
     */
-    private function startDocument($type, $attributes) {
-        if (!$this->secondPass) {
-            $id = $this->startSection(
+    function _startDocument($type, $attributes) {
+        if (!$this->_secondPass) {
+            $id = $this->_startSection(
               $type,
               isset($attributes['id']) ? $attributes['id'] : ''
             );
@@ -990,16 +990,16 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
             return sprintf(
               '<html><head><title>%s: %s</title><body><h1 class="title">%s: %s</h1>',
 
-              $this->author,
-              $this->title,
-              $this->author,
-              $this->title
+              $this->_author,
+              $this->_title,
+              $this->_author,
+              $this->_title
             );
         }
     }
 
     // }}}
-    // {{{ private function endDocument($type, $cdata)
+    // {{{ function _endDocument($type, $cdata)
 
     /**
     * @param  string
@@ -1007,11 +1007,11 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     * @return string
     * @access private
     */
-    private function endDocument($type, $cdata) {
-        if (!$this->secondPass) {
-            $this->endSection($type);
+    function _endDocument($type, $cdata) {
+        if (!$this->_secondPass) {
+            $this->_endSection($type);
 
-            $this->secondPass = true;
+            $this->_secondPass = true;
 
             $cdata = sprintf(
               '%s</%s>',
@@ -1030,67 +1030,67 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     }
 
     // }}}
-    // {{{ private function startSection($type, $id)
+    // {{{ function _startSection($type, $id)
 
     /**
     * @param  string
     * @return string
     * @access private
     */
-    private function startSection($type, $id) {
-        array_push($this->context, $type);
-        array_push($this->ids,     $id);
+    function _startSection($type, $id) {
+        array_push($this->_context, $type);
+        array_push($this->_ids,     $id);
 
         switch ($type) {
             case 'article':
             case 'book':
             case 'chapter':
             case 'section': {
-                $this->currentSectionNumber = '';
+                $this->_currentSectionNumber = '';
 
-                if (!isset($this->sections[$type]['open'])) {
-                    $this->sections[$type]['open'] = 1;
+                if (!isset($this->_sections[$type]['open'])) {
+                    $this->_sections[$type]['open'] = 1;
                 } else {
-                    $this->sections[$type]['open']++;
+                    $this->_sections[$type]['open']++;
                 }
 
-                if (!isset($this->sections[$type]['id'][$this->sections[$type]['open']])) {
-                    $this->sections[$type]['id'][$this->sections[$type]['open']] = 1;
+                if (!isset($this->_sections[$type]['id'][$this->_sections[$type]['open']])) {
+                    $this->_sections[$type]['id'][$this->_sections[$type]['open']] = 1;
                 } else {
-                    $this->sections[$type]['id'][$this->sections[$type]['open']]++;
+                    $this->_sections[$type]['id'][$this->_sections[$type]['open']]++;
                 }
 
-                for ($i = 1; $i <= $this->sections[$type]['open']; $i++) {
-                    if (!empty($this->currentSectionNumber)) {
-                        $this->currentSectionNumber .= '.';
+                for ($i = 1; $i <= $this->_sections[$type]['open']; $i++) {
+                    if (!empty($this->_currentSectionNumber)) {
+                        $this->_currentSectionNumber .= '.';
                     }
 
-                    $this->currentSectionNumber .= $this->sections[$type]['id'][$i];
+                    $this->_currentSectionNumber .= $this->_sections[$type]['id'][$i];
                 }
             }
             break;
 
             case 'example': {
-                if (!isset($this->examples[$this->currentSectionNumber])) {
-                    $this->examples[$this->currentSectionNumber] = 1;
+                if (!isset($this->_examples[$this->_currentSectionNumber])) {
+                    $this->_examples[$this->_currentSectionNumber] = 1;
                 } else {
-                    $this->examples[$this->currentSectionNumber]++;
+                    $this->_examples[$this->_currentSectionNumber]++;
                 }
 
-                $this->currentExampleNumber =
-                $this->currentSectionNumber . '.' . $this->examples[$this->currentSectionNumber];
+                $this->_currentExampleNumber =
+                $this->_currentSectionNumber . '.' . $this->_examples[$this->_currentSectionNumber];
             }
             break;
 
             case 'figure': {
-                if (!isset($this->figures[$this->currentFigureNumber])) {
-                    $this->figures[$this->currentSectionNumber] = 1;
+                if (!isset($this->_figures[$this->_currentFigureNumber])) {
+                    $this->_figures[$this->_currentSectionNumber] = 1;
                 } else {
-                    $this->figures[$this->currentSectionNumber]++;
+                    $this->_figures[$this->_currentSectionNumber]++;
                 }
 
-                $this->currentFigureNumber =
-                $this->currentSectionNumber . '.' . $this->figures[$this->currentSectionNumber];
+                $this->_currentFigureNumber =
+                $this->_currentSectionNumber . '.' . $this->_figures[$this->_currentSectionNumber];
             }
             break;
         }
@@ -1103,21 +1103,21 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     }
 
     // }}}
-    // {{{ private function endSection($type)
+    // {{{ function _endSection($type)
 
     /**
     * @param  string
     * @access private
     */
-    private function endSection($type) {
-        array_pop($this->context);
+    function _endSection($type) {
+        array_pop($this->_context);
 
         switch ($type) {
             case 'article':
             case 'book':
             case 'chapter':
             case 'section': {
-                $this->sections[$type]['open']--;
+                $this->_sections[$type]['open']--;
             }
             break;
         }
