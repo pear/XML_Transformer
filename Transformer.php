@@ -239,7 +239,12 @@ class XML_Transformer {
     * @access public
     */
     function overloadNamespace($namespacePrefix, &$object, $recursiveOperation = '') {
-        $namespacePrefix = $this->canonicalize($namespacePrefix);
+        if (empty($namespacePrefix) ||
+            $namespacePrefix == '&MAIN')) {
+            $namespacePrefix = '&MAIN';
+        } else {
+            $namespacePrefix = $this->canonicalize($namespacePrefix);
+        }
 
         $result = $this->_callbackRegistry->overloadNamespace(
           $namespacePrefix,
@@ -411,7 +416,7 @@ class XML_Transformer {
         if (strstr($element, ':')) {
             list($namespacePrefix, $qElement) = explode(':', $element);
         } else {
-            $namespacePrefix = '';
+            $namespacePrefix = '&MAIN';
         }
 
         // Push element's name and attributes onto the stack.
@@ -439,9 +444,7 @@ class XML_Transformer {
               $qElement,
               $attributes
             );
-        }
-
-        else {
+        } else {
             // No callback was registered for this element's
             // opening tag, copy it.
 
@@ -473,7 +476,7 @@ class XML_Transformer {
         if (strstr($element, ':')) {
             list($namespacePrefix, $qElement) = explode(':', $element);
         } else {
-            $namespacePrefix = '';
+            $namespacePrefix = '&MAIN';
         }
 
         $this->_debug(
@@ -499,9 +502,7 @@ class XML_Transformer {
             if ($this->_callbackRegistry->overloadedNamespaces[$namespacePrefix]['recursiveOperation']) {
                 $recursion = true;
             }
-        }
-
-        else {
+        } else {
             // No callback was registered for this element's
             // closing tag, copy it.
 
