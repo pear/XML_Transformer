@@ -120,16 +120,10 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     var $defaultNamespacePrefix = '&MAIN';
 
     /**
-    * @var    string
+    * @var    array
     * @access private
     */
-    var $_emphasizeRole = '';
-
-    /**
-    * @var    string
-    * @access private
-    */
-    var $_programlistingRole = '';
+    var $_roles = array();
 
     /**
     * @var    array
@@ -202,16 +196,16 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
         switch($emphasisRole) {
             case 'bold':
             case 'strong': {
-                $this->_emphasisRole = 'b';
+                $this->_roles['emphasis'] = 'b';
             }
             break;
 
             default: {
-                $this->_emphasisRole = 'i';
+                $this->_roles['emphasis'] = 'i';
             }
         }
 
-        return '<' . $this->_emphasisRole . '>';
+        return '<' . $this->_roles['emphasis'] . '>';
     }
 
     // }}}
@@ -223,10 +217,15 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     * @access public
     */
     function end_emphasis($cdata) {
-        $emphasisRole        = $this->_emphasisRole;
-        $this->_emphasisRole = '';
+        $cdata = sprintf(
+          '%s</%s>',
+          $cdata,
+          $this->_roles['emphasis']
+        );
 
-        return $cdata . '</' . $emphasisRole . '>';
+        $this->_roles['emphasis'] = '';
+
+        return $cdata;
     }
 
     // }}}
@@ -334,7 +333,7 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     * @access public
     */
     function start_programlisting($attributes) {
-        $this->_programlistingRole = isset($attributes['role']) ? $attributes['role'] : '';
+        $this->_roles['programlisting'] = isset($attributes['role']) ? $attributes['role'] : '';
 
         return '';
     }
@@ -348,7 +347,7 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     * @access public
     */
     function end_programlisting($cdata) {
-        switch ($this->_programlistingRole) {
+        switch ($this->_roles['programlisting']) {
             case 'php': {
                 $cdata = array(
                   str_replace(
@@ -362,7 +361,7 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
             break;
         }
 
-        $this->_programlistingRole = '';
+        $this->_roles['programlisting'] = '';
 
         return $cdata;
     }
