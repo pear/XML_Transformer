@@ -477,13 +477,22 @@ class XML_Transformer {
             // The event is handled by a callback
             // that is registered for this namespace.
 
-            $cdata = $this->_callbackRegistry->overloadedNamespaces[$namespacePrefix]['object']->endElement(
+            $result = $this->_callbackRegistry->overloadedNamespaces[$namespacePrefix]['object']->endElement(
               $qElement,
               $cdata
             );
 
-            $recursion = $this->_callbackRegistry->overloadedNamespaces[$namespacePrefix]['recursiveOperation'] &&
-                         isset($this->_elementStack[$this->_level-1]);
+            if (is_array($result)) {
+                $cdata   = &$result[0];
+                $reparse = $result[1];
+            } else {
+                $cdata   = &$result;
+                $reparse = true;
+            }
+
+            $recursion = $reparse &&
+                         isset($this->_elementStack[$this->_level-1]) &&
+                         $this->_callbackRegistry->overloadedNamespaces[$namespacePrefix]['recursiveOperation'];
         } else {
             // No callback was registered for this element's
             // closing tag, copy it.
