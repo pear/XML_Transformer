@@ -412,7 +412,7 @@ class XML_Transformer {
             return $xml;
         }
 
-        $xml = '<_>' . str_replace('&', '&amp;', $xml) . '</_>';
+        $xml = str_replace('&', '&amp;', $xml);
 
         // Create XML parser, set parser options.
 
@@ -495,7 +495,7 @@ class XML_Transformer {
 
         // Return result of the transformation.
 
-        return substr($result, 3, -4);
+        return $result;
     }
 
     // }}}
@@ -621,7 +621,7 @@ class XML_Transformer {
               )
             );
 
-            $cdata = $transformer->transform($cdata);
+            $cdata = substr($transformer->transform("<_>$cdata</_>"),3,-4);
 
             if ($this->_checkDebug('&RECURSE')) {
                 $this->sendMessage(
