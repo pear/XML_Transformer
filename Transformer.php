@@ -211,13 +211,11 @@ class XML_Transformer {
         );
 
         for ($i = $this->_level; $i >= 0; $i--) {
-          $attributes = XML_Transformer_Util::attributesToString($this->_attributesStack[$i]);
-
           $stackdump .= sprintf(
             "level=%d\nelement=%s:%s\ncdata=%s\n\n",
             $i,
             $this->_elementStack[$i],
-            $attributes,
+            XML_Transformer_Util::attributesToString($this->_attributesStack[$i]),
             $this->_cdataStack[$i]
           );
         }
