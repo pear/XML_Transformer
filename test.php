@@ -110,11 +110,27 @@ class XML_Transformer_Test extends PHPUnit_TestCase {
           '<p><b>text</b></p>',
 
           $t->transform(
-            '<p xmlns:test="test"><test:bold>text</test:bold></p>'
+            '<p><test:bold>text</test:bold></p>'
           )
         );
     }
 
+    function testNamespaceURI() {
+        $t = new XML_Transformer;
+
+        $t->overloadNamespace(
+          'test',
+          new TestNamespace
+        );
+
+        $this->assertEquals(
+          '<p><b>text</b></p>',
+
+          $t->transform(
+            '<p><test:bold>text</test:bold></p>'
+          )
+        );
+    }
 }
 
 $result = PHPUnit::run(new PHPUnit_TestSuite('XML_Transformer_Test'));
