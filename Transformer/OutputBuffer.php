@@ -19,14 +19,16 @@
 require_once 'XML/Transformer.php';
 
 /**
-* ...
+* Uses PHP's Output Buffering mechanism to catch the
+* output of a script, transforms it, and outputs the
+* result.
 *
 * Example
 *
 *   <?php
-*   require_once 'XML/Transformer.php';
+*   require_once 'XML/Transformer/OutputBuffer.php';
 *
-*   $t = new XML_Transformer(
+*   $t = new XML_Transformer_OutputBuffer(
 *     array(
 *       'overloadedElements' => array(
 *         'bold' => array(
