@@ -362,19 +362,24 @@ class XML_Transformer {
 
         if (!xml_parse($parser, $xml, true)) {
             $line = xml_get_current_line_number($parser);
-            $errmsg = sprintf(
+
+            $errorMessage = sprintf(
               "Transformer: XML Error: %s at line %d\n",
               xml_error_string(xml_get_error_code($parser)),
-              xml_get_current_line_number($parser)
+              $line
             );
 
             $exml = preg_split('/\n/', $xml);
-            for ($i=$line-3; $i<count($exml) and $i<$line+3; $i++)
-              $errmsg .= sprintf("line %d: %s\n", $i+1, $exml[$i]);
 
-            $errmsg .= "\n";
-            $errmsg .= $this->stackdump();
-            error_log($errmsg);
+            for ($i = $line-3; $i < sizeof($exml) && $i < $line+3; $i++) {
+                $errorMessage .= sprintf(
+                  "line %d: %s\n",
+                  $i+1,
+                  $exml[$i]
+                );
+            }
+
+            error_log($errorMessage . "\n" . $this->stackdump());
 
             return '';
         }
