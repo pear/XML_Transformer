@@ -503,13 +503,6 @@ class XML_Transformer {
     * @access public
     */
     function start() {
-        $this->_debug(
-          sprintf(
-            "start: %s\n",
-            serialize($this)
-          )
-        );
-
         if (!$this->_started) {
             ob_start(
               array(
@@ -518,6 +511,13 @@ class XML_Transformer {
             );
 
             $this->_started = TRUE;
+
+            $this->_debug(
+              sprintf(
+                "start: %s\n",
+                serialize($this)
+              )
+            );
         }
     }
 
