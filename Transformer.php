@@ -371,7 +371,6 @@ class XML_Transformer {
     /**
     * Returns a stack dump as a debugging aid.
     *
-    * @param
     * @return string
     * @access public
     */
