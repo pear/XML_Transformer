@@ -220,40 +220,28 @@ class XML_Transformer {
     * @access public
     */
     function stackdump() {
-        $r = sprintf(
+        $stackdump = sprintf(
           "Stackdump (level: %s) follows:\n",
           $this->_level
         );
 
         for ($i = $this->_level; $i >= 0; $i--) {
-          $r .= sprintf(
-            "level=%d\n",
-            $i
-          );
-
-          $r .= sprintf(
-            "element=%s:",
-            $this->_elementStack[$i]
-          );
-
-          $r .= sprintf(
-            "%s\n",
+          $stackdump .= sprintf(
+            "level=%d\nelement=%s:%s\ncdata=%s\n\n",
+            $i,
+            $this->_elementStack[$i],
             htmlspecialchars(
               $this->attributesToString(
                 $this->_attributesStack[$i]
               )
-            )
-          );
-
-          $r .= sprintf(
-            "cdata=%s\n\n",
+            ),
             htmlspecialchars(
               $this->_cdataStack[$i]
             )
           );
         }
 
-        return $r;
+        return $stackdump;
     }
 
     // }}}
