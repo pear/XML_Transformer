@@ -94,18 +94,39 @@ class XML_Transformer_CallbackRegistry {
     * @access public
     */
     function overloadNamespace($namespacePrefix, &$object, $recursiveOperation = '') {
-        if (is_object($object) &&
-            method_exists($object, 'startElement') &&
-            method_exists($object, 'endElement')) {
-            $this->overloadedNamespaces[$namespacePrefix]['active']             = true;
-            $this->overloadedNamespaces[$namespacePrefix]['object']             = &$object;
-            $this->overloadedNamespaces[$namespacePrefix]['recursiveOperation'] = is_bool($recursiveOperation) ? $recursiveOperation : $this->_recursiveOperation;
-        } else {
-            return 'Cannot overload namespace "' .
-                   $namespacePrefix .
-                   '", method(s) "startElement" and/or "endElement" ' .
-                   'are missing on given object.';
+        if (!is_object($object)) {
+            return sprintf(
+              'Cannot overload namespace "%s", ' .
+              'second parameter is not an object.',
+
+              $namespacePrefix
+            );
         }
+
+        if (!is_subclass_of()) {
+            return sprintf(
+              'Cannot overload namespace "%s", ' .
+              'provided object was not instantiated from ' .
+              'a class that inherits XML_Transformer_Namespace.',
+
+              $namespacePrefix
+            );
+        }
+
+        if (method_exists($object, 'startElement') &&
+            method_exists($object, 'endElement')) {
+            return sprintf(
+              'Cannot overload namespace "%s", ' .
+              'method(s) "startElement" and/or "endElement" ' .
+              'are missing on given object.',
+
+              $namespacePrefix
+            );
+        }
+
+        $this->overloadedNamespaces[$namespacePrefix]['active']             = true;
+        $this->overloadedNamespaces[$namespacePrefix]['object']             = &$object;
+        $this->overloadedNamespaces[$namespacePrefix]['recursiveOperation'] = is_bool($recursiveOperation) ? $recursiveOperation : $this->_recursiveOperation;
 
         return true;
     }

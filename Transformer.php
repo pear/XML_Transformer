@@ -236,7 +236,7 @@ class XML_Transformer {
         if ($result === true) {
             // Call initObserver() on the object, if it exists.
 
-            if (is_object($object) && method_exists($object, 'initObserver')) {
+            if (method_exists($object, 'initObserver')) {
                 $object->initObserver(
                   $namespacePrefix,
                   $this
