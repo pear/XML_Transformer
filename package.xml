@@ -73,6 +73,8 @@
   called statically.
 
 * Fixed recursive transformation of overloaded namespaces.
+
+* Changed license from PHP License 2.02 to PHP License 3.00.
 ]]>
     </notes>
     <filelist>
