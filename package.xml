@@ -27,19 +27,10 @@
   </maintainers>
   <license>PHP License</license>
   <release>
-    <version>0.3</version>
+    <version>0.4</version>
     <state>stable</state>
-    <date>2002-05-16</date>
+    <date>2002-XX-XX</date>
     <notes>
-+ Added setDebug() and stackdump() to allow for easier debugging.
-
-+ Added setRecursiveOperation() to enable/disable the recursive
-  operation of the XML Transformer.
-
-* Changed the constructor to be more intuitive and user-friendly.
-
-* Changed setCaseFolding() to accept a second parameter to set
-  the case to which XML attributes and elements are folded.
     </notes>
     <filelist>
       <dir name="/" baseinstalldir="XML">
@@ -52,6 +43,22 @@
     </deps>
   </release>
   <changelog>
+    <release>
+      <version>0.3</version>
+      <state>stable</state>
+      <date>2002-05-16</date>
+      <notes>
++ Added setDebug() and stackdump() to allow for easier debugging.
+
++ Added setRecursiveOperation() to enable/disable the recursive
+  operation of the XML Transformer.
+
+* Changed the constructor to be more intuitive and user-friendly.
+
+* Changed setCaseFolding() to accept a second parameter to set
+  the case to which XML attributes and elements are folded.
+      </notes>
+    </release>
     <release>
       <version>0.2</version>
       <date>2002-04-07</date>
