@@ -217,7 +217,8 @@ class XML_Transformer_Namespace_Anchor extends XML_Transformer_Namespace {
         srand((double)microtime()*1000000);
 
         $keys = array_keys($this->_anchorDatabase);
-        $name = $keys[rand(0, count($keys)-1)];
+        $pos  = rand(0, count($keys)-1);
+        $name = $keys[$pos];
 
         return sprintf('<a %s>%s</a>',
             XML_Transformer_Util::attributesToString($this->_anchorDatabase[$name]),
