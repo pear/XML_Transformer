@@ -86,6 +86,7 @@ class XML_Transformer_Namespace_Anchor extends XML_Transformer_Namespace {
 
         return true;
     }
+
     // }}}
     // {{{ function getDatabase($db)
 
@@ -98,8 +99,8 @@ class XML_Transformer_Namespace_Anchor extends XML_Transformer_Namespace {
     function getDatabase() {
         return $this->_anchorDatabase;
     }
-    // }}}
 
+    // }}}
     // {{{ function addItem($item, $attr)
 
     /**
@@ -115,6 +116,7 @@ class XML_Transformer_Namespace_Anchor extends XML_Transformer_Namespace {
 
         return true;
     }
+
     // }}}
     // {{{ function dropItem($item)
 
@@ -130,8 +132,10 @@ class XML_Transformer_Namespace_Anchor extends XML_Transformer_Namespace {
             return false;
 
         unset($this->_anchorDatabase[$item]);
+
         return true;
     }
+
     // }}}
     // {{{ function getItem($item)
 
@@ -143,14 +147,14 @@ class XML_Transformer_Namespace_Anchor extends XML_Transformer_Namespace {
     * @access public
     */
     function getItem($item) {
-        if (!isset($this->_anchorDatabase[$item]))
+        if (!isset($this->_anchorDatabase[$item])) {
             return false;
+        }
 
         return $this->_anchorDatabase[$item];
     }
+
     // }}}
-
-
     // {{{ function start_iref($attributes)
 
     /**
@@ -173,14 +177,16 @@ class XML_Transformer_Namespace_Anchor extends XML_Transformer_Namespace {
     * @access public
     */
     function end_iref($cdata) {
-        if (!isset($this->_irefAttributes))
-          return '';
+        if (!isset($this->_irefAttributes)) {
+            return '';
+        }
         
         $name = $this->_irefAttributes['iref'];
 
-        return sprintf('<a href='%s'>%s</a>',
-            XML_Transformer_Util::attributesToString($this->_anchorDatabase[$name]),
-            $cdata
+        return sprintf(
+          '<a href='%s'>%s</a>',
+          XML_Transformer_Util::attributesToString($this->_anchorDatabase[$name]),
+          $cdata
         );
     }
 
