@@ -647,9 +647,10 @@ class XML_Transformer {
 
             $transformer = new XML_Transformer(
               array(
-                'caseFolding'   => $this->_caseFolding,
-                'caseFoldingTo' => $this->_caseFoldingTo,
-                'lastProcessed' => $element
+                'callbackRegistry' => &$this->_callbackRegistry,
+                'caseFolding'      => $this->_caseFolding,
+                'caseFoldingTo'    => $this->_caseFoldingTo,
+                'lastProcessed'    => $element
               )
             );
 
