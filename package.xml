@@ -34,8 +34,33 @@
 <![CDATA[
 + Added new tags to the PHP Namespace Handler:
 
-  + <php:logic/> executes a given block of PHP code and stores
-    its output into the output XML tree.
+    + <php:logic/> executes a given block of PHP code and stores
+      its output into the output XML tree.
+
+* Refactored the XML_Transformer class into
+
+    * XML_Transformer.
+
+    * XML_Transformer_CallbackRegistry.
+
+      This class faciliates the registration of new callbacks
+      on-the-fly inside the transformation's recursion.
+
+    * XML_Transformer_OutputBuffer.
+
+      This class decouples the XML transformation from the output
+      buffering.
+
+* Deprecated overloading of single XML elements.
+
+  By overloading a special namespace, &MAIN, the old behaviour can
+  be achieved.
+
+* setDefaultCallback() and unsetDefaultCallback() are deprecated.
+
+  By overloading the newly introduced &MAIN namespace with a class
+  that provides default element handlers the old behaviour can
+  be achieved.
 ]]>
 </notes>
     <filelist>
