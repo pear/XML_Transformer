@@ -304,13 +304,13 @@ class XML_Transformer {
     * @param  boolean
     * @access public
     */
-    function overloadElement($element, $startHandler, $endHandler, $recursiveOperation = "dummy") {
+    function overloadElement($element, $startHandler, $endHandler, $recursiveOperation = '') {
         $element = $this->canonicalName($element);
 
         $this->_registerElementCallback($element, 'start', $startHandler);
         $this->_registerElementCallback($element, 'end',   $endHandler);
 
-        $this->_overloadedElements[$element]['recursiveOperation'] = $recursiveOperation != "dummy" ? $recursiveOperation : $this->_recursiveOperation;
+        $this->_overloadedElements[$element]['recursiveOperation'] = is_bool($recursiveOperation) ? $recursiveOperation : $this->_recursiveOperation;
     }
 
     // }}}
