@@ -471,7 +471,7 @@ class XML_Transformer {
     // {{{ function setDebug($debug)
 
     /**
-    * Enables or disables Debugging to syslog
+    * Enables or disables debugging to error.log.
     *
     * @param  boolean
     * @access public
@@ -479,27 +479,6 @@ class XML_Transformer {
     function setDebug($debug) {
         if (is_bool($debug)) {
             $this->_debug = $debug;
-
-            if ($debug) {
-                define_syslog_variables();
-
-                openlog(
-                  $_SERVER['PHP_SELF'],
-                  LOG_PID | LOG_PERROR, LOG_LOCAL0
-                );
-
-                syslog(
-                  LOG_DEBUG,
-                  "debug enabled\n"
-                );
-            } else {
-                syslog(
-                  LOG_DEBUG,
-                  "debug disabled\n"
-                );
-
-                closelog();
-            }
         }
     }
 
@@ -878,7 +857,7 @@ class XML_Transformer {
     // {{{ function _debug($debugMessage) {
 
     /**
-    * Sends a debug message to syslog, if debugging is enabled.
+    * Sends a debug message to error.log, if debugging is enabled.
     *
     * @param  string
     * @access private
@@ -886,10 +865,7 @@ class XML_Transformer {
 
     function _debug($debugMessage) {
         if ($this->_debug) {
-            syslog(
-              LOG_DEBUG,
-              $debugMessage
-            );
+            error_log($debugMessage);
         }
     }
 

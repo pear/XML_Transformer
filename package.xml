@@ -31,6 +31,9 @@
     <state>stable</state>
     <date>2002-XX-XX</date>
     <notes>
+* When in debug mode, debug messages are now beeing sent using
+  error_log() instead of syslog().
+
 * Fixed a bug in the case-folding handling.
     </notes>
     <filelist>
