@@ -183,7 +183,7 @@ class XML_Transformer {
 
     /**
     * Overloads an XML tag and bind its
-    * opening and closing tag to a PHP callback.
+    * opening and closing tags to a PHP callback.
     *
     * @param  string
     * @param  string
