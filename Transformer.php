@@ -576,6 +576,10 @@ class XML_Transformer {
             }
         }
 
+        else if (is_string($namespaces)) {
+            $namespaces = array($namespaces);
+        }
+
         foreach ($namespaces as $namespace) {
             if (@include_once($path . $namespace . '.php')) {
                 $className = 'XML_Transformer_Namespace_' . $namespace;
