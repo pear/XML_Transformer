@@ -25,6 +25,34 @@ require_once 'XML/Transformer/Namespace.php';
 /**
 * Handler for the PHP Namespace.
 *
+* Example
+*
+*   <?php
+*   require_once 'XML/Transformer.php';
+*   require_once 'XML/Transformer/PHP.php';
+*
+*   $t = new XML_Transformer;
+*
+*   $t->overloadNamespace(
+*     'php',
+*     new XML_Transformer_PHP 
+*   );
+*
+*   $t->start();
+*   ?>
+*   <dl>
+*     <dd>Current time: <php:expr>time()</php:expr></dd>
+*     <php:setvariable name="foo">bar</php:setvariable>
+*     <dd>foo = <php:getvariable name="foo"/></dd>
+*   </dl>
+*
+* Output
+*
+*   <dl>
+*     <dd>Current time: 1032158587</dd>
+*     <dd>foo = bar</dd>
+*   </dl>
+*
 * @author  Sebastian Bergmann <sb@sebastian-bergmann.de>
 *          Kristian Köhntopp <kris@koehntopp.de>
 * @version $Revision$
