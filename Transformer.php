@@ -130,6 +130,7 @@ class XML_Transformer {
         $this->_caseFoldingTo = isset($parameters['caseFoldingTo']) ? $parameters['caseFoldingTo'] : CASE_UPPER;
         $this->_lastProcessed = isset($parameters['lastProcessed']) ? $parameters['lastProcessed'] : '';
 
+        $autoload             = isset($parameters['autoload'])             ? $parameters['autoload']             : true;
         $overloadedNamespaces = isset($parameters['overloadedNamespaces']) ? $parameters['overloadedNamespaces'] : array();
         $recursiveOperation   = isset($parameters['recursiveOperation'])   ? $parameters['recursiveOperation']   : true;
 
@@ -144,6 +145,34 @@ class XML_Transformer {
               $namespacePrefix,
               $object
             );
+        }
+
+        // Autoload all namespace handlers from
+        // XML/Transformer/Namespace/.
+
+        if ($autoload) {
+            $path = dirname(__FILE__) . '/Transformer/Namespace/';
+
+            if ($dir = @opendir($path)) {
+                while (($file = @readdir($dir)) !== false) {
+                    if (strstr($file, '.php')) {
+                        if (@include_once($path . $file)) {
+                            $namespacePrefix = $this->canonicalize(
+                              strtolower(
+                                substr($file, 0, -4)
+                              )
+                            );
+
+                            $className = 'XML_Transformer_Namespace_' . $namespacePrefix;
+
+                            $this->overloadNamespace(
+                              $namespacePrefix,
+                              new $className
+                            );
+                        }
+                    }
+                }
+            }
         }
     }
 
