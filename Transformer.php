@@ -141,7 +141,7 @@ class XML_Transformer {
         $this->_recursiveOperation   = isset($parameters['recursiveOperation'])   ? $parameters['recursiveOperation']   : true;
 
         if ($startup) {
-            // Walk through overloadedElements array,
+            // Walk through overloadedElements array
             // that was passed to the constructor and
             // register the element callbacks it contains.
 
