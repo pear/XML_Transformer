@@ -579,10 +579,11 @@ class XML_Transformer {
         foreach ($namespaces as $namespace) {
             if (@include_once($path . $namespace . '.php')) {
                 $className = 'XML_Transformer_Namespace_' . $namespace;
+                $object    = new $className;
 
                 $this->overloadNamespace(
-                  $namespacePrefix,
-                  new $className
+                  !empty($object->defaultNamespacePrefix) ? $object->defaultNamespacePrefix : $namespace;
+                  $object
                 );
             }
         }

@@ -70,6 +70,12 @@ class XML_Transformer_Namespace {
     // {{{ Members
 
     /**
+    * @var    boolean
+    * @access public
+    */
+    var $defaultNamespacePrefix = '';
+
+    /**
     * @var    array
     * @access private
     */
