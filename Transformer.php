@@ -521,13 +521,10 @@ class XML_Transformer {
               '&RECURSE'
             );
 
-            // Note: Recursive debugging creates monstrous output.
-
             $transformer = new XML_Transformer(
               array(
                 'caseFolding'   => $this->_caseFolding,
                 'caseFoldingTo' => $this->_caseFoldingTo,
-                'debug'         => false,
                 'lastProcessed' => $element
               )
             );
