@@ -723,7 +723,8 @@ class XML_Transformer {
         }
 
         if ($recursion &&
-            $this->_overloadedElements[$element]['recursiveOperation']) {
+            (isset($this->_overloadedNamespaces[$namespacePrefix]) ||
+             $this->_overloadedElements[$element]['recursiveOperation'])) {
             // Recursively process this transformation's result.
 
             $this->_debug(

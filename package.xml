@@ -32,6 +32,8 @@
     <date>2002-XX-XX</date>
     <notes>
 + Added a base class for namespace-handling transformer classes.
+
+* Fixed recursive transformation of overloaded namespaces.
     </notes>
     <filelist>
       <dir name="/" baseinstalldir="XML">
