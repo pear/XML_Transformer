@@ -61,6 +61,12 @@ define(PEAR_XML_TRANSFORMER_IMAGE_cacheDir, '/cache/gtext');
 * @access  public
 */
 class XML_Transformer_Namespace_Image extends XML_Transformer_Namespace {
+    /**
+    * @var    boolean
+    * @access public
+    */
+    var $defaultNamespacePrefix = 'img';
+
     var $img_attributes          = array();
     var $gtext_attributes        = array();
     var $gtextdefault_attributes = array();

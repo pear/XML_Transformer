@@ -63,6 +63,12 @@ class XML_Transformer_Namespace_PHP extends XML_Transformer_Namespace {
     // {{{ Members
 
     /**
+    * @var    boolean
+    * @access public
+    */
+    var $defaultNamespacePrefix = 'php';
+
+    /**
     * @var    string
     * @access private
     */

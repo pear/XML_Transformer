@@ -61,6 +61,12 @@ class XML_Transformer_Namespace_Anchor extends XML_Transformer_Namespace {
     // {{{ Members
 
     /**
+    * @var    boolean
+    * @access public
+    */
+    var $defaultNamespacePrefix = 'a';
+
+    /**
     * @var    array
     * @access private
     */
