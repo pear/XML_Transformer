@@ -24,16 +24,11 @@ require_once 'XML/Transformer/Namespace.php';
 * Example
 *
 *   <?php
-*   require_once 'XML/Transformer.php';
+*   require_once 'XML/Transformer_OutputBuffer.php';
 *   require_once 'XML/Transformer/PHP.php';
 *
-*   $t = new XML_Transformer;
-*
-*   $t->overloadNamespace(
-*     'php',
-*     new XML_Transformer_PHP 
-*   );
-*
+*   $t = new XML_Transformer_OutputBuffer;
+*   $t->overloadNamespace('php', new XML_Transformer_PHP);
 *   $t->start();
 *   ?>
 *   <dl>
@@ -63,7 +58,20 @@ class XML_Transformer_PHP extends XML_Transformer_Namespace {
     */
     var $_variable = '';
 
+    /**
+    * @var    string
+    * @access private
+    */
+    var $_define_name;
+
+    /**
+    * @var    string
+    * @access private
+    */
+    var $_namespace = 'define';
+
     // }}}
+
     // {{{ function start_expr($attributes)
 
     /**
@@ -104,6 +112,9 @@ class XML_Transformer_PHP extends XML_Transformer_Namespace {
     * @access public
     */
     function end_logic($cdata) {
+        // This does not actually work in PHP 4.2.3, 
+        // when using XML_Namespace_OutputBuffer.
+        // It should, though.
         ob_start();
         eval($cdata);
         $buffer = ob_get_contents();
@@ -156,6 +167,54 @@ class XML_Transformer_PHP extends XML_Transformer_Namespace {
     * @access public
     */
     function end_postparameter($cdata) {
+        return $cdata;
+    }
+
+    // }}}
+    // {{{ function start_cookieparameter($attributes)
+
+    /**
+    * @param  array
+    * @return string
+    * @access public
+    */
+    function start_cookieparameter($attributes) {
+        return isset($_COOKIE[$attributes['name']]) ? $_COOKIE[$attributes['name']] : '';
+    }
+
+    // }}}
+    // {{{ function end_cookieparameter($cdata)
+
+    /**
+    * @param  string
+    * @return string
+    * @access public
+    */
+    function end_cookieparameter($cdata) {
+        return $cdata;
+    }
+
+    // }}}
+    // {{{ function start_serverparameter($attributes)
+
+    /**
+    * @param  array
+    * @return string
+    * @access public
+    */
+    function start_serverparameter($attributes) {
+        return isset($_SERVER[$attributes['name']]) ? $_SERVER[$attributes['name']] : '';
+    }
+
+    // }}}
+    // {{{ function end_serverparameter($cdata)
+
+    /**
+    * @param  string
+    * @return string
+    * @access public
+    */
+    function end_serverparameter($cdata) {
         return $cdata;
     }
 
@@ -239,6 +298,89 @@ class XML_Transformer_PHP extends XML_Transformer_Namespace {
     }
 
     // }}}
+
+    // {{{ function start_define($attributes)
+
+    /**
+    * @param  string
+    * @return string
+    * @access public
+    */
+    function start_define($att) {
+      $this->_define_name = $att['name'];
+      if (isset($att['namespace'])) {
+        $this->_namespace = $att['namespace'];
+      }
+
+      return "";
+    }
+    // }}}
+
+    // {{{ function end_define($cdata)
+
+    /**
+    * @param  string
+    * @return string
+    * @access public
+    */
+    function end_define($cdata) {
+      $classname = sprintf('_PEAR_XML_Transformer_PHP_%s', $this->_define_name);
+      $str = sprintf('
+        class %s extends XML_Transformer_Namespace {
+          var $attributes = array();
+
+          function start_%s($att) {
+            $this->attributes = $att;
+
+            return "";
+          }
+
+          function end_%s($content) {
+            foreach ($this->attributes as $__k => $__v) {
+              $$__k = $__v;
+            }
+
+            return "%s";
+          }
+        };',$classname,
+           $this->_define_name,
+           $this->_define_name,
+           $cdata
+      );
+
+      eval($str);
+      $this->_transformer->overloadNamespace($this->_namespace, new $classname, true);
+
+      return "";
+    }
+    // }}}
+
+    // {{{ function start_namespace($attributes)
+
+    /**
+    * @param  string
+    * @return string
+    * @access public
+    */
+    function start_namespace($att) {
+      $this->_namespace = $att['name'];
+
+      return "";
+    }
+    // }}}
+
+    // {{{ function end_namespace($cdata)
+
+    /**
+    * @param  string
+    * @return string
+    * @access public
+    */
+    function end_namespace($cdata) {
+      return "";
+    }
+    // }}}
+
 }
 
 /*
