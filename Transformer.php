@@ -120,6 +120,12 @@ class XML_Transformer {
     */
     var $_lastProcessed = '';
 
+    /**
+    * @var    boolean
+    * @access public
+    */
+    var $_secondPassRequired = false;
+
     // }}}
     // {{{ function XML_Transformer($parameters = array())
 
@@ -245,6 +251,10 @@ class XML_Transformer {
         );
 
         if ($result === true) {
+            if ($object->secondPassRequired) {
+                $this->_secondPassRequired = true;
+            }
+
             // Call initObserver() on the object, if it exists.
 
             if (method_exists($object, 'initObserver')) {
@@ -374,16 +384,6 @@ class XML_Transformer {
             return $xml;
         }
 
-        // Clean up, if needed.
-
-        if (!empty($this->_elementStack)) {
-            $this->_attributesStack = array();
-            $this->_cdataStack      = array('');
-            $this->_elementStack    = array();
-            $this->_level           = 0;
-            $this->_lastProcessed   = '';
-        }
-
         // Create XML parser, set parser options.
 
         $parser = xml_parser_create();
@@ -429,11 +429,33 @@ class XML_Transformer {
             return '';
         }
 
+        $result = $this->_cdataStack[0];
+
+        // Clean up.
+
         xml_parser_free($parser);
+
+        $this->_attributesStack = array();
+        $this->_cdataStack      = array('');
+        $this->_elementStack    = array();
+        $this->_level           = 0;
+        $this->_lastProcessed   = '';
+
+        // Perform second transformation pass, if required.
+
+        $secondPassRequired = $this->_secondPassRequired;
+
+        if ($secondPassRequired) {
+            $this->_secondPassRequired = false;
+
+            $result = $this->transform($result);
+        }
+
+        $this->_secondPassRequired = $secondPassRequired;
 
         // Return result of the transformation.
 
-        return $this->_cdataStack[0];
+        return $result;
     }
 
     // }}}

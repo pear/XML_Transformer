@@ -68,6 +68,80 @@ require_once 'XML/Transformer/Namespace.php';
 *
 *   * <xref>
 *
+* Example
+*
+*   <?php
+*   require_once 'XML/Transformer/Driver/OutputBuffer.php';
+*   $t = new XML_Transformer_Driver_OutputBuffer(
+*     array(
+*       'autoload' => 'DocBook'
+*     )
+*   );
+*   ?>
+*   <article>
+*     <artheader>
+*       <title>
+*         An Article
+*       </title>
+*       <author>
+*         <firstname>
+*           Sebastian
+*         </firstname>
+*         <surname>
+*           Bergmann
+*         </surname>
+*       </author>
+*     </artheader>
+*
+*     <section id="foo">
+*       <title>
+*         Section One
+*       </title>
+*     </section>
+*
+*     <section id="bar">
+*       <title>
+*         Section Two
+*       </title>
+*
+*       <para>
+*         <xref linkend="foo" />
+*       </para>
+*     </section>
+*   </article>
+*
+* Output
+*
+*   <html>
+*     <head>
+*       <title>
+*         Sebastian Bergmann: An Article
+*       </title>
+*     </head>
+*     <body>
+*       <h1 class="title">
+*         Sebastian Bergmann: An Article
+*       </h1>
+*       <div class="section">
+*         <a id="foo"></a>
+*         <h2 class="title">
+*           1. Section One
+*         </h2>
+*       </div>
+*       <div class="section">
+*         <a id="bar"></a>
+*         <h2 class="title">
+*           2. Section Two
+*         </h2>
+*         <p>
+*           <a href="#foo">
+*             1. Section One
+*           </a>
+*         </p>
+*       </div>
+*     </body>
+*   </html>
+*
 * @author  Sebastian Bergmann <sb@sebastian-bergmann.de>
 * @author  Kristian Köhntopp <kris@koehntopp.de>
 * @version $Revision$
@@ -81,6 +155,12 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     * @access public
     */
     var $defaultNamespacePrefix = '&MAIN';
+
+    /**
+    * @var    boolean
+    * @access public
+    */
+    var $secondPassRequired = true;
 
     /**
     * @var    string

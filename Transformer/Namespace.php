@@ -70,10 +70,16 @@ class XML_Transformer_Namespace {
     // {{{ Members
 
     /**
-    * @var    boolean
+    * @var    string
     * @access public
     */
     var $defaultNamespacePrefix = '';
+
+    /**
+    * @var    boolean
+    * @access public
+    */
+    var $secondPassRequired = false;
 
     /**
     * @var    array

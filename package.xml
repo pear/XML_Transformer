@@ -67,7 +67,6 @@
         <dir name="Transformer">
           <dir name="Driver">
             <file role="php" name="Cache.php"/>
-            <file role="php" name="DocBook.php"/>
             <file role="php" name="OutputBuffer.php"/>
           </dir>
 
