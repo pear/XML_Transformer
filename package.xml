@@ -31,6 +31,16 @@
 <![CDATA[
 + Added new tags to the PHP Namespace Handler:
 
+    + <php:define/> ...
+
+    + <php:namespace/> ...
+
+    + <php:cookievariable name=""/> inserts the contents of a given
+      HTTP Cookie into the output XML tree.
+
+    + <php:servervariable name=""/> inserts the contents of a
+      given server variable into the output XML tree.
+
     + <php:logic/> executes a given block of PHP code and stores
       its output into the output XML tree.
 
