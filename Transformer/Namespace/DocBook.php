@@ -125,6 +125,33 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     }
 
     // }}}
+    // {{{ function start_chapter($attributes)
+
+    /**
+    * @param  array
+    * @return string
+    * @access public
+    */
+    function start_chapter($attributes) {
+        return '<h2 class="title">' .
+               $this->_startSection('chapter') . '. ';
+    }
+
+    // }}}
+    // {{{ function end_chapter($cdata)
+
+    /**
+    * @param  string
+    * @return string
+    * @access public
+    */
+    function end_chapter($cdata) {
+        $this->_endSection('chapter');
+
+        return $cdata . '</h2>';
+    }
+
+    // }}}
     // {{{ function start_emphasis($attributes)
 
     /**
