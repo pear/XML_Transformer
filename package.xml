@@ -136,7 +136,6 @@
           <file role="php" name="CallbackRegistry.php"/>
           <file role="php" name="Namespace.php"/>
           <file role="php" name="OutputBuffer.php"/>
-          <file role="php" name="PHP.php"/>
           <file role="php" name="Util.php"/>
         </dir>
 
