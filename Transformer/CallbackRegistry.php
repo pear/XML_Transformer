@@ -114,7 +114,7 @@ class XML_Transformer_CallbackRegistry {
     */
     function unOverloadNamespace($namespacePrefix) {
         if (isset($this->overloadedNamespaces[$namespacePrefix]['object'])) {
-            unset($this->overloadedNamespaces[$namespacePrefix]['object']);
+            unset($this->overloadedNamespaces[$namespacePrefix]);
         }
     }
 
