@@ -224,18 +224,170 @@ order to generate indicies or other data collections. If this is
 needed, the namespace should set secondPassRequired to true
 (default: false).
 
+2.4.1 Using autoloading
+
+We have supplied a number of subclasses to
+XML_Transformer_Namespace. These reside in a directory
+"./Transformer/Namespace" relative to the directory of the
+actual Transformer.php file itself, and can be autoloaded.
+
+In order to autoload namespaces, supply the flag "autoload" to
+your transformer constructor. You may set the flag simply to
+"true" in order to load all Namespaces, or you may pass a single
+string or an array of strings indicating the namespaces you want
+to load.
+
+Namespaces are connected to their default prefixes, and in order
+for this to work they must define such prefixes in
+defaultNamespacePrefix.
+
+Example:
+
+ $t = new XML_Transformer(
+            array(
+              "autoload" => true
+            )
+          );
+ Load all Namespaces
+
+ $t = new XML_Transformer(
+            array(
+              "autoload" => "PHP"
+            )
+          );
+ Load XML/Transformer/Namespace/PHP.php.
+
+ $t = new XML_Transformer(
+            array(
+              "autoload" => array("PHP", "Image", "Anchor")
+            )
+          );
+ Load the indicated namespaces.
+
+Limitations of autoloading:
+
+- currently, there is no pathname support. Only classes in
+  "./Transformer/Namespace" can be autoloaded. Your project
+  directories are not searched.
+
+- currently, there is no separate function to trigger autoload.
+  You must specify autoloading as a flag to the constructor.
+
 
 2.5 supplied XML_Transformer Namespaces
 
-* TODO (sb) autoloading
+All namespaces we supply are derived from
+XML_Transformer_Namespace and subject to the limitations and
+interfaces of this baseclass.
 
-2.5.1 XML_Transformer_Namespace_PHP
+2.5.1 XML_Transformer_Namespace_Anchor
 
-* TODO (kk)
+The Anchor namespace implements a number of tags that create
+indirect named links (URNs): The link is specified by name, and
+the actual link location and title are supplied from a database
+internal to the class. Additionally, a tag that selects a random
+link is supplied.
 
-2.5.2 XML_Transformer_Namespace_Image
+The default namespace prefix for this Namespace is "a".
 
-* TODO (kk)
+2.5.1.1 Link database
+
+The link database is maintained internally as an array,
+_anchorDatabase and is accessible through the setDatabase($db)
+and $db = getDatabase() accessor functions.
+
+  $a = new XML_Transformer_Namespace_Anchor();
+  $t = new XML_Transformer();
+  $t->overloadNamespace("a", $a);
+
+  $a->setDatabase(
+        array(
+          "php"  => array(
+                      "href"  => "http://www.php.net",
+                      "title" => "PHP Homepage"
+                    ),
+          "pear" => array(
+                      "href"  => "http://pear.php.net",
+                      "title" => "PEAR Homepage"
+                    )
+        )
+      );
+
+Additionally, items may be added to or dropped from the database
+using the addItem() and dropItem() methods. Also, individual
+items can be queried with getItem().
+
+  $a->addItem("dclpfaq",
+        array( "href"  => "http://www.dclp-faq.de", 
+               "title" => "de.comp.lang.php FAQ Homepage")
+  );
+
+  $a->dropItem("dclpfaq");
+
+  $dclpfaq = $a->getItem("dclpfaq");
+  echo $dclpfaq["href"];
+
+Note that neither database nor the tags place any restrictions
+on the number or kind of attributes ("href", "title", ...)
+stored in the database. All attributes will be reproduced "as
+is" on the generated links.
+
+2.5.1.2 The iref tag
+
+The <a:iref iref="name" /> container will look the given name up
+in the database and produce a HTML <a /> container. The
+attributes find in the link database will be produced literally
+as attributes to the <a /> container and the contents of the
+<a:iref /> will become the contents of the <a /> container.
+
+Example:
+
+<a:iref iref="php">The PHP Homepage</a:iref>
+
+Result:
+
+<a href="http://www.php.net" title="PHP Homepage">The PHP
+Homepage</a>
+
+2.5.1.3 The random tag
+
+The <a:random /> container will select a random name from the
+database and link to it. The contents of the <a:random /> become
+the contents of the generated <a /> container.
+
+Example:
+
+<a:random>A random link</a:random>
+
+Result:
+
+<a href="http://www.php.net" title="PHP Homepage">A random link</a>
+
+2.5.1.4 The link tag
+
+The link tag will add a link to the database, and vanishes
+(generates no output). The name attribute to link will define
+the link name, the other attributes are copied into the database
+literally.
+
+Example:
+
+<a:link name="php"
+        href="http://www.php.net"
+        title="PHP Homepage" />
+
+Result:
+
+The link is added to the database. No output is being generated.
+
+
+2.5.2 XML_Transformer_Namespace_DocBook
+
+2.5.3 XML_Transformer_Namespace_Image
+
+2.5.4 XML_Transformer_Namespace_PHP
+
+2.5.5 XML_Transformer_Namespace_Widget
 
 2.6 XML_Transformer_Driver_Cache
 
