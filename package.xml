@@ -24,10 +24,59 @@
   </maintainers>
   <license>PHP License</license>
   <release>
-    <version>0.9.0-dev</version>
+    <version>1.0.0-dev</version>
     <state>devel</state>
     <date>200Y-MM-DD</date>
     <notes>
+<![CDATA[
+* Refactored using PHP 5 syntax.
+
+! PHP 5.0.0 (or higher) is now required.
+]]>
+    </notes>
+    <filelist>
+      <dir name="/" baseinstalldir="XML">
+        <dir name="Transformer">
+          <dir name="Driver">
+            <file role="php" name="Cache.php"/>
+            <file role="php" name="OutputBuffer.php"/>
+          </dir>
+
+          <dir name="Namespace">
+            <file role="php" name="Anchor.php"/>
+            <file role="php" name="DocBook.php"/>
+            <file role="php" name="Image.php"/>
+            <file role="php" name="PHP.php"/>
+            <file role="php" name="Widget.php"/>
+          </dir>
+
+          <dir name="Tests">
+            <dir name="Namespace">
+              <file role="php" name="AllTestss.php"/>
+            </dir>
+
+            <file role="php" name="AllTestss.php"/>
+          </dir>
+
+          <file role="php" name="CallbackRegistry.php"/>
+          <file role="php" name="Namespace.php"/>
+        </dir>
+
+        <file role="php" name="Transformer.php"/>
+      </dir>
+    </filelist>
+    <deps>
+      <dep type="php" rel="ge" version="5.0.0" />
+      <dep type="ext" rel="has">xml</dep>
+      <dep type="pkg" rel="ge" version="0.5.1">XML_Util</dep>
+    </deps>
+  </release>
+  <changelog>
+    <release>
+      <version>0.9.0</version>
+      <state>stable</state>
+      <date>2004-02-06</date>
+      <notes>
 <![CDATA[
 * Variable access tags in the PHP Namespace have been
   renamed. Tag names such as <php:getparameter/> are
@@ -62,37 +111,8 @@
 
 ! The XML_Util package is now required.
 ]]>
-    </notes>
-    <filelist>
-      <dir name="/" baseinstalldir="XML">
-        <dir name="Transformer">
-          <dir name="Driver">
-            <file role="php" name="Cache.php"/>
-            <file role="php" name="OutputBuffer.php"/>
-          </dir>
-
-          <dir name="Namespace">
-            <file role="php" name="Anchor.php"/>
-            <file role="php" name="DocBook.php"/>
-            <file role="php" name="Image.php"/>
-            <file role="php" name="PHP.php"/>
-            <file role="php" name="Widget.php"/>
-          </dir>
-
-          <file role="php" name="CallbackRegistry.php"/>
-          <file role="php" name="Namespace.php"/>
-        </dir>
-
-        <file role="php" name="Transformer.php"/>
-      </dir>
-    </filelist>
-    <deps>
-      <dep type="php" rel="ge" version="4.2.0" />
-      <dep type="ext" rel="has">xml</dep>
-      <dep type="pkg" rel="ge" version="0.5.1">XML_Util</dep>
-    </deps>
-  </release>
-  <changelog>
+      </notes>
+    </release>
     <release>
       <version>0.8.2</version>
       <state>stable</state>
