@@ -514,7 +514,7 @@ class XML_Transformer {
 
             $this->_debug(
               sprintf(
-                'recursion[%d]: %s',
+                'start recursion[%d]: %s',
                 $this->_level,
                 $cdata
               ),
