@@ -63,6 +63,7 @@
     </filelist>
     <deps>
       <dep type="php" rel="ge" version="4.2.0" />
+      <dep type="php" rel="lt" version="5.1" />
       <dep type="ext" rel="has">pcre</dep>
       <dep type="ext" rel="has">xml</dep>
       <dep type="pkg" rel="ge" version="1.1.0">XML_Util</dep>
