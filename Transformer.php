@@ -195,60 +195,6 @@ class XML_Transformer {
     }
 
     // }}}
-    // {{{ function logMessage($logMessage, $target = 'error_log')
-
-    /**
-    * Sends an error message to a given target.
-    *
-    * @param  string
-    * @param  string
-    * @access public
-    * @static
-    */
-    function logMessage($logMessage, $target = 'error_log') {
-        switch ($target) {
-            case 'echo':
-            case 'print': {
-                print $logMessage;
-            }
-            break;
-
-            default: {
-                error_log($logMessage);
-            }
-        }
-    }
-
-    // }}}
-    // {{{ function stackdump()
-
-    /**
-    * Returns a stack dump as a debugging aid.
-    *
-    * @param
-    * @return string
-    * @access public
-    */
-    function stackdump() {
-        $stackdump = sprintf(
-          "Stackdump (level: %s) follows:\n",
-          $this->_level
-        );
-
-        for ($i = $this->_level; $i >= 0; $i--) {
-          $stackdump .= sprintf(
-            "level=%d\nelement=%s:%s\ncdata=%s\n\n",
-            $i,
-            isset($this->_elementStack[$i])    ? $this->_elementStack[$i]                                  : '',
-            isset($this->_attributesStack[$i]) ? XML_Util::attributesToString($this->_attributesStack[$i]) : '',
-            isset($this->_cdataStack[$i])      ? $this->_cdataStack[$i]                                    : ''
-          );
-        }
-
-        return $stackdump;
-    }
-
-    // }}}
     // {{{ function overloadNamespace($namespacePrefix, &$object, $recursiveOperation = '')
 
     /**
@@ -287,7 +233,7 @@ class XML_Transformer {
                 );
             }
         } else {
-            $this->logMessage(
+            $this->sendMessage(
               $result,
               $this->_logTarget
             );
@@ -322,6 +268,30 @@ class XML_Transformer {
         return $this->_callbackRegistry->isOverloadedNamespace(
           $this->canonicalize($namespacePrefix)
         );
+    }
+
+    // }}}
+    // {{{ function sendMessage($message, $target = 'error_log')
+
+    /**
+    * Sends a message to a given target.
+    *
+    * @param  string
+    * @param  string
+    * @access public
+    */
+    function sendMessage($message, $target = 'error_log') {
+        switch ($target) {
+            case 'echo':
+            case 'print': {
+                print $message;
+            }
+            break;
+
+            default: {
+                error_log($message);
+            }
+        }
     }
 
     // }}}
@@ -390,6 +360,35 @@ class XML_Transformer {
     }
 
     // }}}
+    // {{{ function stackdump()
+
+    /**
+    * Returns a stack dump as a debugging aid.
+    *
+    * @param
+    * @return string
+    * @access public
+    */
+    function stackdump() {
+        $stackdump = sprintf(
+          "Stackdump (level: %s) follows:\n",
+          $this->_level
+        );
+
+        for ($i = $this->_level; $i >= 0; $i--) {
+          $stackdump .= sprintf(
+            "level=%d\nelement=%s:%s\ncdata=%s\n\n",
+            $i,
+            isset($this->_elementStack[$i])    ? $this->_elementStack[$i]                                  : '',
+            isset($this->_attributesStack[$i]) ? XML_Util::attributesToString($this->_attributesStack[$i]) : '',
+            isset($this->_cdataStack[$i])      ? $this->_cdataStack[$i]                                    : ''
+          );
+        }
+
+        return $stackdump;
+    }
+
+    // }}}
     // {{{ function transform($xml)
 
     /**
@@ -445,7 +444,7 @@ class XML_Transformer {
                 );
             }
 
-            $this->logMessage(
+            $this->sendMessage(
               $errorMessage . "\n" . $this->stackdump(),
               $this->_logTarget
             );
@@ -506,7 +505,7 @@ class XML_Transformer {
         $this->_attributesStack[$this->_level] = $attributes;
 
         if ($this->_checkDebug($element)) {
-            $this->_debug(
+            $this->sendMessage(
               sprintf(
                 'startElement[%d]: %s %s',
                 $this->_level,
@@ -588,7 +587,7 @@ class XML_Transformer {
             // Recursively process this transformation's result.
 
             if ($this->_checkDebug('&RECURSE')) {
-                $this->_debug(
+                $this->sendMessage(
                   sprintf(
                     'start recursion[%d]: %s',
                     $this->_level,
@@ -608,7 +607,7 @@ class XML_Transformer {
             $cdata = $transformer->transform($cdata);
 
             if ($this->_checkDebug('&RECURSE')) {
-                $this->_debug(
+                $this->sendMessage(
                   sprintf(
                     'end recursion[%d]: %s',
                     $this->_level,
@@ -619,7 +618,7 @@ class XML_Transformer {
         }
 
         if ($this->_checkDebug($element)) {
-            $this->_debug(
+            $this->sendMessage(
               sprintf(
                 'endElement[%d]: %s (with cdata=%s)',
                 $this->_level,
@@ -647,7 +646,7 @@ class XML_Transformer {
     */
     function _characterData($parser, $cdata) {
       if ($this->_checkDebug('&CDATA')) {
-          $this->_debug(
+          $this->sendMessage(
             sprintf(
               'cdata [%d]: %s + %s',
               $this->_level,
@@ -725,22 +724,6 @@ class XML_Transformer {
         } else {
             return false;
         }
-    }
-
-    // }}}
-    // {{{ function _debug($debugMessage, $currentElement = '')
-
-    /**
-    * Sends a debug message to error.log, if debugging is enabled.
-    *
-    * @param  string
-    * @access private
-    */
-    function _debug($debugMessage) {
-        $this->logMessage(
-          $debugMessage,
-          $this->_logTarget
-        );
     }
 
     // }}}

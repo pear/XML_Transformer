@@ -104,7 +104,7 @@ class XML_Transformer_Driver_OutputBuffer extends XML_Transformer {
             $this->_started = true;
 
             if ($this->_checkDebug()) {
-                $this->_debug(
+                $this->sendMessage(
                   'start: ' . serialize($this)
                 );
             }

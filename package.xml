@@ -29,6 +29,8 @@
     <date>200Y-MM-DD</date>
     <notes>
 <![CDATA[
+* Refactored debug message system.
+
 - Replaced XML_Transformer_Util::attributesToString()
   with XML_Util::attributesToString().
 
