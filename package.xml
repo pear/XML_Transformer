@@ -24,16 +24,15 @@
   </maintainers>
   <license>PHP License</license>
   <release>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <state>stable</state>
-    <date>2004-03-16</date>
+    <date>2004-MM-DD</date>
     <notes>
 <![CDATA[
-* The collapsing of empty tags (<foo></foo>) into their
-  short-tag (<foo />) equivalent has been made optional
-  and is disabled by default to restore backwards
-  compatibility with XML_Transformer versions prior to
-  0.9.0.
+* Use XML_Util::attributesToString() without replacing XML entities
+  where appropriate.
+
+* Do not replace XML entities twice in second-pass transformations.
 ]]>
     </notes>
     <filelist>
@@ -62,10 +61,24 @@
     <deps>
       <dep type="php" rel="ge" version="4.2.0" />
       <dep type="ext" rel="has">xml</dep>
-      <dep type="pkg" rel="ge" version="0.5.1">XML_Util</dep>
+      <dep type="pkg" rel="ge" version="0.6.0">XML_Util</dep>
     </deps>
   </release>
   <changelog>
+    <release>
+      <version>1.0.1</version>
+      <state>stable</state>
+      <date>2004-03-16</date>
+      <notes>
+<![CDATA[
+* The collapsing of empty tags (<foo></foo>) into their
+  short-tag (<foo />) equivalent has been made optional
+  and is disabled by default to restore backwards
+  compatibility with XML_Transformer versions prior to
+  0.9.0.
+]]>
+      </notes>
+    </release>
     <release>
       <version>1.0.0</version>
       <state>stable</state>

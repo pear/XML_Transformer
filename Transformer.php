@@ -421,24 +421,27 @@ class XML_Transformer {
     }
 
     // }}}
-    // {{{ function transform($xml)
+    // {{{ function transform($xml, $replaceEntities = true)
 
     /**
     * Transforms a given XML string using the registered
     * PHP callbacks for overloaded tags.
     *
     * @param  string
+    * @param  boolean
     * @return string
     * @access public
     */
-    function transform($xml) {
-        // Don't process input when it contains no XML elements.
+    function transform($xml, $replaceEntities = true) {
+        // Do not process input when it contains no XML elements.
 
         if (strpos($xml, '<') === false) {
             return $xml;
         }
 
-        $xml = str_replace('&', '&amp;', $xml);
+        if ($replaceEntities == true) {
+            $xml = str_replace('&', '&amp;', $xml);
+        }
 
         // Create XML parser, set parser options.
 
@@ -505,7 +508,7 @@ class XML_Transformer {
         if ($secondPassRequired) {
             $this->_depth++;
             $this->_secondPassRequired = false;
-            $result = $this->transform($result);
+            $result = $this->transform($result, false);
             $this->_depth--;
         }
 
@@ -648,7 +651,7 @@ class XML_Transformer {
               )
             );
 
-            $cdata = substr($transformer->transform("<_>$cdata</_>"),3,-4);
+            $cdata = substr($transformer->transform("<_>$cdata</_>", false), 3, -4);
 
             if ($this->_checkDebug('&RECURSE')) {
                 $this->sendMessage(
