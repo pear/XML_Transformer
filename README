@@ -222,3 +222,41 @@ complete XML specification.
 
 * TODO (any)
 
+3. Debugging
+
+* TODO (kk) entire section
+
+3.1 The debugging filter
+
+3.2 Debugging recursion
+
+3.3 Debugging and the output buffer
+
+4. Caching and XML_Transformer
+
+* TODO (kk) entire section
+
+4.1 Adressable and hidden caches
+
+* Images and server fast path, cache must be below document root
+* generated HTML and templates need not be addressable, outside
+  document root
+
+4.2 What caching is about
+
+* Caching means NOT to work
+* Cache keys determine the cached object,
+  cache key must include all items that can cause the
+  cached object to vary
+* Cache keys should not be the cached object, that is,
+  $key = md5($transformation_result) is useless.
+* Do we need to clean out the cache?
+
+* Caching fragments
+
+4.3 How XML_Transformer_Namespace_Image uses caching
+
+4.4 How XML_Transformer_Cache uses caching
+
+4.5 How to deploy caching manually
+
