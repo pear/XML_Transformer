@@ -521,10 +521,12 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     */
     function start_graphic($attributes) {
         return sprintf(
-          '<img alt="%s" border="0" src="%s" />',
+          '<img alt="%s" border="0" src="%s"%s%s/>',
 
-          isset($attributes['srccredit']) ? $attributes['srccredit'] : '',
-          isset($attributes['fileref'])   ? $attributes['fileref']   : ''
+          isset($attributes['srccredit']) ? $attributes['srccredit']                  : '',
+          isset($attributes['fileref'])   ? $attributes['fileref']                    : '',
+          isset($attributes['width'])     ? ' width="'  . $attributes['width']  . '"' : '',
+          isset($attributes['height'])    ? ' height="' . $attributes['height'] . '"' : ''
         );
     }
 
@@ -537,7 +539,7 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     * @access public
     */
     function end_graphic($cdata) {
-        return '';
+        return $cdata;
     }
 
     // }}}
