@@ -75,7 +75,7 @@ class XML_Transformer {
     var $_caseFolding = false;
 
     /**
-    * @var    boolean
+    * @var    integer
     * @access private
     */
     var $_caseFoldingTo = CASE_UPPER;
@@ -211,10 +211,11 @@ class XML_Transformer {
     * @access public
     */
     function canonicalName($name) {
-      if ($this->caseFoldingTo == CASE_UPPER)
-        return $this->_caseFolding ? strtoupper($name) : $name;
-      else
-        return $this->_caseFolding ? strtolower($name) : $name;
+      if ($this->caseFoldingTo == CASE_UPPER) {
+          return $this->_caseFolding ? strtoupper($name) : $name;
+      } else {
+          return $this->_caseFolding ? strtolower($name) : $name;
+      }
     }
 
     // }}}
@@ -349,11 +350,16 @@ class XML_Transformer {
     * Sets the XML parser's case-folding option.
     *
     * @param  boolean
+    * @param  integer
     * @access public
     */
-    function setCaseFolding($caseFolding) {
-        if (is_bool($caseFolding)) {
-            $this->_caseFolding = $caseFolding;
+    function setCaseFolding($caseFolding, $caseFoldingTo = CASE_UPPER) {
+        if (is_bool($caseFolding) &&
+            ($caseFoldingTo == CASE_LOWER || $caseFoldingTo == CASE_UPPER)
+           )
+        {
+            $this->_caseFolding   = $caseFolding;
+            $this->_caseFoldingTo = $caseFoldingTo;
         }
     }
 
