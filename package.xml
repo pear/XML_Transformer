@@ -29,10 +29,9 @@
     <date>2004-MM-DD</date>
     <notes>
 <![CDATA[
-* Use XML_Util::attributesToString() without replacing XML entities
-  where appropriate.
+* Do not replace XML entities twice.
 
-* Do not replace XML entities twice in second-pass transformations.
+  (Patch by Thomas Duffey <tduffey@homeboyz.org>)
 ]]>
     </notes>
     <filelist>
@@ -60,8 +59,9 @@
     </filelist>
     <deps>
       <dep type="php" rel="ge" version="4.2.0" />
+      <dep type="ext" rel="has">pcre</dep>
       <dep type="ext" rel="has">xml</dep>
-      <dep type="pkg" rel="ge" version="0.6.0">XML_Util</dep>
+      <dep type="pkg" rel="ge" version="1.0.0">XML_Util</dep>
     </deps>
   </release>
   <changelog>
