@@ -1,130 +1,127 @@
-
 XML Transformer Tutorial
-by Kristian Köhntopp, Sebastian Bergmann
+By Kristian Köhntopp and Sebastian Bergmann.
+
 
 0. This file
 
-This file is a supplementary document for the online
-documentation of the XML_Transformer PEAR package. It is not a
-comprehensive manual of methods and parameters, that's what the
-PEAR online documentation is good for.
+This file is a supplementary document for the online documentation of the 
+XML_Transformer PEAR package. It is not a comprehensive manual of methods and 
+parameters, that's what the PEAR online documentation is good for.
 
-Instead, this document acts as a guide and tutorial to
-XML_Transformer and friends. It aims to explain the architecture
-of XML_Transformer and the choices that governed its design.
-Also, it should contain a number of simple applications of
-XML_Transformer to illustrate its typical use.
+Instead, this document acts as a guide and tutorial to XML_Transformer and 
+friends. It aims at explaining the architecture of XML_Transformer and the 
+choices that governed its design. Also, it should contain a number of simple 
+applications of XML_Transformer to illustrate its typical use.
+
 
 1. What is it good for?
 
-The XML Transformer is a system of PEAR classes that can be used
-to transform XML files into other XML files. The transformation
-is being specified using PHP functions.
+The XML Transformer is a system of PEAR classes that can be used to transform 
+XML files into other XML files. The transformation is specified using PHP 
+functions.
 
-We created XML Transformer, because we were annoyed with the
-syntax and capabilities of XSLT. XSLT is a very verbose language
-that needs many lines of text to express even the simplest of
-algorithms. Also, XSLT is a functional language offering all the
-drawbacks of languages of this class (variables are actually a
-kind of constant, recursion is needed to express many loops etc)
-without the advantages that come with such languages (closures,
-functions as first-order datatypes etc). Finally, XSLT is badly
-integrated into almost all development environments, offering
-little in the way of character manipulation, and nothing in the
-way to database access, image manipulation, flat file output
+We created XML Transformer because we were annoyed with the syntax and 
+capabilities of XSLT. XSLT is a very verbose language that needs many lines of 
+text to express even the simplest of algorithms. Also, XSLT is a functional 
+language offering all the drawbacks of languages of this class (variables are 
+actually a kind of constant, recursion is needed to express many loops etc) 
+without the advantages that come with such languages (closures, functions as 
+first-order datatypes etc). Finally, XSLT is badly integrated into almost all 
+development environments, offering little in the way of character manipulation, 
+and nothing in the way to database access, image manipulation, flat file output 
 control and so on.
 
-XML transformer can do many things that linear (non-reordering)
-XSLT can. It can do some things XSLT can't (such as recursively
-reparsing its own output), and it can utilize all PHP builtin
-functions and classes to do this. Transformations are specified
-using the syntax of PHP with which you already familiar, and
-there is a simplified syntax to specify simple replacement
-transformations that does not even need PHP at all.
+XML Transformer can do many things that linear (non-reordering) XSLT can. It can 
+do some things XSLT can't (such as recursively reparsing its own output), and it 
+can utilize all PHP built-in functions and classes to do this. Transformations 
+are specified using the syntax of PHP with which you're already familiar, and 
+there is a simplified syntax to specify simple replacement transformations that 
+does not even need PHP at all.
 
-Since XML Transformer uses a SAX parser to do its work, it can't
-do anything a SAX parser can't do. That is, it cannot do
-reordering transformations in a single pass. You won't be able
-to generate indices, tables of contents and other summary
-operations in a single pass. If you run into such problems,
-think LaTeX and use the solutions LaTeX uses for this problems
-as well - we have recently added support for multipassing, so
-that implementing such a mechanism shouldn't be too difficult.
-Also, we are providing the Docbook Namespace Transformation as
-an Example for such mechanisms. Finally, we are considering an
-implementation of XML Transformer using a DOM parser and XPath
-queries to enable single pass reordering operations in PHP as
+Since XML Transformer uses a SAX parser to do its work, it can't do anything a 
+SAX parser can't do. That is, it cannot do reordering transformations in a 
+single pass. You won't be able to generate indices, tables of contents and other 
+summary operations in a single pass. If you run into such problems, think LaTeX 
+and use the solutions LaTeX uses for this problems as well - we have recently 
+added support for multipassing, so that implementing such a mechanism shouldn't 
+be too difficult. Also, we are providing the Docbook Namespace Handler as an 
+example for such mechanisms.
+
+Finally, we are considering an implementation of XML Transformer using a DOM 
+parser and XPath queries to enable single pass reordering operations in PHP as 
 well.
+
 
 2. What are all these files and classes?
 
 2.1 XML_Transformer
 
-The heart of the XML Transformer is defined in
-XML/Transformer.php. All the work is being done within the
-transform() method, which takes an XML string, transforms it and
-returns the transformed result.
+The heart of the XML Transformer is defined in XML/Transformer.php. All the work 
+is being done within the transform() method, which takes an XML string, 
+transforms it and returns the transformed result.
 
-As transform() uses PHP's expat extension internally, the XML
-string must be a well-formed XML fragment in order for the
-transformation to work. That is, it must be starting with a tag
-and ending with the same tag.
+As transform() uses PHP's expat extension internally, the XML string must be a 
+well-formed XML fragment in order for the transformation to work. That is, it 
+must be starting with a tag and ending with the same tag.
 
-To set up a transformation, you need to create an instance of
-the class XML_Transformer and then add options and
-transformations to it.
+To set up a transformation, you need to create an instance of the class 
+XML_Transformer and then add options and transformations to it.
 
   $t = new XML_Transformer();
   $t->setDebug(true);
-  $t->overloadNamespace("php", new XML_Transformer_PHP);
+  $t->overloadNamespace('php', new XML_Transformer_PHP);
 
-Options are added using the set-type methods setDebug(),
-setRecursiveOperation(), and setCaseFolding(). Transformations
-are added using overloadNamespace(). All of these options and
-then some can be set as parameters to the constructor. You'd be
-using an array that is being passed to the c'tor for this.
+Options are added using the set-type methods setDebug(), 
+setRecursiveOperation(), and setCaseFolding(). Transformations are added using 
+overloadNamespace(). All of these options and then some can be set as parameters 
+to the constructor. You'd be using an array that is being passed to the c'tor 
+for this.
 
   $t = new XML_Transformer(
-         "debug" => true,
-         "overloadedNamespaces" => array("php", new XML_Transformer_PHP)
-       );
+    'debug'                => true,
+    'overloadedNamespaces' => array(
+      'php',
+      new XML_Transformer_PHP
+    )
+  );
+
 
 2.2 XML_Transformer_CallbackRegistry
 
-Internally, XML Transformer uses to auxiliary classes to do its
-work. One of them is the XML_Transformer_CallbackRegistry, which
-does all the bookkeeping for XML_Transformer, tracking which
-functions are to call for which namespace and so on.
-XML_Transformer_CallbackRegistry is a Singleton, and the
-instance is maintained automatically by XML_Transformer. You
-never use it directly.
+Internally, XML Transformer uses two auxiliary classes to do its work. One of 
+them is the XML_Transformer_CallbackRegistry, which does all the bookkeeping for 
+XML_Transformer, tracking which methods are to call for which namespace and so 
+on. XML_Transformer_CallbackRegistry is a Singleton, and the instance is 
+maintained automatically by XML_Transformer. You never use it directly.
+
 
 2.3 XML_Transformer_Util
 
-The other auxiliary class is actually only a function
-collection, XML_Transformer_Util. As such, it does not have any
-instances at all, but contains static methods, which can be
-called by XML_Transformer or your own classes.
+The other auxiliary class is actually only a collection of static methods, 
+XML_Transformer_Util. As such, it does not have any instances at all, but 
+provides functionality, which can be used by XML_Transformer or your own 
+classes.
 
-We offer the attributesToString() function, which returns a hash
-of tag attributes (key, value) as a string that can be added to
-your output.
+We offer the attributesToString() method, which returns a hash of tag attributes 
+(key, value) as a string that can be added to your output.
 
   $att = array(
-          "a" => "blah",
-          "b" => "yak"
-         );
+    'a' => 'blah',
+    'b' => 'yak'
+  );
+
   echo XML_Transformer_Util::attributesToString($att);
+
   /* prints
    *   a='blah' b='yak'
    */
 
-Another function, qualifiedElement(), takes a tag name or
-possibly a namespace:tag combination and returns an array of
-namespace and tag name. If the tag name has no namespace, the
-namespace is returned as '&MAIN'.
+Another method, qualifiedElement(), takes a tag name or possibly a namespace:tag 
+combination and returns an array of namespace and tag name. If the tag name has 
+no namespace, the namespace is returned as '&MAIN'.
 
   list($namespace, $element ) = XML_Transformer_Util::qualifiedElement('img');
+
   /*
    * returns array('&MAIN', 'img');
    */
@@ -132,28 +129,25 @@ namespace is returned as '&MAIN'.
 
 2.4 XML_Transformer_Namespace
 
-Using XML_Transformer, all transformations are specified for
-namespaces. You may specifiy transformations for the empty
-namespace, that is, you may transform simple tags such as
-<body/> or <p/>. The name of the empty namespace is '' or
+Using XML_Transformer, all transformations are specified for namespaces. You may 
+specifiy transformations for the empty namespace, that is, you may transform 
+simple tags such as <body/> or <p/>. The name of the empty namespace is '' or 
 '&MAIN'.
 
-To make the defintion of namespaces easy, we supply a class
-XML_Transformer_Namespace from which you can inherit (Note that
-XML_Transformer_namespace ist only one possible implementation
-for a namespace. You are free to choose a different
-implementation schema anytime, for example if the direct mapping
-of classes to namespaces is not applicable for your deployment
-scenario). The class is suitable for all non-nesting tags and
-the implementation schemata shown here are suitable for
-non-nesting tags such as <img/> or <h1/>, but you'd need
-something more sophisticated to implement a nesting structure
-such as <table/> which can contain itself.
+To make the definition of namespaces easy, we supply a class 
+XML_Transformer_Namespace from which you can inherit (Note that 
+XML_Transformer_namespace ist only one possible implementation for a namespace. 
+You are free to choose a different implementation schema anytime, for example if 
+the direct mapping of classes to namespaces is not applicable for your 
+deployment scenario). The class is suitable for all non-nesting tags and the 
+implementation schemata shown here are suitable for non-nesting tags such as 
+<img/> or <h1/>, but you'd need something more sophisticated to implement a 
+nesting structure such as <table/> which can contain itself.
 
-In order to define a tag called <tag />, you create a class and
-implement functions called start_tag($attributes) and
-end_tag($cdata). These functions must return the result of the
-transformation as strings, and it must be a valid XML fragment.
+In order to define a tag called <tag />, you create a class and implement 
+methods called start_tag($attributes) and end_tag($cdata). These methods must 
+return the result of the transformation as strings, and it must be a valid XML 
+fragment.
 
 class MyNamespace extends XML_Transformer_Namespace {
   var $tag_attributes = array();
@@ -161,7 +155,7 @@ class MyNamespace extends XML_Transformer_Namespace {
   function start_tag($att) {
     $this->tag_attributes = $att;
 
-    return "";
+    return '';
   }
 
   function end_tag($cdata) {
@@ -169,205 +163,193 @@ class MyNamespace extends XML_Transformer_Namespace {
       $name = $this->tag_attributes['name'];
       $thline = "<tr><th>$name</th></tr>";
     } else {
-      $thline = "";
+      $thline = '';
     }
 
     return "<table>$thline<tr><td>$cdata</td></tr></table>";
   }
 }
 
-This minimal sample implements a container tag called 
-<...:tag name="headline" />, which places its content in a
-table, and additionally supplied a table headline in a <th/>
-cell if an attribute "name" is present.
+This minimal sample implements a container tag called <...:tag name="headline" 
+/>, which places its content in a table, and additionally supplied a table 
+headline in a <th/> cell if an attribute "name" is present.
 
-The example is pretty much useless, but illustrates attribute
-capture, access to the tags cdata content, and returning of
-results. Also, it illustrates how easy namespaces are created by
-inheriting from XML_Transformer_Namespace.
+The example is pretty much useless, but illustrates attribute capture, access to 
+the tags cdata content, and returning of results. Also, it illustrates how easy 
+namespaces are created by inheriting from XML_Transformer_Namespace.
 
-To activate the namespace and assign it a namespace prefix,
-you'd use overloadNamespace():
+To activate the namespace and assign it a namespace prefix, you'd use 
+overloadNamespace():
 
   $t = new XML_Transformer(...);
-  $t->overloadNamespace("my", new MyNamespace());
+  $t->overloadNamespace('my', new MyNamespace());
 
-This tag can now be used as "<my:tag
-name='heading'>content</my:tag>".
+This tag can now be used as "<my:tag name='heading'>content</my:tag>".
 
-The XML_Transformer_Namespace class has a few instance variables
-which may come in handy in some cases. One of them is
-_transformer, which is indeed a reference to the owning
-transformer. 
+The XML_Transformer_Namespace class has a few instance variables which may come 
+in handy in some cases. One of them is _transformer, which is indeed a reference 
+to the owning transformer. 
 
-Another is an array _prefix, which is an enumeration of
-namespace prefixes of this namespace class. In our example
-above, that array would have just one element,
-$this->_prefix[0], and it would contain the string 'my'. As you
-might have guessed from the fact that _prefix is an array, we
-consider it legal to register a single namespace class under
-multiple prefixes, if you can manage to keep your references
-straight and not inadvertantly copy your instance. We have not
-bothered to implement namespace scopes, though, as we should
-have were we in the business of implementing the complete XML
-specification.
+Another is an array _prefix, which is an enumeration of namespace prefixes of 
+this namespace class. In our example above, that array would have just one 
+element, $this->_prefix[0], and it would contain the string 'my'. As you might 
+have guessed from the fact that _prefix is an array, we consider it legal to 
+register a single namespace class under multiple prefixes, if you can manage to 
+keep your references straight and not inadvertantly copy your instance. We have 
+not bothered to implement namespace scopes, though, as we should have were we in 
+the business of implementing the complete XML specification.
 
-The XML_Transformer has a handy feature where Namespaces are
-autoloaded and registered under their default namespace names,
-if they define one. In order for autoloading to work, define an
-instance variable defaultNamespacePrefix as a string. This
-string is the prefix under which the namespace will register
-itself when autoloading.
+The XML_Transformer has a handy feature where Namespaces are autoloaded and 
+registered under their default namespace names, if they define one. In order for 
+autoloading to work, define an instance variable defaultNamespacePrefix as a 
+string. This string is the prefix under which the namespace will register itself 
+when autoloading.
 
-Finally, a namespace may indicate that it requires two passes in
-order to generate indicies or other data collections. If this is
-needed, the namespace should set secondPassRequired to true
-(default: false).
+Finally, a namespace may indicate that it requires two passes in order to 
+generate indicies or other data collections. If this is needed, the namespace 
+should set secondPassRequired to true (default: false).
+
 
 2.4.1 Using autoloading
 
-We have supplied a number of subclasses to
-XML_Transformer_Namespace. These reside in a directory
-"./Transformer/Namespace" relative to the directory of the
+We have supplied a number of subclasses to XML_Transformer_Namespace. These 
+reside in a directory "./Transformer/Namespace" relative to the directory of the 
 actual Transformer.php file itself, and can be autoloaded.
 
-In order to autoload namespaces, supply the flag "autoload" to
-your transformer constructor. You may set the flag simply to
-"true" in order to load all Namespaces, or you may pass a single
-string or an array of strings indicating the namespaces you want
-to load.
+In order to autoload namespaces, supply the flag "autoload" to your transformer 
+constructor. You may set the flag simply to "true" in order to load all 
+Namespaces, or you may pass a single string or an array of strings indicating 
+the namespaces you want to load.
 
-Namespaces are connected to their default prefixes, and in order
-for this to work they must define such prefixes in
-defaultNamespacePrefix.
+Namespaces are connected to their default prefixes, and in order for this to 
+work they must define such prefixes in defaultNamespacePrefix.
 
 Example:
 
  $t = new XML_Transformer(
             array(
-              "autoload" => true
+              'autoload' => true
             )
           );
  Load all Namespaces
 
  $t = new XML_Transformer(
             array(
-              "autoload" => "PHP"
+              'autoload' => 'PHP'
             )
           );
  Load XML/Transformer/Namespace/PHP.php.
 
  $t = new XML_Transformer(
             array(
-              "autoload" => array("PHP", "Image", "Anchor")
+              'autoload' => array('PHP', 'Image', 'Anchor')
             )
           );
  Load the indicated namespaces.
 
 Limitations of autoloading:
 
-- currently, there is no pathname support. Only classes in
-  "./Transformer/Namespace" can be autoloaded. Your project
-  directories are not searched.
+- currently, there is no pathname support. Only classes in 
+  "./Transformer/Namespace" can be autoloaded. Your project directories are
+  not searched.
 
-- currently, there is no separate function to trigger autoload.
+- currently, there is no separate method to trigger autoload.
   You must specify autoloading as a flag to the constructor.
 
 
 2.5 supplied XML_Transformer Namespaces
 
-All namespaces we supply are derived from
-XML_Transformer_Namespace and subject to the limitations and
-interfaces of this baseclass.
+All namespaces we supply are derived from XML_Transformer_Namespace and subject 
+to the limitations and interfaces of this baseclass.
 
-If you are looking into our code in order to write your own
-namespaces, we recommend you look into Anchor first. Anchor is
-your plain vanilly namespace with no tricks and extra features.
+If you are looking into our code in order to write your own namespaces, we 
+recommend you look into Anchor first. Anchor is your plain vanilla namespace 
+with no tricks and extra features.
 
-The DocBook namespace is an example of a two-pass namespace. If
-you have an application that needs to generate tables of
-contents, cross references or other stuff that cannot be done
-without reordering, you should read DocBook as an example.
+The DocBook namespace is an example of a two-pass namespace. If you have an 
+application that needs to generate tables of contents, cross references or other 
+stuff that cannot be done without reordering, you should read DocBook as an 
+example.
 
-The Image namespace generates PNG images, and uses a local cache
-for this. That is, we generate files in our cache, and generate
-<img /> HTML tags that references these files. This is fast, and
-saves us multiple renderings of the same image. You should look
-into these techniques if your tags are graphically intensive or
-otherwise ressource consuming. Also, <img:gtext /> uses a lot of
-parameters, and often these are similar across multiple calls of
-<img:gtext /> on the same page. We supply <img:gtextdefault />
-as a mechanism to provide sensible defaults to subsequent calls.
-Look into our code to learn how we did this.
+The Image namespace generates PNG images, and uses a local cache for this. That 
+is, we generate files in our cache, and generate <img /> HTML tags that 
+references these files. This is fast, and saves us multiple renderings of the 
+same image. You should look into these techniques if your tags are graphically 
+intensive or otherwise ressource consuming. Also, <img:gtext /> uses a lot of 
+parameters, and often these are similar across multiple calls of <img:gtext /> 
+on the same page. We supply <img:gtextdefault /> as a mechanism to provide 
+sensible defaults to subsequent calls. Look into our code to learn how we did 
+this.
 
-The PHP namespace implements <php:define />, which gobbles up
-its contents unparsed. In order to do this it uses getLock() and
-releaseLock() in transformer. If you need code that is read
-as-is and evaluated later, look into this. Also, the PHP
-namespace uses PHP's eval function extensively to generate
-namespace classes at run-time. This is not a recommended
-practice, but probably interesting code.
+The PHP namespace implements <php:define />, which gobbles up its contents 
+unparsed. In order to do this it uses getLock() and releaseLock() in 
+transformer. If you need code that is read as-is and evaluated later, look into 
+this. Also, the PHP namespace uses PHP's eval function extensively to generate 
+namespace classes at run-time. This is not a recommended practice, but probably 
+interesting code.
 
 
 2.5.1 XML_Transformer_Namespace_Anchor
 
-The Anchor namespace implements a number of tags that create
-indirect named links (URNs): The link is specified by name, and
-the actual link location and title are supplied from a database
-internal to the class. Additionally, a tag that selects a random
-link is supplied.
+The Anchor namespace implements a number of tags that create indirect named 
+links (URNs): The link is specified by name, and the actual link location and 
+title are supplied from a database internal to the class. Additionally, a tag 
+that selects a random link is supplied.
 
 The default namespace prefix for this Namespace is "a".
 
+
 2.5.1.1 Link database
 
-The link database is maintained internally as an array,
-_anchorDatabase and is accessible through the setDatabase($db)
-and $db = getDatabase() accessor functions.
+The link database is maintained internally as an array, _anchorDatabase and is 
+accessible through the setDatabase($db) and $db = getDatabase() accessor 
+methods.
 
   $a = new XML_Transformer_Namespace_Anchor();
   $t = new XML_Transformer();
-  $t->overloadNamespace("a", $a);
+  $t->overloadNamespace('a', $a);
 
   $a->setDatabase(
         array(
-          "php"  => array(
-                      "href"  => "http://www.php.net",
-                      "title" => "PHP Homepage"
+          'php'  => array(
+                      'href'  => 'http://www.php.net',
+                      'title' => 'PHP Homepage'
                     ),
-          "pear" => array(
-                      "href"  => "http://pear.php.net",
-                      "title" => "PEAR Homepage"
+          'pear' => array(
+                      'href'  => 'http://pear.php.net',
+                      'title' => 'PEAR Homepage'
                     )
         )
       );
 
-Additionally, items may be added to or dropped from the database
-using the addItem() and dropItem() methods. Also, individual
-items can be queried with getItem().
+Additionally, items may be added to or dropped from the database using the 
+addItem() and dropItem() methods. Also, individual items can be queried with 
+getItem().
 
-  $a->addItem("dclpfaq",
-        array( "href"  => "http://www.dclp-faq.de", 
-               "title" => "de.comp.lang.php FAQ Homepage")
+  $a->addItem(
+    'dclpfaq',
+    array(
+      'href'  => 'http://www.dclp-faq.de', 
+      'title' => 'de.comp.lang.php FAQ Homepage'
+    )
   );
 
-  $a->dropItem("dclpfaq");
+  $a->dropItem('dclpfaq');
 
-  $dclpfaq = $a->getItem("dclpfaq");
-  echo $dclpfaq["href"];
+  $dclpfaq = $a->getItem('dclpfaq');
+  echo $dclpfaq['href'];
 
-Note that neither database nor the tags place any restrictions
-on the number or kind of attributes ("href", "title", ...)
-stored in the database. All attributes will be reproduced "as
-is" on the generated links.
+Note that neither database nor the tags place any restrictions on the number or 
+kind of attributes ("href", "title", ...) stored in the database. All attributes 
+will be reproduced "as is" on the generated links.
 
-2.5.1.2 The iref tag
 
-The <a:iref iref="name" /> container will look the given name up
-in the database and produce a HTML <a /> container. The
-attributes find in the link database will be produced literally
-as attributes to the <a /> container and the contents of the
-<a:iref /> will become the contents of the <a /> container.
+2.5.1.2 The <a:iref> tag
+
+The <a:iref iref="name" /> container will look the given name up in the database 
+and produce a HTML <a /> container. The attributes find in the link database 
+will be produced literally as attributes to the <a /> container and the contents 
+of the <a:iref /> will become the contents of the <a /> container.
 
 Example:
 
@@ -378,11 +360,12 @@ Result:
 <a href="http://www.php.net" title="PHP Homepage">The PHP
 Homepage</a>
 
-2.5.1.3 The random tag
 
-The <a:random /> container will select a random name from the
-database and link to it. The contents of the <a:random /> become
-the contents of the generated <a /> container.
+2.5.1.3 The <a:random> tag
+
+The <a:random /> container will select a random name from the database and link 
+to it. The contents of the <a:random /> become the contents of the generated
+<a /> container.
 
 Example:
 
@@ -392,12 +375,12 @@ Result:
 
 <a href="http://www.php.net" title="PHP Homepage">A random link</a>
 
-2.5.1.4 The link tag
 
-The link tag will add a link to the database, and vanishes
-(generates no output). The name attribute to link will define
-the link name, the other attributes are copied into the database
-literally.
+2.5.1.4 The <a:link> tag
+
+The link tag will add a link to the database, and vanishes (generates no 
+output). The name attribute to link will define the link name, the other 
+attributes are copied into the database literally.
 
 Example:
 
@@ -409,24 +392,26 @@ Result:
 
 The link is added to the database. No output is being generated.
 
+
 2.5.2 XML_Transformer_Namespace_DocBook
+
 
 * TODO (sb)
 
+
 2.5.3 XML_Transformer_Namespace_Image
 
-The Image namespace implements a number of tags that are loosely
-related to images. At the moment there is a tag that
-autogenerates height/width attributes and another tag that turns
-its content text into a PNG with that text.
+The Image namespace implements a number of tags that are loosely related to 
+images. At the moment there is a tag that autogenerates height/width attributes 
+and another tag that turns its content text into a PNG with that text.
 
 The default namespace prefix for this namespace is "img".
 
-2.5.3.1 The img tag.
 
-This tag will generate a <img /> tag with the original
-attributes, and will add width and height attributes if
-possible.
+2.5.3.1 The <img> tag.
+
+This tag will generate a <img /> tag with the original attributes, and will add 
+width and height attributes if possible.
 
 Example:
 
@@ -436,43 +421,39 @@ Result:
 
 <img alt="blah" height="168" src="somepng.png" width="320" />
 
-2.5.3.2 The gtext tag
 
-Gtext is short for graphical text. The tag will take its content
-and turn it into a single PNG or a series of PNGs using
-ImageTTFText() internally.
+2.5.3.2 The <gtext> tag
 
-Gtext takes a very large number of attributes. All of them can
-be specified as defaults with <img:gtextdefault /> (see below)
-and individually overridden.
+Gtext is short for graphical text. The tag will take its content and turn it 
+into a single PNG or a series of PNGs using ImageTTFText() internally.
+
+Gtext takes a very large number of attributes. All of them can be specified as 
+defaults with <img:gtextdefault /> (see below) and individually overridden.
 
 Limitations:
 
-Gtext requires a directory called "/cache/gtext" below
-DocumentRoot that is writeable by the webserver. Also, Fonts are
-looked for in /usr/X11R6/lib/X11/fonts/truetype. Currently there
-is no API to override this.
+Gtext requires a directory called "/cache/gtext" below DocumentRoot that is 
+writeable by the webserver. Also, Fonts are looked for in 
+/usr/X11R6/lib/X11/fonts/truetype. Currently there is no API to override this.
 
 Attributes:
 
 - split
 
-  Split is either "none", "word" or "char". If it is "none",
-  the complete content of a gtext is set as a single image.
-  If it is "word", each word of the content is set as a
-  separate image. This does not look as good as a single
-  image, but can be word wrapped. If it is "char", each
-  character is rendered as a single image. This loads
-  very fast (multiple occurences of the same character
-  are mapped onto the same file), but does not look right.
+  Split is either "none", "word" or "char". If it is "none", the complete 
+  content of a gtext is set as a single image. If it is "word", each word of the 
+  content is set as a separate image. This does not look as good as a single 
+  image, but can be word wrapped. If it is "char", each character is rendered as 
+  a single image. This loads very fast (multiple occurences of the same 
+  character are mapped onto the same file), but does not look right.
 
 - font
 
   Name of the TTF font to use.
 
-  If an absolute pathname is supplied, that font is being used.
-  Otherwise /usr/X11R6/lib/X11/fonts/truetype/ is prepended to
-  the font name and that file is tried.
+  If an absolute pathname is supplied, that font is being used. Otherwise 
+  /usr/X11R6/lib/X11/fonts/truetype/ is prepended to the font name and that file 
+  is tried.
 
 - fontsize
 
@@ -481,55 +462,48 @@ Attributes:
 
 - alt
 
-  By default, each generated image is created with the text
-  on the image as alt Tag. This can be overridden by specifying
-  an alt tag (not recommended).
+  By default, each generated image is created with the text on the image as alt 
+  Tag. This can be overridden by specifying an alt tag (not recommended).
 
-  Note that XML attributes may not contain tags. Thus, all
-  markup is being stripped from the automatically generated
-  alt tag in order to ensure well-formed HTML.
+  Note that XML attributes may not contain tags. Thus, all markup is being 
+  stripped from the automatically generated alt tag in order to ensure well-
+  formed HTML.
 
 - bgcolor, fgcolor
 
-  The generated image is initially filled with bgcolor. This
-  color is then set to transparent (unless prohibited, see
-  below). After that, text is rendered in fgcolor into this
-  image.
+  The generated image is initially filled with bgcolor. This color is then set 
+  to transparent (unless prohibited, see below). After that, text is rendered in 
+  fgcolor into this image.
 
 - antialias
 
-  The rendered text is by default generated with antialiasing.
-  If you do not want the text to be antialiased, set the
-  antialias attribute to "no".
+  The rendered text is by default generated with antialiasing. If you do not 
+  want the text to be antialiased, set the antialias attribute to "no".
 
 - transparency
 
-  The background color is by default set to transparent.
-  If you do not want the bgcolor to be set transparent,
-  set the transparency attribute to "no".
+  The background color is by default set to transparent. If you do not want the 
+  bgcolor to be set transparent, set the transparency attribute to "no".
 
 - cacheable
 
-  By default, the generated image is stored in the gtext
-  cache. After that, subsequent renderings of that image
-  are not done. Instead the cached image is referenced.
+  By default, the generated image is stored in the gtext cache. After that, 
+  subsequent renderings of that image are not done. Instead the cached image is 
+  referenced.
 
-  If you set the cacheable attribute to "no", the image
-  is recreated on each <img:gtext /> call. This is
-  recommended during development.
+  If you set the cacheable attribute to "no", the image is recreated on each 
+  <img:gtext /> call. This is recommended during development.
 
 - spacing
 
-  <img:gtext /> tries to create the generated PNG as small as
-  possible. If you specify a spacing attribute, a transparent
-  border of x pixels is added around all four borders of the
-  generated image.
+  <img:gtext /> tries to create the generated PNG as small as possible. If you 
+  specify a spacing attribute, a transparent border of x pixels is added around 
+  all four borders of the generated image.
 
 - border
 
-  Additionally, if you specify a border, an x pixel border is
-  added around the text and the spacing. Unlike spacing the
-  border is painted in bordercolor.
+  Additionally, if you specify a border, an x pixel border is added around the 
+  text and the spacing. Unlike spacing the border is painted in bordercolor.
 
 - bordercolor
 
@@ -553,12 +527,12 @@ Example:
   <img:gtext split="word">Ein Satz mit x.</img:gtext><br/>
   <img:gtext split="char">Alphabet Soup!</img:gtext>
 
-2.5.3.3 The gtextdefault tag
 
-<img:gtextdefault /> takes all attributes of <img:gtext /> and
-stores them. These attributes are then supplied to all
-subsequent <img:gtext /> calls. They may be overriden by
-specifiying alternative values in the <img:gtext />.
+2.5.3.3 The <gtextdefault> tag
+
+<img:gtextdefault /> takes all attributes of <img:gtext /> and stores them. 
+These attributes are then supplied to all subsequent <img:gtext /> calls. They 
+may be overriden by specifiying alternative values in the <img:gtext />.
 
 <img:gtextdefault /> is empty and renderes to nothing.
 
@@ -577,7 +551,7 @@ See above, <img:gtext /> for an example.
 
 2.7 XML_Transformer_Driver_OutputBuffer
 
-* TODO (any)
+* TODO (sb)
 
 3. Debugging
 
@@ -616,4 +590,3 @@ See above, <img:gtext /> for an example.
 4.4 How XML_Transformer_Cache uses caching
 
 4.5 How to deploy caching manually
-
