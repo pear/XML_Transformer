@@ -412,7 +412,7 @@ class XML_Transformer {
             return $xml;
         }
 
-        $xml = "<_>" . str_replace("&","&amp;",$xml) . "</_>";
+        $xml = '<_>' . str_replace('&', '&amp;', $xml) . '</_>';
 
         // Create XML parser, set parser options.
 
@@ -483,8 +483,12 @@ class XML_Transformer {
             $this->depth--;
         }
 
-        if ($this->depth==0) {
-            $result=preg_replace("/<(\w+)([^>]*)><\/\\1>/s","<\\1\\2 />",$result);
+        if ($this->depth == 0) {
+            $result = preg_replace(
+              '/<(\w+)([^>]*)><\/\\1>/s',
+              '<\\1\\2 />',
+              $result
+            );
         }
 
         $this->_secondPassRequired = $secondPassRequired;
