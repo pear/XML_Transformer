@@ -27,11 +27,19 @@
   </maintainers>
   <license>PHP License</license>
   <release>
-    <version>0.2</version>
+    <version>0.3</version>
     <state>stable</state>
-    <date>2002-04-07</date>
+    <date>2002-05-XX</date>
     <notes>
-      Renamed to XML_Transformer, per Stig's request.
++ Added setDebug() and stackdump() to allow for easier debugging.
+
++ Added setRecursiveOperation() to enable/disable the recursive
+  operation of the XML Transformer.
+
+* Changed the constructor to be more intuitive and user-friendly.
+
+* Changed setCaseFolding() to accept a second parameter to set
+  the case to which XML attributes and elements are folded.
     </notes>
     <filelist>
       <dir name="/" baseinstalldir="XML">
@@ -45,10 +53,17 @@
   </release>
   <changelog>
     <release>
+      <version>0.2</version>
+      <date>2002-04-07</date>
+      <notes>
+* Renamed to XML_Transformer, per Stig's request.
+      </notes>
+    </release>
+    <release>
       <version>0.1</version>
       <date>2002-04-06</date>
       <notes>
-        This is the initial independent PEAR release.
+* Initial independent PEAR release.
       </notes>
     </release>
   </changelog>
