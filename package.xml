@@ -85,6 +85,7 @@
       <dir name="/" baseinstalldir="XML">
         <dir name="Transformer">
           <dir name="Namespace">
+            <file role="php" name="Image.php"/>
             <file role="php" name="PHP.php"/>
           </dir>
 
