@@ -393,6 +393,7 @@ class XML_Transformer {
 
         xml_set_element_handler($parser, '_startElement', '_endElement');
         xml_set_character_data_handler($parser, '_characterData');
+        xml_set_default_handler($parser, '_characterData');
 
         // Parse input.
 
