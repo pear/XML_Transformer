@@ -48,6 +48,10 @@
       This class decouples the XML transformation from the output
       buffering.
 
+    * XML_Transformer_Util.
+
+      Static utility methods.
+
 * Deprecated overloading of single XML elements.
 
   By overloading a special namespace, &MAIN, the old behaviour can
@@ -69,6 +73,7 @@
           <file role="php" name="Namespace.php"/>
           <file role="php" name="OutputBuffer.php"/>
           <file role="php" name="PHP.php"/>
+          <file role="php" name="Util.php"/>
         </dir>
       </dir>
     </filelist>

@@ -16,6 +16,8 @@
 // $Id$
 //
 
+require_once 'XML/Transformer/Util.php';
+
 /**
 * Convenience Base Class for Namespace Transformers.
 *
@@ -119,7 +121,7 @@ class XML_Transformer_Namespace {
           "<%s%s>",
 
           $element,
-          XML_Transformer::attributesToString($attributes)
+          XML_Transformer_Util::attributesToString($attributes)
         );
     }
 

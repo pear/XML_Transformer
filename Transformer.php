@@ -17,6 +17,7 @@
 //
 
 require_once 'XML/Transformer/CallbackRegistry.php';
+require_once 'XML/Transformer/Util.php';
 
 /**
 * XML Transformations in PHP.
@@ -147,31 +148,6 @@ class XML_Transformer {
     }
 
     // }}}
-    // {{{ function attributesToString($attributes)
-
-    /**
-    * Returns string representation of attributes array.
-    *
-    * @param  array
-    * @return string
-    * @access public
-    * @static
-    */
-    function attributesToString($attributes) {
-        $string = '';
-
-        if (is_array($attributes)) {
-            ksort($attributes);
-
-            foreach ($attributes as $key => $value) {
-                $string .= ' ' . $key . '="' . $value . '"';
-            }
-        }
-
-        return $string;
-    }
-
-    // }}}
     // {{{ function canonicalize($target)
 
     /**
@@ -213,7 +189,7 @@ class XML_Transformer {
         );
 
         for ($i = $this->_level; $i >= 0; $i--) {
-          $attributes = $this->attributesToString($this->_attributesStack[$i]);
+          $attributes = XML_Transformer_Util::attributesToString($this->_attributesStack[$i]);
 
           $stackdump .= sprintf(
             "level=%d\nelement=%s:%s\ncdata=%s\n\n",
@@ -414,12 +390,8 @@ class XML_Transformer {
         $element    = $this->canonicalize($element);
         $process    = $this->_lastProcessed != $element;
 
-        if (strstr($element, ':')) {
-            list($namespacePrefix, $qElement) = explode(':', $element);
-        } else {
-            $namespacePrefix = '&MAIN';
-            $qElement        = $element;
-        }
+        list($namespacePrefix, $qElement) =
+        XML_Transformer_Util::qualifiedElement($element);
 
         // Push element's name and attributes onto the stack.
 
@@ -432,7 +404,7 @@ class XML_Transformer {
             'startElement[%d]: %s %s',
             $this->_level,
             $element,
-            $this->attributesToString($attributes)
+            XML_Transformer_Util::attributesToString($attributes)
           ),
           $element
         );
@@ -453,7 +425,7 @@ class XML_Transformer {
             $cdata = sprintf(
               '<%s%s>',
               $element,
-              $this->attributesToString($attributes)
+              XML_Transformer_Util::attributesToString($attributes)
             );
         }
 
@@ -476,12 +448,8 @@ class XML_Transformer {
         $process   = $this->_lastProcessed != $element;
         $recursion = false;
 
-        if (strstr($element, ':')) {
-            list($namespacePrefix, $qElement) = explode(':', $element);
-        } else {
-            $namespacePrefix = '&MAIN';
-            $qElement        = $element;
-        }
+        list($namespacePrefix, $qElement) =
+        XML_Transformer_Util::qualifiedElement($element);
 
         if ($process &&
             isset($this->_callbackRegistry->overloadedNamespaces[$namespacePrefix]['object'])) {
