@@ -29,6 +29,16 @@
     <date>200Y-MM-DD</date>
     <notes>
 <![CDATA[
+* Variable access tags in the php namespace have been
+  renamed. Tag names such as <php:getparameter/> are
+  hard to type, and have been used inconsistently
+  as weel (<php:getparameter/>, but <php:cookievariable/>).
+
+  We break compatibility NOW and provide NO backward
+  compatibility interface (you can trivially write your
+  own, if you absolutely need it) in order to encourage
+  to use the new names and speed up migration.
+
 * XML fragments are now handled more gracefully.
 
   It is now possible, for instance, to return

@@ -258,103 +258,125 @@ class XML_Transformer_Namespace_PHP extends XML_Transformer_Namespace {
     }
 
     // }}}
-    // {{{ function start_getparameter($attributes)
+    // {{{ function start_get($attributes)
 
     /**
     * @param  array
     * @return string
     * @access public
     */
-    function start_getparameter($attributes) {
+    function start_get($attributes) {
         return isset($_GET[$attributes['name']]) ? $_GET[$attributes['name']] : '';
     }
 
     // }}}
-    // {{{ function end_getparameter($cdata)
+    // {{{ function end_get($cdata)
 
     /**
     * @param  string
     * @return string
     * @access public
     */
-    function end_getparameter($cdata) {
+    function end_get($cdata) {
         return $cdata;
     }
 
     // }}}
-    // {{{ function start_postparameter($attributes)
+    // {{{ function start_post($attributes)
 
     /**
     * @param  array
     * @return string
     * @access public
     */
-    function start_postparameter($attributes) {
+    function start_post($attributes) {
         return isset($_POST[$attributes['name']]) ? $_POST[$attributes['name']] : '';
     }
 
     // }}}
-    // {{{ function end_postparameter($cdata)
+    // {{{ function end_post($cdata)
 
     /**
     * @param  string
     * @return string
     * @access public
     */
-    function end_postparameter($cdata) {
+    function end_post($cdata) {
         return $cdata;
     }
 
     // }}}
-    // {{{ function start_cookievariable($attributes)
+    // {{{ function start_cookie($attributes)
 
     /**
     * @param  array
     * @return string
     * @access public
     */
-    function start_cookievariable($attributes) {
+    function start_cookie($attributes) {
         return isset($_COOKIE[$attributes['name']]) ? $_COOKIE[$attributes['name']] : '';
     }
 
     // }}}
-    // {{{ function end_cookievariable($cdata)
+    // {{{ function end_cookie($cdata)
 
     /**
     * @param  string
     * @return string
     * @access public
     */
-    function end_cookievariable($cdata) {
+    function end_cookie($cdata) {
         return $cdata;
     }
 
     // }}}
-    // {{{ function start_servervariable($attributes)
+    // {{{ function start_request($attributes)
 
     /**
     * @param  array
     * @return string
     * @access public
     */
-    function start_servervariable($attributes) {
-        return isset($_SERVER[$attributes['name']]) ? $_SERVER[$attributes['name']] : '';
+    function start_request($attributes) {
+        return isset($_REQUEST[$attributes['name']]) ? $_REQUEST[$attributes['name']] : '';
     }
 
     // }}}
-    // {{{ function end_servervariable($cdata)
+    // {{{ function end_request($cdata)
 
     /**
     * @param  string
     * @return string
     * @access public
     */
-    function end_servervariable($cdata) {
+    function end_request($cdata) {
+        return $cdata;
+    }
+    // {{{ function start_server($attributes)
+
+    /**
+    * @param  array
+    * @return string
+    * @access public
+    */
+    function start_server($attributes) {
+        return isset($_SERVER[$attributes['name']]) ? $_SERVER[$attributes['name']] : '';
+    }
+
+    // }}}
+    // {{{ function end_server($cdata)
+
+    /**
+    * @param  string
+    * @return string
+    * @access public
+    */
+    function end_server($cdata) {
         return $cdata;
     }
 
     // }}}
-    // {{{ function start_sessionvariable($attributes)
+    // {{{ function start_session($attributes)
 
     /**
     * @param  array
@@ -373,31 +395,31 @@ class XML_Transformer_Namespace_PHP extends XML_Transformer_Namespace {
     * @return string
     * @access public
     */
-    function end_sessionvariable($cdata) {
+    function end_session($cdata) {
         return $cdata;
     }
 
     // }}}
-    // {{{ function start_getvariable($attributes)
+    // {{{ function start_variable($attributes)
 
     /**
     * @param  array
     * @return string
     * @access public
     */
-    function start_getvariable($attributes) {
+    function start_variable($attributes) {
         return isset($GLOBALS[$attributes['name']]) ? $GLOBALS[$attributes['name']] : '';
     }
 
     // }}}
-    // {{{ function end_getvariable($cdata)
+    // {{{ function end_variable($cdata)
 
     /**
     * @param  string
     * @return string
     * @access public
     */
-    function end_getvariable($cdata) {
+    function end_variable($cdata) {
         return $cdata;
     }
 
