@@ -182,15 +182,15 @@ class Transformer {
     }
 
     /**
-    * Overloads an XML tag and bind its opening and / or
-    * closing tag to a PHP callback.
+    * Overloads an XML tag and bind its
+    * opening and closing tag to a PHP callback.
     *
     * @param  string
     * @param  string
     * @param  string
     * @access public
     */
-    function overloadElement($element, $startHandler = '', $endHandler = '') {
+    function overloadElement($element, $startHandler, $endHandler) {
         $element = $this->canonicalName($element);
 
         $this->_registerElementCallback($element, 'start', $startHandler);
@@ -493,10 +493,6 @@ class Transformer {
     * @access private
     */
     function _parseCallback($callback) {
-        if (empty($callback)) {
-          return false;
-        }
-
         $parsedCallback = false;
 
         // classname::staticMethod
