@@ -33,13 +33,19 @@ ini_set('highlight.string',  '#550000');
 *
 * Transformations for the following DocBook tags are implemented:
 *
+*   * <artheader>
+*
 *   * <article>
+*
+*   * <author>
 *
 *   * <chapter>
 *
 *   * <emphasis>
 *
 *   * <filename>
+*
+*   * <firstname>
 *
 *   * <function>
 *
@@ -54,6 +60,8 @@ ini_set('highlight.string',  '#550000');
 *   * <programlisting>
 *
 *   * <section>
+*
+*   * <surname>
 *
 *   * <title>
 *
@@ -127,6 +135,24 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     * @var    array
     * @access private
     */
+    var $_author = '';
+
+    /**
+    * @var    array
+    * @access private
+    */
+    var $_context = array();
+
+    /**
+    * @var    array
+    * @access private
+    */
+    var $_currentSectionNumber = '';
+
+    /**
+    * @var    array
+    * @access private
+    */
     var $_roles = array();
 
     /**
@@ -134,6 +160,32 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     * @access private
     */
     var $_sections = array();
+
+    /**
+    * @var    array
+    * @access private
+    */
+    var $_title = '';
+
+    // }}}
+    // {{{ function start_artheader($attributes)
+
+    /**
+    * @param  array
+    * @return string
+    * @access public
+    */
+    function start_artheader($attributes) {}
+
+    // }}}
+    // {{{ function end_artheader($cdata)
+
+    /**
+    * @param  string
+    * @return string
+    * @access public
+    */
+    function end_artheader($cdata) {}
 
     // }}}
     // {{{ function start_article($attributes)
@@ -144,6 +196,8 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     * @access public
     */
     function start_article($attributes) {
+        $this->_startSection('article');
+
         return '<html><body>';
     }
 
@@ -156,7 +210,31 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     * @access public
     */
     function end_article($cdata) {
+        $this->_endSection('article');
+
         return $cdata . '</body></html>';
+    }
+
+    // }}}
+    // {{{ function start_author($attributes)
+
+    /**
+    * @param  array
+    * @return string
+    * @access public
+    */
+    function start_author($attributes) {}
+
+    // }}}
+    // {{{ function end_author($cdata)
+
+    /**
+    * @param  string
+    * @return string
+    * @access public
+    */
+    function end_author($cdata) {
+        $this->_author = trim(str_replace("\n", '', $cdata));
     }
 
     // }}}
@@ -168,8 +246,9 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     * @access public
     */
     function start_chapter($attributes) {
-        return '<h2 class="title">' .
-               $this->_startSection('chapter') . '. ';
+        $this->_startSection('chapter');
+
+        return '<div class="chapter">';
     }
 
     // }}}
@@ -183,7 +262,7 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     function end_chapter($cdata) {
         $this->_endSection('chapter');
 
-        return $cdata . '</h2>';
+        return $cdata . '</div>';
     }
 
     // }}}
@@ -254,6 +333,28 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     */
     function end_filename($cdata) {
         return trim($cdata) . '</tt>';
+    }
+
+    // }}}
+    // {{{ function start_firstname($attributes)
+
+    /**
+    * @param  array
+    * @return string
+    * @access public
+    */
+    function start_firstname($attributes) {}
+
+    // }}}
+    // {{{ function end_firstname($cdata)
+
+    /**
+    * @param  string
+    * @return string
+    * @access public
+    */
+    function end_firstname($cdata) {
+        return trim($cdata);
     }
 
     // }}}
@@ -430,8 +531,9 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     * @access public
     */
     function start_section($attributes) {
-        return '<h2 class="title" style="clear: both">' .
-               $this->_startSection('section') . '. ';
+        $this->_startSection('section');
+
+        return '<div class="section">';
     }
 
     // }}}
@@ -445,7 +547,29 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     function end_section($cdata) {
         $this->_endSection('section');
 
-        return $cdata . '</h2>';
+        return $cdata . '</div>';
+    }
+
+    // }}}
+    // {{{ function start_surname($attributes)
+
+    /**
+    * @param  array
+    * @return string
+    * @access public
+    */
+    function start_surname($attributes) {}
+
+    // }}}
+    // {{{ function end_surname($cdata)
+
+    /**
+    * @param  string
+    * @return string
+    * @access public
+    */
+    function end_surname($cdata) {
+        return trim($cdata);
     }
 
     // }}}
@@ -457,7 +581,13 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     * @access public
     */
     function start_title($attributes) {
-        return '';
+        switch ($this->_context[sizeof($this->_context)-1]) {
+            case 'chapter':
+            case 'section': {
+                return '<h2>' . $this->_currentSectionNumber . '. ';
+            }
+            break;
+        }
     }
 
     // }}}
@@ -469,7 +599,23 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     * @access public
     */
     function end_title($cdata) {
-        return $cdata;
+        switch ($this->_context[sizeof($this->_context)-1]) {
+            case 'article':
+            case 'book': {
+                $this->_title = trim($cdata);
+            }
+            break;
+
+            case 'chapter':
+            case 'section': {
+                return trim($cdata) . '</h2>';
+            }
+            break;
+
+            default: {
+                return trim($cdata);
+            }
+        }
     }
 
     // }}}
@@ -501,11 +647,12 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
 
     /**
     * @param  string
-    * @return string
     * @access public
     */
     function _startSection($type) {
-        $result = '';
+        $this->_currentSectionNumber = '';
+
+        array_push($this->_context, $type);
 
         if (!isset($this->_sections[$type]['open'])) {
             $this->_sections[$type]['open']  = 1;
@@ -520,14 +667,12 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
         }
 
         for ($i = 1; $i <= $this->_sections[$type]['open']; $i++) {
-            if (!empty($result)) {
-                $result .= '.';
+            if (!empty($this->_currentSectionNumber)) {
+                $this->_currentSectionNumber .= '.';
             }
 
-            $result .= $this->_sections[$type]['id'][$i];
+            $this->_currentSectionNumber .= $this->_sections[$type]['id'][$i];
         }
-
-        return $result;
     }
 
     // }}}
@@ -538,6 +683,7 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     * @access private
     */
     function _endSection($type) {
+        array_pop($this->_context);
         $this->_sections[$type]['open']--;
     }
 
