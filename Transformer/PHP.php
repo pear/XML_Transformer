@@ -86,6 +86,32 @@ class XML_Transformer_PHP extends XML_Transformer_Namespace {
     }
 
     // }}}
+    // {{{ function start_logic($attributes)
+
+    /**
+    * @param  array
+    * @return string
+    * @access public
+    */
+    function start_logic($attributes) {}
+
+    // }}}
+    // {{{ function end_logic($cdata)
+
+    /**
+    * @param  string
+    * @return string
+    * @access public
+    */
+    function end_logic($cdata) {
+        ob_start();
+        eval($cdata);
+        $buffer = ob_get_contents();
+        ob_end_clean();
+        return $buffer;
+    }
+
+    // }}}
     // {{{ function start_getparameter($attributes)
 
     /**

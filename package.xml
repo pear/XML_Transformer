@@ -27,10 +27,38 @@
   </maintainers>
   <license>PHP License</license>
   <release>
-    <version>0.6</version>
-    <state>stable</state>
-    <date>2002-09-18</date>
+    <version>0.7-dev</version>
+    <state>devel</state>
+    <date>2002-XX-XX</date>
     <notes>
+<![CDATA[
++ Added new tags to the PHP Namespace Handler:
+
+  + <php:logic/> executes a given block of PHP code and stores
+    its output into the output XML tree.
+]]>
+</notes>
+    <filelist>
+      <dir name="/" baseinstalldir="XML">
+        <file role="php" name="Transformer.php"/>
+
+        <dir name="Transformer">
+          <file role="php" name="Namespace.php"/>
+          <file role="php" name="PHP.php"/>
+        </dir>
+      </dir>
+    </filelist>
+    <deps>
+      <dep type="php" rel="ge" version="4.2.0" />
+      <dep type="ext" rel="has">xml</dep>
+    </deps>
+  </release>
+  <changelog>
+    <release>
+      <version>0.6</version>
+      <state>stable</state>
+      <date>2002-09-18</date>
+      <notes>
 <![CDATA[
 + Added methods setDefaultCallback() and unsetDefaultCallback() to
   set/unset default callbacks for elements that are not overloaded.
@@ -76,23 +104,8 @@
 
 * Changed license from PHP License 2.02 to PHP License 3.00.
 ]]>
-    </notes>
-    <filelist>
-      <dir name="/" baseinstalldir="XML">
-        <file role="php" name="Transformer.php"/>
-
-        <dir name="Transformer">
-          <file role="php" name="Namespace.php"/>
-          <file role="php" name="PHP.php"/>
-        </dir>
-      </dir>
-    </filelist>
-    <deps>
-      <dep type="php" rel="ge" version="4.2.0" />
-      <dep type="ext" rel="has">xml</dep>
-    </deps>
-  </release>
-  <changelog>
+      </notes>
+    </release>
     <release>
       <version>0.5</version>
       <state>stable</state>
