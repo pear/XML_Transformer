@@ -351,7 +351,7 @@ class XML_Transformer {
     * @param  integer
     * @access public
     */
-    function function setCollapsingOfEmptyTags($collapseEmptyTags, $mode = XML_UTIL_COLLAPSE_ALL) {
+    function setCollapsingOfEmptyTags($collapseEmptyTags, $mode = XML_UTIL_COLLAPSE_ALL) {
         if (is_bool($collapseEmptyTags) &&
             ($mode == XML_UTIL_COLLAPSE_ALL || $mode == XML_UTIL_COLLAPSE_XHTML_ONLY)) {
             $this->_collapseEmptyTags     = $collapseEmptyTags;
