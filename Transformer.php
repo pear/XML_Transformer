@@ -3,7 +3,7 @@
 // +---------------------------------------------------------------------------+
 // | PEAR :: XML :: Transformer                                                |
 // +---------------------------------------------------------------------------+
-// | Copyright (c) 2002-2003-2003 Sebastian Bergmann <sb@sebastian-bergmann.de> and |
+// | Copyright (c) 2002-2003 Sebastian Bergmann <sb@sebastian-bergmann.de> and |
 // |                         Kristian Köhntopp <kris@koehntopp.de>.            |
 // +---------------------------------------------------------------------------+
 // | This source file is subject to version 3.00 of the PHP License,           |
@@ -31,14 +31,14 @@ require_once 'XML/Transformer/Util.php';
 * @version $Revision$
 * @access  public
 */
-class XML_Transformer {
+class XML::Transformer {
     // {{{ Members
 
     /**
     * @var    object
     * @access private
     */
-    var $_callbackRegistry = null;
+    private $callbackRegistry = null;
 
     /**
     * If true, XML attribute and element names will be
@@ -46,9 +46,9 @@ class XML_Transformer {
     * 
     * @var    boolean
     * @access private
-    * @see    $_caseFoldingTo
+    * @see    $caseFoldingTo
     */
-    var $_caseFolding = false;
+    private $caseFolding = false;
 
     /**
     * Can be set to either CASE_UPPER or CASE_LOWER
@@ -56,9 +56,9 @@ class XML_Transformer {
     *
     * @var    integer
     * @access private
-    * @see    $_caseFolding
+    * @see    $caseFolding
     */
-    var $_caseFoldingTo = CASE_UPPER;
+    private $caseFoldingTo = CASE_UPPER;
 
     /**
     * If true, debugging information will be sent to
@@ -66,9 +66,9 @@ class XML_Transformer {
     *
     * @var    boolean
     * @access private
-    * @see    $_debugFilter
+    * @see    $debugFilter
     */
-    var $_debug = false;
+    private $debug = false;
 
     /**
     * If not empty, debugging information will only be generated
@@ -76,9 +76,9 @@ class XML_Transformer {
     *
     * @var    array
     * @access private
-    * @see    $_debug
+    * @see    $debug
     */
-    var $_debugFilter = array();
+    private $debugFilter = array();
 
     /**
     * Specifies the target to which error messages and
@@ -86,48 +86,48 @@ class XML_Transformer {
     *
     * @var    string
     * @access private
-    * @see    $_debug
+    * @see    $debug
     */
-    var $_logTarget = 'error_log';
+    private $logTarget = 'error_log';
 
     /**
     * @var    array
     * @access private
     */
-    var $_attributesStack = array();
+    private $attributesStack = array();
 
     /**
     * @var    array
     * @access private
     */
-    var $_cdataStack = array('');
+    private $cdataStack = array('');
 
     /**
     * @var    array
     * @access private
     */
-    var $_elementStack = array();
+    private $elementStack = array();
 
     /**
     * @var    integer
     * @access private
     */
-    var $_level = 0;
+    private $level = 0;
 
     /**
     * @var    string
     * @access private
     */
-    var $_lastProcessed = '';
+    private $lastProcessed = '';
 
     /**
     * @var    boolean
     * @access public
     */
-    var $_secondPassRequired = false;
+    public $secondPassRequired = false;
 
     // }}}
-    // {{{ function XML_Transformer($parameters = array())
+    // {{{ public function __construct($parameters = array())
 
     /**
     * Constructor.
@@ -135,17 +135,17 @@ class XML_Transformer {
     * @param  array
     * @access public
     */
-    function XML_Transformer($parameters = array()) {
+    public function __construct($parameters = array()) {
         // Parse parameters array.
 
         if (isset($parameters['debug'])) {
             $this->setDebug($parameters['debug']);
         }
 
-        $this->_caseFolding   = isset($parameters['caseFolding'])   ? $parameters['caseFolding']   : false;
-        $this->_caseFoldingTo = isset($parameters['caseFoldingTo']) ? $parameters['caseFoldingTo'] : CASE_UPPER;
-        $this->_lastProcessed = isset($parameters['lastProcessed']) ? $parameters['lastProcessed'] : '';
-        $this->_logTarget     = isset($parameters['logTarget'])     ? $parameters['logTarget']     : 'error_log';
+        $this->caseFolding   = isset($parameters['caseFolding'])   ? $parameters['caseFolding']   : false;
+        $this->caseFoldingTo = isset($parameters['caseFoldingTo']) ? $parameters['caseFoldingTo'] : CASE_UPPER;
+        $this->lastProcessed = isset($parameters['lastProcessed']) ? $parameters['lastProcessed'] : '';
+        $this->logTarget     = isset($parameters['logTarget'])     ? $parameters['logTarget']     : 'error_log';
 
         $autoload             = isset($parameters['autoload'])             ? $parameters['autoload']             : false;
         $overloadedNamespaces = isset($parameters['overloadedNamespaces']) ? $parameters['overloadedNamespaces'] : array();
@@ -153,7 +153,7 @@ class XML_Transformer {
 
         // Initialize callback registry.
 
-        $this->_callbackRegistry = &XML_Transformer_CallbackRegistry::singleton(
+        $this->callbackRegistry = XML::Transformer::CallbackRegistry::singleton(
           $recursiveOperation
         );
 
@@ -165,12 +165,12 @@ class XML_Transformer {
         }
 
         if ($autoload !== false) {
-            $this->_autoload($autoload);
+            $this->autoload($autoload);
         }
     }
 
     // }}}
-    // {{{ function canonicalize($target)
+    // {{{ public function canonicalize($target)
 
     /**
     * Canonicalizes a given attributes array or element name.
@@ -179,14 +179,14 @@ class XML_Transformer {
     * @return mixed
     * @access public
     */
-    function canonicalize($target) {
-        if ($this->_caseFolding) {
+    public function canonicalize($target) {
+        if ($this->caseFolding) {
             if (is_string($target)) {
-                return ($this->_caseFoldingTo == CASE_UPPER) ? strtoupper($target) : strtolower($target);
+                return ($this->caseFoldingTo == CASE_UPPER) ? strtoupper($target) : strtolower($target);
             } else {
                 return array_change_key_case(
                   $target,
-                  $this->_caseFoldingTo
+                  $this->caseFoldingTo
                 );
             }
         }
@@ -195,7 +195,7 @@ class XML_Transformer {
     }
 
     // }}}
-    // {{{ function stackdump()
+    // {{{ public function stackdump()
 
     /**
     * Returns a stack dump as a debugging aid.
@@ -204,19 +204,19 @@ class XML_Transformer {
     * @return string
     * @access public
     */
-    function stackdump() {
+    public function stackdump() {
         $stackdump = sprintf(
           "Stackdump (level: %s) follows:\n",
-          $this->_level
+          $this->level
         );
 
-        for ($i = $this->_level; $i >= 0; $i--) {
+        for ($i = $this->level; $i >= 0; $i--) {
           $stackdump .= sprintf(
             "level=%d\nelement=%s:%s\ncdata=%s\n\n",
             $i,
-            isset($this->_elementStack[$i])    ? $this->_elementStack[$i]                                              : '',
-            isset($this->_attributesStack[$i]) ? XML_Transformer_Util::attributesToString($this->_attributesStack[$i]) : '',
-            isset($this->_cdataStack[$i])      ? $this->_cdataStack[$i]                                                : ''
+            isset($this->elementStack[$i])    ? $this->elementStack[$i]                                              : '',
+            isset($this->attributesStack[$i]) ? XML::Transformer::Util::attributesToString($this->attributesStack[$i]) : '',
+            isset($this->cdataStack[$i])      ? $this->cdataStack[$i]                                                : ''
           );
         }
 
@@ -224,7 +224,7 @@ class XML_Transformer {
     }
 
     // }}}
-    // {{{ function overloadNamespace($namespacePrefix, &$object, $recursiveOperation = '')
+    // {{{ public function overloadNamespace($namespacePrefix, $object, $recursiveOperation = '')
 
     /**
     * Overloads an XML Namespace.
@@ -234,7 +234,7 @@ class XML_Transformer {
     * @param  boolean
     * @access public
     */
-    function overloadNamespace($namespacePrefix, &$object, $recursiveOperation = '') {
+    public function overloadNamespace($namespacePrefix, $object, $recursiveOperation = '') {
         if (empty($namespacePrefix) ||
             $namespacePrefix == '&MAIN') {
             $namespacePrefix = '&MAIN';
@@ -242,7 +242,7 @@ class XML_Transformer {
             $namespacePrefix = $this->canonicalize($namespacePrefix);
         }
 
-        $result = $this->_callbackRegistry->overloadNamespace(
+        $result = $this->callbackRegistry->overloadNamespace(
           $namespacePrefix,
           $object,
           $recursiveOperation
@@ -250,7 +250,7 @@ class XML_Transformer {
 
         if ($result === true) {
             if ($object->secondPassRequired) {
-                $this->_secondPassRequired = true;
+                $this->secondPassRequired = true;
             }
 
             // Call initObserver() on the object, if it exists.
@@ -262,15 +262,15 @@ class XML_Transformer {
                 );
             }
         } else {
-            XML_Transformer_Util::logMessage(
+            XML::Transformer::Util::logMessage(
               $result,
-              $this->_logTarget
+              $this->logTarget
             );
         }
     }
 
     // }}}
-    // {{{ function unOverloadNamespace($namespacePrefix)
+    // {{{ public function unOverloadNamespace($namespacePrefix)
 
     /**
     * Reverts overloading of a given XML Namespace.
@@ -278,12 +278,12 @@ class XML_Transformer {
     * @param  string
     * @access public
     */
-    function unOverloadNamespace($namespacePrefix) {
-        $this->_callbackRegistry->unOverloadNamespace($namespacePrefix);
+    public function unOverloadNamespace($namespacePrefix) {
+        $this->callbackRegistry->unOverloadNamespace($namespacePrefix);
     }
 
     // }}}
-    // {{{ function isOverloadedNamespace($namespacePrefix)
+    // {{{ public function isOverloadedNamespace($namespacePrefix)
 
     /**
     * Returns true if a given namespace is overloaded,
@@ -293,14 +293,14 @@ class XML_Transformer {
     * @return boolean
     * @access public
     */
-    function isOverloadedNamespace($namespacePrefix) {
-        return $this->_callbackRegistry->isOverloadedNamespace(
+    public function isOverloadedNamespace($namespacePrefix) {
+        return $this->callbackRegistry->isOverloadedNamespace(
           $this->canonicalize($namespacePrefix)
         );
     }
 
     // }}}
-    // {{{ function setCaseFolding($caseFolding)
+    // {{{ public function setCaseFolding($caseFolding)
 
     /**
     * Sets the XML parser's case-folding option.
@@ -309,16 +309,16 @@ class XML_Transformer {
     * @param  integer
     * @access public
     */
-    function setCaseFolding($caseFolding, $caseFoldingTo = CASE_UPPER) {
+    public function setCaseFolding($caseFolding, $caseFoldingTo = CASE_UPPER) {
         if (is_bool($caseFolding) &&
             ($caseFoldingTo == CASE_LOWER || $caseFoldingTo == CASE_UPPER)) {
-            $this->_caseFolding   = $caseFolding;
-            $this->_caseFoldingTo = $caseFoldingTo;
+            $this->caseFolding   = $caseFolding;
+            $this->caseFoldingTo = $caseFoldingTo;
         }
     }
 
     // }}}
-    // {{{ function setDebug($debug)
+    // {{{ public function setDebug($debug)
 
     /**
     * Enables or disables debugging information.
@@ -326,19 +326,19 @@ class XML_Transformer {
     * @param  mixed
     * @access public
     */
-    function setDebug($debug) {
+    public function setDebug($debug) {
         if (is_array($debug)) {
-            $this->_debug       = true;
-            $this->_debugFilter = array_flip($debug);
+            $this->debug       = true;
+            $this->debugFilter = array_flip($debug);
         }
 
         else if (is_bool($debug)) {
-            $this->_debug = $debug;
+            $this->debug = $debug;
         }
     }
 
     // }}}
-    // {{{ function setLogTarget($logTarget)
+    // {{{ public function setLogTarget($logTarget)
 
     /**
     * Sets the target to which error messages and
@@ -347,12 +347,12 @@ class XML_Transformer {
     * @param  string
     * @access public
     */
-    function setLogTarget($logTarget) {
-        $this->_logTarget = $logTarget;
+    public function setLogTarget($logTarget) {
+        $this->logTarget = $logTarget;
     }
 
     // }}}
-    // {{{ function setRecursiveOperation($recursiveOperation)
+    // {{{ public function setRecursiveOperation($recursiveOperation)
 
     /**
     * Enables or disables the recursive operation.
@@ -360,12 +360,12 @@ class XML_Transformer {
     * @param  boolean
     * @access public
     */
-    function setRecursiveOperation($recursiveOperation) {
-        $this->_callbackRegistry->setRecursiveOperation($recursiveOperation);
+    public function setRecursiveOperation($recursiveOperation) {
+        $this->callbackRegistry->setRecursiveOperation($recursiveOperation);
     }
 
     // }}}
-    // {{{ function transform($xml)
+    // {{{ public function transform($xml)
 
     /**
     * Transforms a given XML string using the registered
@@ -375,7 +375,7 @@ class XML_Transformer {
     * @return string
     * @access public
     */
-    function transform($xml) {
+    public function transform($xml) {
         // Don't process input when it contains no XML elements.
 
         if (strpos($xml, '<') === false) {
@@ -387,13 +387,13 @@ class XML_Transformer {
         $parser = xml_parser_create();
 
         xml_set_object($parser, $this);
-        xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, $this->_caseFolding);
+        xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, $this->caseFolding);
 
         // Register SAX callbacks.
 
-        xml_set_element_handler($parser, '_startElement', '_endElement');
-        xml_set_character_data_handler($parser, '_characterData');
-        xml_set_default_handler($parser, '_characterData');
+        xml_set_element_handler($parser, 'startElement', 'endElement');
+        xml_set_character_data_handler($parser, 'characterData');
+        xml_set_default_handler($parser, 'characterData');
 
         // Parse input.
 
@@ -420,37 +420,37 @@ class XML_Transformer {
                 );
             }
 
-            XML_Transformer_Util::logMessage(
+            XML::Transformer::Util::logMessage(
               $errorMessage . "\n" . $this->stackdump(),
-              $this->_logTarget
+              $this->logTarget
             );
 
             return '';
         }
 
-        $result = $this->_cdataStack[0];
+        $result = $this->cdataStack[0];
 
         // Clean up.
 
         xml_parser_free($parser);
 
-        $this->_attributesStack = array();
-        $this->_cdataStack      = array('');
-        $this->_elementStack    = array();
-        $this->_level           = 0;
-        $this->_lastProcessed   = '';
+        $this->attributesStack = array();
+        $this->cdataStack      = array('');
+        $this->elementStack    = array();
+        $this->level           = 0;
+        $this->lastProcessed   = '';
 
         // Perform second transformation pass, if required.
 
-        $secondPassRequired = $this->_secondPassRequired;
+        $secondPassRequired = $this->secondPassRequired;
 
         if ($secondPassRequired) {
-            $this->_secondPassRequired = false;
+            $this->secondPassRequired = false;
 
             $result = $this->transform($result);
         }
 
-        $this->_secondPassRequired = $secondPassRequired;
+        $this->secondPassRequired = $secondPassRequired;
 
         // Return result of the transformation.
 
@@ -458,7 +458,7 @@ class XML_Transformer {
     }
 
     // }}}
-    // {{{ function _startElement($parser, $element, $attributes)
+    // {{{ private function startElement($parser, $element, $attributes)
 
     /**
     * SAX callback for 'startElement' event.
@@ -468,36 +468,36 @@ class XML_Transformer {
     * @param  array
     * @access private
     */
-    function _startElement($parser, $element, $attributes) {
+    private function startElement($parser, $element, $attributes) {
         $attributes = $this->canonicalize($attributes);
         $element    = $this->canonicalize($element);
-        $process    = $this->_lastProcessed != $element;
+        $process    = $this->lastProcessed != $element;
 
         list($namespacePrefix, $qElement) =
-        XML_Transformer_Util::qualifiedElement($element);
+        XML::Transformer::Util::qualifiedElement($element);
 
         // Push element's name and attributes onto the stack.
 
-        $this->_level++;
-        $this->_elementStack[$this->_level]    = $element;
-        $this->_attributesStack[$this->_level] = $attributes;
+        $this->level++;
+        $this->elementStack[$this->level]    = $element;
+        $this->attributesStack[$this->level] = $attributes;
 
-        $this->_debug(
+        $this->debug(
           sprintf(
             'startElement[%d]: %s %s',
-            $this->_level,
+            $this->level,
             $element,
-            XML_Transformer_Util::attributesToString($attributes)
+            XML::Transformer::Util::attributesToString($attributes)
           ),
           $element
         );
 
         if ($process &&
-            isset($this->_callbackRegistry->overloadedNamespaces[$namespacePrefix]['active'])) {
+            isset($this->callbackRegistry->overloadedNamespaces[$namespacePrefix]['active'])) {
             // The event is handled by a callback
             // that is registered for this namespace.
 
-            $cdata = $this->_callbackRegistry->overloadedNamespaces[$namespacePrefix]['object']->startElement(
+            $cdata = $this->callbackRegistry->overloadedNamespaces[$namespacePrefix]['object']->startElement(
               $qElement,
               $attributes
             );
@@ -508,15 +508,15 @@ class XML_Transformer {
             $cdata = sprintf(
               '<%s%s>',
               $element,
-              XML_Transformer_Util::attributesToString($attributes)
+              XML::Transformer::Util::attributesToString($attributes)
             );
         }
 
-        $this->_cdataStack[$this->_level] = $cdata;
+        $this->cdataStack[$this->level] = $cdata;
     }
 
     // }}}
-    // {{{ function _endElement($parser, $element)
+    // {{{ private function endElement($parser, $element)
 
     /**
     * SAX callback for 'endElement' event.
@@ -525,21 +525,21 @@ class XML_Transformer {
     * @param  string
     * @access private
     */
-    function _endElement($parser, $element) {
-        $cdata     = $this->_cdataStack[$this->_level];
+    private function endElement($parser, $element) {
+        $cdata     = $this->cdataStack[$this->level];
         $element   = $this->canonicalize($element);
-        $process   = $this->_lastProcessed != $element;
+        $process   = $this->lastProcessed != $element;
         $recursion = false;
 
         list($namespacePrefix, $qElement) =
-        XML_Transformer_Util::qualifiedElement($element);
+        XML::Transformer::Util::qualifiedElement($element);
 
         if ($process &&
-            isset($this->_callbackRegistry->overloadedNamespaces[$namespacePrefix]['active'])) {
+            isset($this->callbackRegistry->overloadedNamespaces[$namespacePrefix]['active'])) {
             // The event is handled by a callback
             // that is registered for this namespace.
 
-            $result = $this->_callbackRegistry->overloadedNamespaces[$namespacePrefix]['object']->endElement(
+            $result = $this->callbackRegistry->overloadedNamespaces[$namespacePrefix]['object']->endElement(
               $qElement,
               $cdata
             );
@@ -553,8 +553,8 @@ class XML_Transformer {
             }
 
             $recursion = $reparse &&
-                         isset($this->_elementStack[$this->_level-1]) &&
-                         $this->_callbackRegistry->overloadedNamespaces[$namespacePrefix]['recursiveOperation'];
+                         isset($this->elementStack[$this->level-1]) &&
+                         $this->callbackRegistry->overloadedNamespaces[$namespacePrefix]['recursiveOperation'];
         } else {
             // No callback was registered for this element's
             // closing tag, copy it.
@@ -565,10 +565,10 @@ class XML_Transformer {
         if ($recursion) {
             // Recursively process this transformation's result.
 
-            $this->_debug(
+            $this->debug(
               sprintf(
                 'start recursion[%d]: %s',
-                $this->_level,
+                $this->level,
                 $cdata
               ),
               '&RECURSE'
@@ -576,30 +576,30 @@ class XML_Transformer {
 
             $transformer = new XML_Transformer(
               array(
-                'caseFolding'   => $this->_caseFolding,
-                'caseFoldingTo' => $this->_caseFoldingTo,
+                'caseFolding'   => $this->caseFolding,
+                'caseFoldingTo' => $this->caseFoldingTo,
                 'lastProcessed' => $element
               )
             );
 
             $cdata = $transformer->transform($cdata);
 
-            $this->_debug(
+            $this->debug(
               sprintf(
                 'end recursion[%d]: %s',
-                $this->_level,
+                $this->level,
                 $cdata
               ),
               '&RECURSE'
             );
         }
 
-        $this->_debug(
+        $this->debug(
           sprintf(
             'endElement[%d]: %s (with cdata=%s)',
-            $this->_level,
+            $this->level,
             $element,
-            $this->_cdataStack[$this->_level]
+            $this->cdataStack[$this->level]
           ),
           $element
         );
@@ -607,11 +607,11 @@ class XML_Transformer {
         // Move result of this transformation step to
         // the parent's CDATA section.
 
-        $this->_cdataStack[--$this->_level] .= $cdata;
+        $this->cdataStack[--$this->level] .= $cdata;
     }
 
     // }}}
-    // {{{ function _characterData($parser, $cdata)
+    // {{{ private function characterData($parser, $cdata)
 
     /**
     * SAX callback for 'characterData' event.
@@ -620,22 +620,22 @@ class XML_Transformer {
     * @param  string
     * @access private
     */
-    function _characterData($parser, $cdata) {
-      $this->_debug(
+    private function characterData($parser, $cdata) {
+      $this->debug(
         sprintf(
           'cdata [%d]: %s + %s',
-          $this->_level,
-          $this->_cdataStack[$this->_level],
+          $this->level,
+          $this->cdataStack[$this->level],
           $cdata
         ),
         '&CDATA'
       );
 
-      $this->_cdataStack[$this->_level] .= $cdata;
+      $this->cdataStack[$this->level] .= $cdata;
     }
 
     // }}}
-    // {{{ function _autoload($namespaces)
+    // {{{ private function autoload($namespaces)
 
     /**
     * Loads either all (true) or a selection of namespace
@@ -644,7 +644,7 @@ class XML_Transformer {
     * @param  mixed
     * @access private
     */
-    function _autoload($namespaces) {
+    private function autoload($namespaces) {
         $path = dirname(__FILE__) . '/Transformer/Namespace/';
 
         if ($namespaces === true) {
@@ -669,8 +669,7 @@ class XML_Transformer {
 
         foreach ($namespaces as $namespace) {
             if (@include_once($path . $namespace . '.php')) {
-                $className = 'XML_Transformer_Namespace_' . $namespace;
-                $object    = new $className;
+                $object = new XML::Transformer::Namespace::$namespace;
 
                 $this->overloadNamespace(
                   !empty($object->defaultNamespacePrefix) ? $object->defaultNamespacePrefix : $namespace,
@@ -681,7 +680,7 @@ class XML_Transformer {
     }
 
     // }}}
-    // {{{ function _debug($debugMessage, $currentElement = '')
+    // {{{ private function debug($debugMessage, $currentElement = '')
 
     /**
     * Sends a debug message to error.log, if debugging is enabled.
@@ -689,13 +688,13 @@ class XML_Transformer {
     * @param  string
     * @access private
     */
-    function _debug($debugMessage, $currentElement = '') {
-        if ($this->_debug &&
-            (empty($this->_debugFilter) ||
-             isset($this->_debugFilter[$currentElement]))) {
-            XML_Transformer_Util::logMessage(
+    private function debug($debugMessage, $currentElement = '') {
+        if ($this->debug &&
+            (empty($this->debugFilter) ||
+             isset($this->debugFilter[$currentElement]))) {
+            XML::Transformer::Util::logMessage(
               $debugMessage,
-              $this->_logTarget
+              $this->logTarget
             );
         }
     }
