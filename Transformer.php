@@ -190,13 +190,13 @@ class XML_Transformer {
     }
 
     // }}}
-    // {{{ function canonicalizeAttributes($attributes)
+    // {{{ function canonicalize($target)
 
     /**
-    * Canonicalizes a given attributes array.
+    * Canonicalizes a given attributes array or element name.
     *
-    * @param  array
-    * @return array
+    * @param  mixed
+    * @return mixed
     * @access public
     */
     function canonicalize($target) {
