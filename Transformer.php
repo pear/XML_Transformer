@@ -483,16 +483,6 @@ class XML_Transformer {
             $qElement        = $element;
         }
 
-        $this->_debug(
-          sprintf(
-            'endElement[%d]: %s (with cdata=%s)',
-            $this->_level,
-            $element,
-            $this->_cdataStack[$this->_level]
-          ),
-          $element
-        );
-
         if ($process &&
             isset($this->_callbackRegistry->overloadedNamespaces[$namespacePrefix]['object'])) {
             // The event is handled by a callback
@@ -542,6 +532,16 @@ class XML_Transformer {
               '&RECURSE'
             );
         }
+
+        $this->_debug(
+          sprintf(
+            'endElement[%d]: %s (with cdata=%s)',
+            $this->_level,
+            $element,
+            $this->_cdataStack[$this->_level]
+          ),
+          $element
+        );
 
         // Move result of this transformation step to
         // the parent's CDATA section.

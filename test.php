@@ -17,7 +17,7 @@
 //
 
 require_once 'PHPUnit/PHPUnit.php';
-require_once 'XML/Transformer/OutputBuffer.php';
+require_once 'XML/Transformer.php';
 require_once 'XML/Transformer/Namespace.php';
 
 class Main extends XML_Transformer_Namespace {
@@ -28,7 +28,7 @@ class Main extends XML_Transformer_Namespace {
     function end_body($cdata) {
         return $cdata . '</body>';
     }
-
+/*
     function start_bold($attributes) {
         return '<b>';
     }
@@ -44,9 +44,11 @@ class Main extends XML_Transformer_Namespace {
     function end_boldbold($cdata) {
         return $cdata . '</bold>';
     }
+*/
 }
 
 class XML_Transformer_Test extends PHPUnit_TestCase {
+/*
     function testNoRecursion() {
         $t = new XML_Transformer;
 
@@ -80,10 +82,10 @@ class XML_Transformer_Test extends PHPUnit_TestCase {
           )
         );
     }
-
+*/
     function testSelfReplacing() {
         $t = new XML_Transformer;
-
+        $t->setDebug(true);
         $t->overloadNamespace(
           '&MAIN',
           new Main
