@@ -164,7 +164,7 @@ class XML_Transformer_Namespace_Anchor extends XML_Transformer_Namespace {
     // {{{ function start_iref($attributes)
 
     /**
-    * @param  string
+    * @param  array
     * @return string
     * @access public
     */
@@ -203,7 +203,7 @@ class XML_Transformer_Namespace_Anchor extends XML_Transformer_Namespace {
     // {{{ function start_random($attributes)
 
     /**
-    * @param  string
+    * @param  array
     * @return string
     * @access public
     */
@@ -233,11 +233,10 @@ class XML_Transformer_Namespace_Anchor extends XML_Transformer_Namespace {
     }
 
     // }}}
-
     // {{{ function start_link($attributes)
 
     /**
-    * @param  string
+    * @param  array
     * @return string
     * @access public
     */
