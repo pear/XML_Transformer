@@ -31,12 +31,6 @@ class XML_Transformer_CallbackRegistry {
     * @var    array
     * @access private
     */
-    var $overloadedElements = array();
-
-    /**
-    * @var    array
-    * @access private
-    */
     var $overloadedNamespaces = array();
 
     /**
@@ -50,11 +44,27 @@ class XML_Transformer_CallbackRegistry {
     var $_recursiveOperation = true;
 
     // }}}
+    // {{{ function XML_Transformer_CallbackRegistry($recursiveOperation)
 
+    /**
+    * Constructor.
+    *
+    * @param  boolean
+    * @access public
+    */
     function XML_Transformer_CallbackRegistry($recursiveOperation) {
         $this->_recursiveOperation = $recursiveOperation;
     }
 
+    // }}}
+    // {{{ function &singleton($recursiveOperation)
+
+    /**
+    * Singleton.
+    *
+    * @param  boolean
+    * @access public
+    */
     function &singleton($recursiveOperation) {
         static $instance;
 
@@ -63,77 +73,6 @@ class XML_Transformer_CallbackRegistry {
         }
 
         return $instance;
-    }
-
-    // {{{ function overloadElement($element, $startHandler, $endHandler, $recursiveOperation = '')
-
-    /**
-    * Overloads an XML element and binds its
-    * opening and closing tags to a PHP callback.
-    *
-    * @param  string
-    * @param  string
-    * @param  string
-    * @param  boolean
-    * @return mixed
-    * @access public
-    */
-    function overloadElement($element, $startHandler, $endHandler, $recursiveOperation = '') {
-        $result = $this->_registerElementCallback(
-          $element,
-          'start',
-          $startHandler
-        );
-
-        if ($result !== true) {
-            return $result;
-        }
-
-        $result = $this->_registerElementCallback(
-          $element,
-          'end',
-          $endHandler
-        );
-
-        if ($result !== true) {
-            return $result;
-        }
-
-        $this->overloadedElements[$element]['recursiveOperation'] = is_bool($recursiveOperation) ? $recursiveOperation : $this->_recursiveOperation;
-
-        return true;
-    }
-
-    // }}}
-    // {{{ function unOverloadElement($element)
-
-    /**
-    * Reverts overloading of a given element.
-    *
-    * @param  string
-    * @access public
-    */
-    function unOverloadElement($element) {
-        if (isset($this->overloadedElements[$element])) {
-            unset($this->overloadedElements[$element]);
-        }
-    }
-
-    // }}}
-    // {{{ function isOverloadedElement($element)
-
-    /**
-    * Returns true if a given element is overloaded,
-    * false otherwise.
-    *
-    * @param  string
-    * @return boolean
-    * @access public
-    */
-    function isOverloadedElement($element) {
-        return isset(
-          $this->overloadedElements[$element]
-        );
     }
 
     // }}}
@@ -197,42 +136,6 @@ class XML_Transformer_CallbackRegistry {
     }
 
     // }}}
-    // {{{ function setDefaultCallback($startHandler, $endHandler)
-
-    /**
-    * Registers default start and end handlers for elements that
-    * have no registered callbacks.
-    *
-    * @param  string
-    * @param  string
-    * @access public
-    */
-    function setDefaultCallback($startHandler, $endHandler) {
-        $startHandler = $this->_parseCallback($startHandler);
-        $endHandler   = $this->_parseCallback($endHandler);
-
-        if ($startHandler && $endHandler) {
-            $this->overloadedElements['&DEFAULT']['start'] = $startHandler;
-            $this->overloadedElements['&DEFAULT']['end']   = $endHandler;
-        }
-    }
-
-    // }}}
-    // {{{ function unsetDefaultCallback()
-
-    /**
-    * Unsets default handlers for elements that have no
-    * registered callbacks.
-    *
-    * @access public
-    */
-    function unsetDefaultCallback() {
-        if (isset($this->overloadedElements['&DEFAULT'])) {
-            unset($this->overloadedElements['&DEFAULT']);
-        }
-    }
-
-    // }}}
     // {{{ function setRecursiveOperation($recursiveOperation)
 
     /**
@@ -245,79 +148,6 @@ class XML_Transformer_CallbackRegistry {
         if (is_bool($recursiveOperation)) {
             $this->_recursiveOperation = $recursiveOperation;
         }
-    }
-
-    // }}}
-    // {{{ function _parseCallback($callback)
-
-    /**
-    * Parses a PHP callback.
-    *
-    * @param  string
-    * @return mixed
-    * @access private
-    */
-    function _parseCallback($callback) {
-        $parsedCallback = false;
-
-        // classname::staticMethod
-        if (strstr($callback, '::')) {
-            list($class, $method) = explode('::', $callback);
-
-            if (class_exists($class) &&
-                in_array(strtolower($method), get_class_methods($class))) {
-                $parsedCallback = array($class, $method);
-            }
-        }
-
-        // object->method
-        else if (strstr($callback, '->')) {
-            list($object, $method) = explode('->', $callback);
-
-            if (isset($GLOBALS[$object]) &&
-                is_object($GLOBALS[$object]) &&
-                method_exists($GLOBALS[$object], $method)) {
-                $parsedCallback = array($GLOBALS[$object], $method);
-            }
-        }
-
-        // function
-        else if (function_exists($callback)) {
-            $parsedCallback = $callback;
-        }
-
-        if ($parsedCallback) {
-            return $parsedCallback;
-        } else {
-            return false;
-        }
-    }
-
-    // }}}
-    // {{{ function _registerElementCallback($element, $event, $callback)
-
-    /**
-    * Registers a PHP callback for a given event of a XML element.
-    *
-    * @param  string
-    * @param  string
-    * @param  string
-    * @return mixed
-    * @access private
-    */
-    function _registerElementCallback($element, $event, $callback) {
-        if ($parsedCallback = $this->_parseCallback($callback)) {
-            $this->overloadedElements[$element][$event] = $parsedCallback;
-        } else {
-            return sprintf(
-              'Callback %s for <%s%s> does not exist.',
-              $callback,
-              ($event == 'end') ? '/' : '',
-              $element
-            );
-        }
-
-        return true;
     }
 
     // }}}

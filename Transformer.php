@@ -25,10 +25,6 @@ require_once 'XML/Transformer/CallbackRegistry.php';
 * thus transforming an XML input tree into another XML tree without
 * the need for XSLT.
 *
-* Single XML elements can be overloaded with PHP functions, methods
-* and static method calls, XML namespaces can be registered to be
-* handled by PHP classes.
-*
 * @author  Sebastian Bergmann <sb@sebastian-bergmann.de>
 *          Kristian Köhntopp <kris@koehntopp.de>
 * @version $Revision$
@@ -133,7 +129,6 @@ class XML_Transformer {
         $this->_caseFoldingTo = isset($parameters['caseFoldingTo']) ? $parameters['caseFoldingTo'] : CASE_UPPER;
         $this->_lastProcessed = isset($parameters['lastProcessed']) ? $parameters['lastProcessed'] : '';
 
-        $overloadedElements   = isset($parameters['overloadedElements'])   ? $parameters['overloadedElements']   : array();
         $overloadedNamespaces = isset($parameters['overloadedNamespaces']) ? $parameters['overloadedNamespaces'] : array();
         $recursiveOperation   = isset($parameters['recursiveOperation'])   ? $parameters['recursiveOperation']   : true;
 
@@ -142,19 +137,6 @@ class XML_Transformer {
         $this->_callbackRegistry = XML_Transformer_CallbackRegistry::singleton(
           $recursiveOperation
         );
-
-        foreach ($overloadedElements as $element => $overloadedElement) {
-            $overloadedElement['start']              = isset($overloadedElement['start'])              ? $overloadedElement['start']              : '';
-            $overloadedElement['end']                = isset($overloadedElement['end'])                ? $overloadedElement['end']                : '';
-            $overloadedElement['recursiveOperation'] = isset($overloadedElement['recursiveOperation']) ? $overloadedElement['recursiveOperation'] : $recursiveOperation;
-
-            $this->overloadElement(
-              $element,
-              $overloadedElement['start'],
-              $overloadedElement['end'],
-              $overloadedElement['recursiveOperation']
-            );
-        }
 
         foreach ($overloadedNamespaces as $namespacePrefix => $object) {
             $this->overloadNamespace(
@@ -246,64 +228,6 @@ class XML_Transformer {
     }
 
     // }}}
-    // {{{ function overloadElement($element, $startHandler, $endHandler, $recursiveOperation = '')
-
-    /**
-    * Overloads an XML element and binds its
-    * opening and closing tags to a PHP callback.
-    *
-    * @param  string
-    * @param  string
-    * @param  string
-    * @param  boolean
-    * @access public
-    */
-    function overloadElement($element, $startHandler, $endHandler, $recursiveOperation = '') {
-        $result = $this->_callbackRegistry->overloadElement(
-          $this->canonicalize($element),
-          $startHandler,
-          $endHandler,
-          $recursiveOperation
-        );
-
-        if ($result !== true) {
-            $this->_handleError($result);
-        }
-    }
-
-    // }}}
-    // {{{ function unOverloadElement($element)
-
-    /**
-    * Reverts overloading of a given element.
-    *
-    * @param  string
-    * @access public
-    */
-    function unOverloadElement($element) {
-        $this->_callbackRegistry->unOverloadElement(
-          $this->canonicalize($element)
-        );
-    }
-
-    // }}}
-    // {{{ function isOverloadedElement($element)
-
-    /**
-    * Returns true if a given element is overloaded,
-    * false otherwise.
-    *
-    * @param  string
-    * @return boolean
-    * @access public
-    */
-    function isOverloadedElement($element) {
-        return $this->_callbackRegistry->isOverloadedElement(
-          $this->canonicalize($element)
-        );
-    }
-
-    // }}}
     // {{{ function overloadNamespace($namespacePrefix, &$object, $recursiveOperation = '')
 
     /**
@@ -365,37 +289,6 @@ class XML_Transformer {
         return $this->_callbackRegistry->isOverloadedNamespace(
           $this->canonicalize($namespacePrefix)
         );
-    }
-
-    // }}}
-    // {{{ function setDefaultCallback($startHandler, $endHandler)
-
-    /**
-    * Registers default start and end handlers for elements that
-    * have no registered callbacks.
-    *
-    * @param  string
-    * @param  string
-    * @access public
-    */
-    function setDefaultCallback($startHandler, $endHandler) {
-        $this->_callbackRegistry->setDefaultCallback(
-          $startHandler,
-          $endHandler
-        );
-    }
-
-    // }}}
-    // {{{ function unsetDefaultCallback()
-
-    /**
-    * Unsets default handlers for elements that have no
-    * registered callbacks.
-    *
-    * @access public
-    */
-    function unsetDefaultCallback() {
-        $this->_callbackRegistry->unsetDefaultCallback();
     }
 
     // }}}
@@ -548,26 +441,6 @@ class XML_Transformer {
             );
         }
 
-        else if ($this->_lastProcessed != $element &&
-                 isset($this->_callbackRegistry->overloadedElements[$element]['start'])) {
-            // The event is handled by a callback
-            // that is registered for this element.
-
-            $cdata = call_user_func(
-              $this->_callbackRegistry->overloadedElements[$element]['start'],
-              $attributes
-            );
-        }
-
-        else if (isset($this->_callbackRegistry->overloadedElements['&DEFAULT']['start'])) {
-            // The event is handled by the default callback.
-
-            $cdata = call_user_func(
-              $this->_callbackRegistry->overloadedElements['&DEFAULT']['start'],
-              $attributes
-            );
-        }
-
         else {
             // No callback was registered for this element's
             // opening tag, copy it.
@@ -626,32 +499,6 @@ class XML_Transformer {
             if ($this->_callbackRegistry->overloadedNamespaces[$namespacePrefix]['recursiveOperation']) {
                 $recursion = true;
             }
-        }
-
-        else if ($this->_lastProcessed != $element &&
-                 isset($this->_callbackRegistry->overloadedElements[$element]['end'])) {
-            // The event is handled by a callback
-            // that is registered for this element.
-
-            $cdata = call_user_func(
-              $this->_callbackRegistry->overloadedElements[$element]['end'],
-              $cdata
-            );
-
-            if ($this->_callbackRegistry->overloadedElements[$element]['recursiveOperation']) {
-                $recursion = true;
-            }
-        }
-
-        else if (isset($this->_callbackRegistry->overloadedElements['&DEFAULT']['end'])) {
-            // The event is handled by the default callback.
-
-            $cdata = call_user_func(
-              $this->_callbackRegistry->overloadedElements['&DEFAULT']['end'],
-              $cdata
-            );
-
-            $recursion = true;
         }
 
         else {
