@@ -31,8 +31,12 @@
     <state>stable</state>
     <date>2002-XX-XX</date>
     <notes>
-* When in debug mode, debug messages are now beeing sent using
-  error_log() instead of syslog().
+* Added a filtering mechanism to the debugger that limits
+  the generated debugging information to a given set of
+  elements.
+
+* Debugging information is now sent using error_log()
+  instead of syslog().
 
 * Fixed a bug in the case-folding handling.
     </notes>

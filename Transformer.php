@@ -95,8 +95,19 @@ class XML_Transformer {
     *
     * @var    boolean
     * @access private
+    * @see    $_debugFilter
     */
     var $_debug = FALSE;
+
+    /**
+    * If not empty, debugging information will only be generated
+    * for XML elements whose names are in this array.
+    *
+    * @var    array
+    * @access private
+    * @see    $_debug
+    */
+    var $_debugFilter = array();
 
     /**
     * If TRUE, the transformation will continue recursively
@@ -484,11 +495,16 @@ class XML_Transformer {
     /**
     * Enables or disables debugging to error.log.
     *
-    * @param  boolean
+    * @param  mixed
     * @access public
     */
     function setDebug($debug) {
-        if (is_bool($debug)) {
+        if (is_array($debug)) {
+            $this->_debug       = TRUE;
+            $this->_debugFilter = array_flip($debug);
+        }
+
+        else if (is_bool($debug)) {
             $this->_debug = $debug;
         }
     }
@@ -598,7 +614,8 @@ class XML_Transformer {
             $this->_level,
             $element,
             $this->attributesToString($attributes)
-          )
+          ),
+          $element
         );
 
         $this->_elementStack[$this->_level]    = $element;
@@ -655,7 +672,8 @@ class XML_Transformer {
             $this->_level,
             $element,
             $this->_cdataStack[$this->_level]
-          )
+          ),
+          $element
         );
 
         $cdata           = $this->_cdataStack[$this->_level];
@@ -707,7 +725,8 @@ class XML_Transformer {
                 'recursion[%d]: %s',
                 $this->_level,
                 $cdata
-              )
+              ),
+              $element
             );
 
             // Note: Recursive debugging creates monstrous output.
@@ -731,7 +750,8 @@ class XML_Transformer {
                 'end recursion[%d]: %s',
                 $this->_level,
                 $cdata
-              )
+              ),
+              $element
             );
         }
 
@@ -855,7 +875,7 @@ class XML_Transformer {
     }
 
     // }}}
-    // {{{ function _debug($debugMessage) {
+    // {{{ function _debug($debugMessage, $currentElement = '')
 
     /**
     * Sends a debug message to error.log, if debugging is enabled.
@@ -863,9 +883,10 @@ class XML_Transformer {
     * @param  string
     * @access private
     */
-
-    function _debug($debugMessage) {
-        if ($this->_debug) {
+    function _debug($debugMessage, $currentElement = '') {
+        if ($this->_debug &&
+            (empty($this->_debugFilter) ||
+             isset($this->_debugFilter[$currentElement]))) {
             error_log($debugMessage);
         }
     }
