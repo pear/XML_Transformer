@@ -116,9 +116,8 @@ class XML_Transformer_Namespace {
         }
 
         return sprintf(
-          "<!-- undefined: %s --><%s%s>",
+          "<%s%s>",
 
-          $element,
           $element,
           XML_Transformer::attributesToString($attributes)
         );
