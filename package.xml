@@ -27,9 +27,9 @@
   </maintainers>
   <license>PHP License</license>
   <release>
-    <version>0.5-dev</version>
+    <version>0.5</version>
     <state>devel</state>
-    <date>2002-XX-XX</date>
+    <date>2002-09-08</date>
     <notes>
 * Resolved infinite recursion problem that arose when handlers
   do not remove the tags of their assigned element from the input
