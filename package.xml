@@ -50,11 +50,12 @@
   a callback handler for the endElement event can notify the
   Transformer not to recurively process its result.
 
-* Improved debugging.
+* Improved debugging information.
 
-  The debug information is no longer printed as XML comments
-  into the XML output tree, but sent to the error.log.
+* The target to which error messages and debugging information
+  is beeing sent can now be configured using setLogTarget().
 
+  The default target is the error.log.
 ]]>
     </notes>
     <filelist>

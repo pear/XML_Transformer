@@ -81,6 +81,16 @@ class XML_Transformer {
     var $_debugFilter = array();
 
     /**
+    * Specifies the target to which error messages and
+    * debugging messages are sent.
+    *
+    * @var    string
+    * @access private
+    * @see    $_debug
+    */
+    var $_logTarget = 'error_log';
+
+    /**
     * @var    array
     * @access private
     */
@@ -243,7 +253,10 @@ class XML_Transformer {
                 );
             }
         } else {
-            $this->_handleError($result);
+            XML_Transformer_Util::handleError(
+              $result,
+              $this->_logTarget
+            );
         }
     }
 
@@ -299,7 +312,7 @@ class XML_Transformer {
     // {{{ function setDebug($debug)
 
     /**
-    * Enables or disables debugging to error.log.
+    * Enables or disables debugging information.
     *
     * @param  mixed
     * @access public
@@ -313,6 +326,20 @@ class XML_Transformer {
         else if (is_bool($debug)) {
             $this->_debug = $debug;
         }
+    }
+
+    // }}}
+    // {{{ function setLogTarget($logTarget)
+
+    /**
+    * Sets the target to which error messages and
+    * debugging messages are sent.
+    *
+    * @param  string
+    * @access public
+    */
+    function setLogTarget($logTarget) {
+        $this->_logTarget = $logTarget;
     }
 
     // }}}
@@ -383,7 +410,10 @@ class XML_Transformer {
                 );
             }
 
-            error_log($errorMessage . "\n" . $this->stackdump());
+            XML_Transformer_Util::handleError(
+              $errorMessage . "\n" . $this->stackdump(),
+              $this->_logTarget
+            );
 
             return '';
         }
@@ -631,24 +661,11 @@ class XML_Transformer {
         if ($this->_debug &&
             (empty($this->_debugFilter) ||
              isset($this->_debugFilter[$currentElement]))) {
-            error_log($debugMessage);
+            XML_Transformer_Util::handleError(
+              $debugMessage,
+              $this->_logTarget
+            );
         }
-    }
-
-    // }}}
-    // {{{ function _handleError($errorMessage)
-
-    /**
-    * Inserts an error message into the output.
-    *
-    * @param  string
-    * @access private
-    */
-    function _handleError($errorMessage) {
-        $this->_cdataStack[$this->_level] .= sprintf(
-          "<!-- Transformer Error: %s -->\n",
-          $errorMessage
-        );
     }
 
     // }}}

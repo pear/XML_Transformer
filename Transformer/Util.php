@@ -50,6 +50,30 @@ class XML_Transformer_Util {
     }
 
     // }}}
+    // {{{ function handleError($errorMessage, $target = 'error_log')
+
+    /**
+    * Sends an error message to a given target.
+    *
+    * @param  string
+    * @param  string
+    * @access public
+    * @static
+    */
+    function handleError($errorMessage, $target = 'error_log') {
+        switch ($target) {
+            case 'echo': {
+                echo $errorMessage;
+            }
+            break;
+
+            default: {
+                error_log($errorMessage);
+            }
+        }
+    }
+
+    // }}}
     // {{{ function qualifiedElement($element)
 
     /**
