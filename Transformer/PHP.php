@@ -56,7 +56,7 @@ class XML_Transformer_PHP extends XML_Transformer_Namespace {
     * @var    string
     * @access private
     */
-    var $_defineName;
+    var $_define_name;
 
     /**
     * @var    string
@@ -68,9 +68,22 @@ class XML_Transformer_PHP extends XML_Transformer_Namespace {
     * @var    string
     * @access private
     */
+    var $_in_namespace = false;
+
+    /**
+    * @var    string
+    * @access private
+    */
+    var $_namespace_class_definition = '';
+
+    /**
+    * @var    string
+    * @access private
+    */
     var $_variable = '';
 
     // }}}
+
     // {{{ function start_define($attributes)
 
     /**
@@ -79,16 +92,14 @@ class XML_Transformer_PHP extends XML_Transformer_Namespace {
     * @access public
     */
     function start_define($attributes) {
-        $this->_defineName = $attributes['name'];
+        if (! $this->_in_namespace)
+            return "";
 
-        if (isset($attributes['namespace'])) {
-            $this->_namespace = $attributes['namespace'];
-        }
-
-        return '';
+        $this->_define_name = $attributes['name'];
+        return "";
     }
-
     // }}}
+
     // {{{ function end_define($cdata)
 
     /**
@@ -97,40 +108,79 @@ class XML_Transformer_PHP extends XML_Transformer_Namespace {
     * @access public
     */
     function end_define($cdata) {
-        $classname = '_PEAR_XML_Transformer_PHP_' . $this->_defineName;
+        if (! $this->_in_namespace) {
+          return "";
+        }
 
-        $str = sprintf(
-          'class %s extends XML_Transformer_Namespace {
-            var $attributes = array();
+        $this->_namespace_class_definition .= sprintf('
+            var $%s_attributes = array();
 
             function start_%s($att) {
-              $this->attributes = $att;
-  
+              $this->%s_attributes = $att;
+
               return "";
             }
 
             function end_%s($content) {
-              foreach ($this->attributes as $__k => $__v) {
+              foreach ($this->%s_attributes as $__k => $__v) {
                 $$__k = $__v;
               }
 
               return "%s";
-            }
-          };',
-
-          $classname,
-          $this->_defineName,
-          $this->_defineName,
-          $cdata
+            }', $this->_define_name,
+              $this->_define_name,
+              $this->_define_name,
+              $this->_define_name,
+              $this->_define_name,
+              $cdata
         );
 
-        eval($str);
+        return "";
+    }
+    // }}}
+    // {{{ function start_namespace($attributes)
+
+    /**
+    * @param  string
+    * @return string
+    * @access public
+    */
+    function start_namespace($attributes) {
+        $this->_in_namespace = true;
+        $this->_namespace = $attributes['name'];
+
+        $classname = sprintf(PEAR_XML_TRANSFORMER_PHP . '%s', $this->_namespace);
+        $this->_namespace_class_definition = sprintf(
+          'class %s extends XML_Transformer_Namespace {',
+          $classname
+        );
+
+        return "";
+    }
+    // }}}
+
+    // {{{ function end_namespace($cdata)
+
+    /**
+    * @param  string
+    * @return string
+    * @access public
+    */
+    function end_namespace($cdata) {
+        $classname = sprintf(PEAR_XML_TRANSFORMER_PHP . '%s', $this->_namespace);
+
+        $this->_namespace_class_definition .= " };";
+        eval($this->_namespace_class_definition);
+        $this->_namespace_class_definition = '';
+
         $this->_transformer->overloadNamespace($this->_namespace, new $classname, true);
 
-        return '';
+        $this->_namespace = '';
+        $this->_in_namespace = false;
+        return "";
     }
-
     // }}}
+
     // {{{ function start_expr($attributes)
 
     /**
@@ -179,32 +229,6 @@ class XML_Transformer_PHP extends XML_Transformer_Namespace {
         $buffer = ob_get_contents();
         ob_end_clean();
         return $buffer;
-    }
-
-    // }}}
-    // {{{ function start_namespace($attributes)
-
-    /**
-    * @param  string
-    * @return string
-    * @access public
-    */
-    function start_namespace($attributes) {
-        $this->_namespace = $attributes['name'];
-
-        return '';
-    }
-
-    // }}}
-    // {{{ function end_namespace($cdata)
-
-    /**
-    * @param  string
-    * @return string
-    * @access public
-    */
-    function end_namespace($cdata) {
-        return '';
     }
 
     // }}}
