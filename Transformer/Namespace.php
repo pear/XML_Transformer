@@ -139,7 +139,7 @@ class XML_Transformer_Namespace {
     *
     * @param  string
     * @param  string
-    * @return string
+    * @return array
     * @access public
     */
     function endElement($element, $cdata) {
@@ -149,12 +149,15 @@ class XML_Transformer_Namespace {
             return $this->$do($cdata);
         }
 
-        return array(sprintf(
-          '%s</%s>',
+        return array(
+          sprintf(
+            '%s</%s>',
 
-          $cdata,
-          $element
-        ), false);
+            $cdata,
+            $element
+          ),
+          false
+        );
     }
 
     // }}}
