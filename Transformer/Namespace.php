@@ -149,12 +149,12 @@ class XML_Transformer_Namespace {
             return $this->$do($cdata);
         }
 
-        return sprintf(
+        return array(sprintf(
           '%s</%s>',
 
           $cdata,
           $element
-        );
+        ), false);
     }
 
     // }}}
