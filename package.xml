@@ -63,6 +63,8 @@
     + <php:sessionvariable name=""/> inserts the contents of a given
       session variable into the output XML tree.
 
+* Fixed a bug in overloadNamespace()'s error handling.
+
 * Recursive operation can now be selectively turned off for
   overloaded namespaces, too.
 

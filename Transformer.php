@@ -399,7 +399,7 @@ class XML_Transformer {
             $this->_overloadedNamespaces[$namespacePrefix]['object']             = &$object;
             $this->_overloadedNamespaces[$namespacePrefix]['recursiveOperation'] = is_bool($recursiveOperation) ? $recursiveOperation : $this->_recursiveOperation;
         } else {
-            $this->_handle_error(
+            $this->_handleError(
               'Cannot overload namespace "' .
               $namespacePrefix .
               '", method(s) "startElement" and/or "endElement" ' .
