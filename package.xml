@@ -24,16 +24,20 @@
   </maintainers>
   <license>PHP License</license>
   <release>
-    <version>1.0.2</version>
+    <version>1.1.0</version>
     <state>stable</state>
     <date>2004-MM-DD</date>
     <notes>
 <![CDATA[
 + Enabled the construction of nested transformers by allowing for multiple instances of XML_Transformer_CallbackRegistry. (Based upon a patch by Thomas Duffey <tduffey@homeboyz.org>)
 
++ Added collapseEmptyTagsMode parameter that controls the collapsing of empty tags and allows for the correct transforming of XHTML documents.
+
 * XML_Transformer now uses a namespace-aware SAX parser. This partially addresses bug #2595.
 
 * XML entities are no longer replaced twice. (Patch by Thomas Duffey <tduffey@homeboyz.org>)
+
+! XML_Transformer now requires XML_Util-1.1.0.
 ]]>
     </notes>
     <filelist>
@@ -63,7 +67,7 @@
       <dep type="php" rel="ge" version="4.2.0" />
       <dep type="ext" rel="has">pcre</dep>
       <dep type="ext" rel="has">xml</dep>
-      <dep type="pkg" rel="ge" version="1.0.0">XML_Util</dep>
+      <dep type="pkg" rel="ge" version="1.1.0">XML_Util</dep>
     </deps>
   </release>
   <changelog>

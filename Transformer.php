@@ -72,6 +72,14 @@ class XML_Transformer {
     var $_collapseEmptyTags = FALSE;
 
     /**
+    * Collapse mode
+    *
+    * @var    int
+    * @access private
+    */
+    var $_collapseEmptyTagsMode = XML_UTIL_COLLAPSE_ALL;
+
+    /**
     * If TRUE, debugging information will be sent to
     * the error.log.
     *
@@ -159,15 +167,16 @@ class XML_Transformer {
             $this->setDebug($parameters['debug']);
         }
 
-        $this->_caseFolding       = isset($parameters['caseFolding'])          ? $parameters['caseFolding']          : FALSE;
-        $this->_collapseEmptyTags = isset($parameters['collapseEmptyTags'])    ? $parameters['collapseEmptyTags']    : FALSE;
-        $this->_caseFoldingTo     = isset($parameters['caseFoldingTo'])        ? $parameters['caseFoldingTo']        : CASE_UPPER;
-        $this->_lastProcessed     = isset($parameters['lastProcessed'])        ? $parameters['lastProcessed']        : '';
-        $this->_logTarget         = isset($parameters['logTarget'])            ? $parameters['logTarget']            : 'error_log';
+        $this->_caseFolding           = isset($parameters['caseFolding'])           ? $parameters['caseFolding']           : FALSE;
+        $this->_collapseEmptyTags     = isset($parameters['collapseEmptyTags'])     ? $parameters['collapseEmptyTags']     : FALSE;
+        $this->_collapseEmptyTagsMode = isset($parameters['collapseEmptyTagsMode']) ? $parameters['collapseEmptyTagsMode'] : XML_UTIL_COLLAPSE_ALL;
+        $this->_caseFoldingTo         = isset($parameters['caseFoldingTo'])         ? $parameters['caseFoldingTo']         : CASE_UPPER;
+        $this->_lastProcessed         = isset($parameters['lastProcessed'])         ? $parameters['lastProcessed']         : '';
+        $this->_logTarget             = isset($parameters['logTarget'])             ? $parameters['logTarget']             : 'error_log';
 
-        $autoload                 = isset($parameters['autoload'])             ? $parameters['autoload']             : FALSE;
-        $overloadedNamespaces     = isset($parameters['overloadedNamespaces']) ? $parameters['overloadedNamespaces'] : array();
-        $recursiveOperation       = isset($parameters['recursiveOperation'])   ? $parameters['recursiveOperation']   : TRUE;
+        $autoload                     = isset($parameters['autoload'])              ? $parameters['autoload']              : FALSE;
+        $overloadedNamespaces         = isset($parameters['overloadedNamespaces'])  ? $parameters['overloadedNamespaces']  : array();
+        $recursiveOperation           = isset($parameters['recursiveOperation'])    ? $parameters['recursiveOperation']    : TRUE;
 
         // Initialize callback registry.
 
@@ -333,17 +342,20 @@ class XML_Transformer {
     }
 
     // }}}
-    // {{{ function setCollapsingOfEmptyTags($collapseEmptyTags)
+    // {{{ function setCollapsingOfEmptyTags($collapseEmptyTags, $mode = XML_UTIL_COLLAPSE_ALL)
 
     /**
-    * Sets the XML parser's case-folding option.
+    * Sets the collapsing of empty tags.
     *
     * @param  boolean
+    * @param  integer
     * @access public
     */
-    function setCollapsingOfEmptyTags($collapseEmptyTags) {
-        if (is_bool($collapseEmptyTags)) {
-            $this->_collapseEmptyTags = $collapseEmptyTags;
+    function function setCollapsingOfEmptyTags($collapseEmptyTags, $mode = XML_UTIL_COLLAPSE_ALL) {
+        if (is_bool($collapseEmptyTags) &&
+            ($mode == XML_UTIL_COLLAPSE_ALL || $mode == XML_UTIL_COLLAPSE_XHTML_ONLY)) {
+            $this->_collapseEmptyTags     = $collapseEmptyTags;
+            $this->_collapseEmptyTagsMode = $mode;
         }
     }
 
@@ -516,10 +528,9 @@ class XML_Transformer {
 
         if ($this->_collapseEmptyTags &&
             $this->_depth == 0) {
-            $result = preg_replace(
-              '/<(\w+)([^>]*)><\/\\1>/s',
-              '<\\1\\2 />',
-              $result
+            $result = XML_Util::collapseEmptyTags(
+              $result,
+              $this->_collapseEmptyTagsMode
             );
         }
 
