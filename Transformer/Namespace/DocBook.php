@@ -37,21 +37,25 @@ ini_set('highlight.string',  '#550000');
 *
 *   * <chapter>
 *
-*   * <section>
-*
-*   * <title>
-*
 *   * <emphasis>
+*
+*   * <filename>
+*
+*   * <function>
 *
 *   * <itemizedlist>
 *
-*   * <orderedlist>
-*
 *   * <listitem>
+*
+*   * <orderedlist>
 *
 *   * <para>
 *
 *   * <programlisting>
+*
+*   * <section>
+*
+*   * <title>
 *
 *   * <ulink>
 *
@@ -226,6 +230,57 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
         $this->_roles['emphasis'] = '';
 
         return $cdata;
+    }
+
+    // }}}
+    // {{{ function start_filename($attributes)
+
+    /**
+    * @param  array
+    * @return string
+    * @access public
+    */
+    function start_filename($attributes) {
+        return '<tt>';
+    }
+
+    // }}}
+    // {{{ function end_filename($cdata)
+
+    /**
+    * @param  string
+    * @return string
+    * @access public
+    */
+    function end_filename($cdata) {
+        return trim($cdata) . '</tt>';
+    }
+
+    // }}}
+    // {{{ function start_function($attributes)
+
+    /**
+    * @param  array
+    * @return string
+    * @access public
+    */
+    function start_function($attributes) {
+        return '<code><b>';
+    }
+
+    // }}}
+    // {{{ function end_function($cdata)
+
+    /**
+    * @param  string
+    * @return string
+    * @access public
+    */
+    function end_function($cdata) {
+        return array(
+          trim($cdata) . '</b></code>',
+          false
+        );
     }
 
     // }}}
