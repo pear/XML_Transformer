@@ -29,7 +29,26 @@
     <date>2002-XX-XX</date>
     <notes>
 <![CDATA[
-+ Added Anchor and Image namespace handlers.
++ Added Anchor namespace handler.
+  The Anchor namespace implements a database of indirect links.
+  These links can be maintained centrally in a single location,
+  and can be used using <a:iref iref="name">...</a>. Also,
+  <a:random/> selects a single random link from the database.
+
++ Added Image namespace handler.
+  The Image namespace implements three tags:
+
+  <img:img/> is a replacement for XHTML's <img/> and automatically 
+  determines the size of the image. For this, the image must be
+  in a format that is understood by getimagesize().
+  
+  <img:gtext /> is a container that renders its contents as a PNG
+  graphics using ImageTTFText(). For this to work, a cache directory
+  below DocumentRoot that is writeable by the Webserver owner is
+  necessary. Default is /cache/gtext.
+  
+  <img:gtextdefault /> understands the same attributes as <img:gtext />
+  and supplies these to all subsequent calls of <img:gtext />.
 
 + Namespace handlers can now use getLock() to disable other
   namespace handlers for the time of their transformation.
@@ -45,9 +64,17 @@
 
 + Added new tags to the PHP Namespace Handler:
 
-    + <php:define/> ...
+    + <php:namespace name="a">
+       <php:define name="b">
+        <p>The attribute x is $x and the content is $content.</p>
+       </php:define>
+      </php:namespace>
 
-    + <php:namespace/> ...
+      This will define a new namespace a with a single tag b in it
+      (You may put multiple defines into a namespace). If you use
+      <a:b x="text">sometext</a:b>, the variable $x will be replaced
+      with the text, and the variable $content will be replaced with
+      the content.
 
     + <php:cookievariable name=""/> inserts the contents of a given
       HTTP Cookie into the output XML tree.
