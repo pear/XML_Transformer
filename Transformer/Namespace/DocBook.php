@@ -31,6 +31,30 @@ ini_set('highlight.string',  '#550000');
 * This namespace handler provides transformations to render a subset of
 * the popular DocBook/XML markup (http://www.docbook.org/) into HTML.
 *
+* Transformations for the following DocBook tags are implemented:
+*
+*   * <article>
+*
+*   * <chapter>
+*
+*   * <section>
+*
+*   * <title>
+*
+*   * <emphasis>
+*
+*   * <itemizedlist>
+*
+*   * <orderedlist>
+*
+*   * <listitem>
+*
+*   * <para>
+*
+*   * <programlisting>
+*
+*   * <ulink>
+*
 * Example
 *
 *   <?php
@@ -203,6 +227,78 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
         $this->_emphasisRole = '';
 
         return $cdata . '</' . $emphasisRole . '>';
+    }
+
+    // }}}
+    // {{{ function start_itemizedlist($attributes)
+
+    /**
+    * @param  array
+    * @return string
+    * @access public
+    */
+    function start_itemizedlist($attributes) {
+        return '<ul>';
+    }
+
+    // }}}
+    // {{{ function end_itemizedlist($cdata)
+
+    /**
+    * @param  string
+    * @return string
+    * @access public
+    */
+    function end_itemizedlist($cdata) {
+        return $cdata . '</ul>';
+    }
+
+    // }}}
+    // {{{ function start_listitem($attributes)
+
+    /**
+    * @param  array
+    * @return string
+    * @access public
+    */
+    function start_listitem($attributes) {
+        return '<li>';
+    }
+
+    // }}}
+    // {{{ function end_listitem($cdata)
+
+    /**
+    * @param  string
+    * @return string
+    * @access public
+    */
+    function end_listitem($cdata) {
+        return $cdata . '</li>';
+    }
+
+    // }}}
+    // {{{ function start_orderedlist($attributes)
+
+    /**
+    * @param  array
+    * @return string
+    * @access public
+    */
+    function start_orderedlist($attributes) {
+        return '<ol>';
+    }
+
+    // }}}
+    // {{{ function end_orderedlist($cdata)
+
+    /**
+    * @param  string
+    * @return string
+    * @access public
+    */
+    function end_orderedlist($cdata) {
+        return $cdata . '</ol>';
     }
 
     // }}}
