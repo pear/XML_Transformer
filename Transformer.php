@@ -908,9 +908,10 @@ class XML_Transformer {
     * @access private
     */
     function _handleError($errorMessage) {
-        $this->_cdataStack[$this->_level] .= '<!-- Transformer Error: ' .
-                                             $errorMessage .
-                                             " -->\n";
+        $this->_cdataStack[$this->_level] .= sprintf(
+          "<!-- Transformer Error: %s -->\n",
+          $errorMessage
+        );
     }
 
     // }}}
