@@ -18,6 +18,13 @@
 
 require_once 'XML/Transformer/Namespace.php';
 
+ini_set('highlight.bg',      '#ffffff');
+ini_set('highlight.comment', '#ba8370');
+ini_set('highlight.default', '#113d73');
+ini_set('highlight.html',    '#000000');
+ini_set('highlight.keyword', '#005500');
+ini_set('highlight.string',  '#550000');
+
 /**
 * DocBook Namespace Handler.
 *
@@ -93,6 +100,12 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     * @access private
     */
     var $_emphasizeRole = '';
+
+    /**
+    * @var    string
+    * @access private
+    */
+    var $_programlistingRole = '';
 
     /**
     * @var    array
@@ -214,6 +227,48 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     */
     function end_para($cdata) {
         return $cdata . '</p>';
+    }
+
+    // }}}
+    // {{{ function start_programlisting($attributes)
+
+    /**
+    * @param  array
+    * @return string
+    * @access public
+    */
+    function start_programlisting($attributes) {
+        $this->_programlistingRole = isset($attributes['role']) ? $attributes['role'] : '';
+
+        return '';
+    }
+
+    // }}}
+    // {{{ function end_programlisting($cdata)
+
+    /**
+    * @param  string
+    * @return mixed
+    * @access public
+    */
+    function end_programlisting($cdata) {
+        switch ($this->_programlistingRole) {
+            case 'php': {
+                $cdata = array(
+                  str_replace(
+                    '&nbsp;',
+                    ' ',
+                    highlight_string($cdata, 1)
+                  ),
+                  false
+                );
+            }
+            break;
+        }
+
+        $this->_programlistingRole = '';
+
+        return $cdata;
     }
 
     // }}}
