@@ -14,8 +14,15 @@
   <maintainers>
     <maintainer>
       <user>sebastian</user>
+      <role>lead</role>
       <name>Sebastian Bergmann</name>
       <email>sb@sebastian-bergmann.de</email>
+    </maintainer>
+    <maintainer>
+      <user>kk</user>
+      <role>developer</role>
+      <name>Kristian Köhntopp</name>
+      <email>kris@koehntopp.de</email>
     </maintainer>
   </maintainers>
   <release>
