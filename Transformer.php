@@ -308,18 +308,14 @@ class XML_Transformer {
         );
 
         for ($i = $this->_level; $i >= 0; $i--) {
+          $attributes = $this->attributesToString($this->_attributesStack[$i]);
+
           $stackdump .= sprintf(
             "level=%d\nelement=%s:%s\ncdata=%s\n\n",
             $i,
             $this->_elementStack[$i],
-            htmlspecialchars(
-              $this->attributesToString(
-                $this->_attributesStack[$i]
-              )
-            ),
-            htmlspecialchars(
-              $this->_cdataStack[$i]
-            )
+            (php_sapi_name() == 'cli') ? $attributes            : htmlspecialchars($attributes),
+            (php_sapi_name() == 'cli') ? $this->_cdataStack[$i] : htmlspecialchars($this->_cdataStack[$i])
           );
         }
 
