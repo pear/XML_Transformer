@@ -450,7 +450,7 @@ class XML_Transformer {
 
             $cdata = sprintf(
               '<%s%s>',
-              $element,
+              ($namespacePrefix != '&MAIN') ? $namespacePrefix . ':' . $element : $element,
               $this->attributesToString($attributes)
             );
         }
@@ -506,7 +506,7 @@ class XML_Transformer {
             // No callback was registered for this element's
             // closing tag, copy it.
 
-            $cdata .= '</' . $element . '>';
+            $cdata .= '</' . (($namespacePrefix != '&MAIN') ? $namespacePrefix . ':' . $element : $element) . '>';
         }
 
         if ($recursion) {
