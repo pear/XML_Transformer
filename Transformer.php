@@ -72,7 +72,7 @@ class XML_Transformer {
     * @var    boolean
     * @access private
     */
-    var $_caseFolding;
+    var $_caseFolding = false;
 
     /**
     * @var    array
