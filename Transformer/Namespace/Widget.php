@@ -57,9 +57,7 @@ class XML_Transformer_Namespace_Widget extends XML_Transformer_Namespace {
     */
     var $_oboxUnitPngURL  = "/cache/unit.png";
 
-
     // }}}
-
     // {{{ function _makeUnitPngPath()
 
     /**
@@ -75,6 +73,7 @@ class XML_Transformer_Namespace_Widget extends XML_Transformer_Namespace {
 
       return;
     }
+
     // }}}
     // {{{ function _unitPng()
 
@@ -85,14 +84,18 @@ class XML_Transformer_Namespace_Widget extends XML_Transformer_Namespace {
     * @access private
     */
     function _unitpng() {
-        if (file_exists($this->_oboxUnitPngPath))
+        if (file_exists($this->_oboxUnitPngPath)) {
             return $this->_oboxUnitPngURL;
+        }
 
         $im    = ImageCreate(1, 1);
         $trans = ImageColorAllocate($im, 128, 128, 128);
+
         ImageColorTransparent($im, $trans);
         ImageFilledRectangle($im, 0,0,1,1,$trans);
+
         $this->_makeUnitPngPath();
+
         ImagePNG($im, $this->_oboxUnitPngPath);
         ImageDestroy($im);
 
@@ -111,15 +114,20 @@ class XML_Transformer_Namespace_Widget extends XML_Transformer_Namespace {
     * @access private
     */
     function _imagePlaceholder($h = false, $w = false) {
-        if ($h === false)
-            $h = isset($this->_oboxAttributes['outlinewidth'])?$this->_oboxAttributes['outlinewidth']:1;
-        if ($w === false)
+        if ($h === false) {
+            $h = isset($this->_oboxAttributes['outlinewidth']) ? $this->_oboxAttributes['outlinewidth'] : 1;
+        }
+
+        if ($w === false) {
             $w = $h;
-        return sprintf('<img src="%s" alt="" width="%s" height="%s" />',
-                 $this->_unitpng(),
-                 $w,
-                 $h
-               );
+        }
+
+        return sprintf(
+          '<img src="%s" alt="" width="%s" height="%s" />',
+          $this->_unitpng(),
+          $w,
+          $h
+        );
     }
 
     // }}}
@@ -134,17 +142,19 @@ class XML_Transformer_Namespace_Widget extends XML_Transformer_Namespace {
     * @access private
     */
     function _oboxGetAttr($name) {
-        if (isset($this->_oboxAttributes[$name]))
-            return sprintf(" %s='%s'",
-                    $name,
-                    $this->_oboxAttributes[$name]
-                  );
-        else
+        if (isset($this->_oboxAttributes[$name])) {
+            return sprintf(
+              " %s='%s'",
+              $name,
+              $this->_oboxAttributes[$name]
+            );
+        } else {
             return '';
+        }
     }
 
     // }}}
-    // {{{ function _oboxGetAttrAs($name, $attr)
+    // {{{ function _oboxGetAttrAs($name, $attributes)
 
     /**
     * Return value of $name suitable as printable attr $attr (attr='valueofname')
@@ -155,14 +165,16 @@ class XML_Transformer_Namespace_Widget extends XML_Transformer_Namespace {
     * @return string
     * @access private
     */
-    function _oboxGetAttrAs($name, $attr) {
-        if (isset($this->_oboxAttributes[$name]))
-            return sprintf(" %s='%s'",
-                    $attr,
-                    $this->_oboxAttributes[$name]
-                  );
-        else
+    function _oboxGetAttrAs($name, $attributes) {
+        if (isset($this->_oboxAttributes[$name])) {
+            return sprintf(
+              " %s='%s'",
+              $attributes,
+              $this->_oboxAttributes[$name]
+            );
+        } else {
             return '';
+        }
     }
 
     // }}}
@@ -177,10 +189,11 @@ class XML_Transformer_Namespace_Widget extends XML_Transformer_Namespace {
     * @access private
     */
     function _oboxGetValueWithDefault($name, $def) {
-      if (isset($this->_oboxAttributes[$name]))
-          return $this->_oboxAttributes[$name];
-      else
-          return $def;
+        if (isset($this->_oboxAttributes[$name])) {
+            return $this->_oboxAttributes[$name];
+        } else {
+            return $def;
+        }
     }
 
     // }}}
@@ -193,48 +206,57 @@ class XML_Transformer_Namespace_Widget extends XML_Transformer_Namespace {
     * @access private
     */
     function _titlebox() {
-        if (! isset($this->_oboxAttributes['title']))
-             return sprintf(" <tr>\n  <td colspan='5'%s>%s</td>\n </tr>\n",
-                        $this->_oboxGetAttrAs("outlinecolor", "bgcolor"),
-                        $this->_imagePlaceholder()
-                    );
+        if (!isset($this->_oboxAttributes['title'])) {
+            return sprintf(
+              " <tr>\n  <td colspan='5'%s>%s</td>\n </tr>\n",
+              $this->_oboxGetAttrAs("outlinecolor", "bgcolor"),
+              $this->_imagePlaceholder()
+            );
+        }
 
-        $left      = $this->_oboxGetValueWithDefault('left', 20);
-        $right     = $this->_oboxGetValueWithDefault('right', 20);
-        $leftskip  = $this->_oboxGetValueWithDefault('leftskip', 10);
+        $left      = $this->_oboxGetValueWithDefault('left',      20);
+        $right     = $this->_oboxGetValueWithDefault('right',     20);
+        $leftskip  = $this->_oboxGetValueWithDefault('leftskip',  10);
         $rightskip = $this->_oboxGetValueWithDefault('rightskip', 10);
-        if (!isset($this->_oboxAttributes['titlecolor'])
-         and isset($this->_oboxAttributes['bgcolor']))
-          $this->_oboxAttributes['titlecolor'] = $this->_oboxAttributes['bgcolor'];
 
-        $r .= sprintf(" <tr>\n  <td>%s</td>\n  <td>%s</td>\n  <td nowrap='nowrap' rowspan='3'%s%s%s>%s%s%s</td>\n  <td>%s</td>\n  <td>%s</td>\n </tr>\n",
-                $this->_imagePlaceholder(1,1),
-                $this->_imagePlaceholder(1, $left),
-                $this->_oboxGetAttrAs('titlealign', 'align'),
-                $this->_oboxGetAttrAs('titlevalign', 'valign'),
-                $this->_oboxGetAttrAs('titlecolor', 'bgcolor'),
-                $this->_imagePlaceholder(1, $leftskip),
-                $this->_oboxAttributes['title'],
-                $this->_imagePlaceholder(1, $rightskip),
-                $this->_imagePlaceholder(1, $right),
-                $this->_imagePlaceholder(1,1)
-              );
-        $r .= sprintf(" <tr%s>\n  <td colspan='2' height='1'%s>%s</td>\n  <td colspan='2' height='1'%s>%s</td>\n </tr>\n",
-                $this->_oboxGetAttrAs("bgcolor", "bgcolor"),
-                $this->_oboxGetAttrAs("outlinecolor", "bgcolor"),
-                $this->_imagePlaceholder($this->_oboxGetValueWithDefault("outlinewidth", 1), 1),
-                $this->_oboxGetAttrAs("outlinecolor", "bgcolor"),
-                $this->_imagePlaceholder($this->_oboxGetValueWithDefault("outlinewidth", 1), 1)
-              );
-        $r .= sprintf(" <tr%s>\n  <td%s>%s</td>\n  <td>%s</td>\n  <td>%s</td>\n  <td%s>%s</td>\n </tr>\n",
-                $this->_oboxGetAttrAs("bgcolor", "bgcolor"),
-                $this->_oboxGetAttrAs('outlinecolor', 'bgcolor'),
-                $this->_imagePlaceholder(1, $this->_oboxGetValueWithDefault("outlinewidth", 1)),
-                $this->_imagePlaceholder(1, 1),
-                $this->_imagePlaceholder(1, 1),
-                $this->_oboxGetAttrAs('outlinecolor', 'bgcolor'),
-                $this->_imagePlaceholder(1, $this->_oboxGetValueWithDefault("outlinewidth", 1))
-              );
+        if (!isset($this->_oboxAttributes['titlecolor']) &&
+             isset($this->_oboxAttributes['bgcolor'])) {
+            $this->_oboxAttributes['titlecolor'] = $this->_oboxAttributes['bgcolor'];
+        }
+
+        $r .= sprintf(
+          " <tr>\n  <td>%s</td>\n  <td>%s</td>\n  <td nowrap='nowrap' rowspan='3'%s%s%s>%s%s%s</td>\n  <td>%s</td>\n  <td>%s</td>\n </tr>\n",
+          $this->_imagePlaceholder(1,1),
+          $this->_imagePlaceholder(1, $left),
+          $this->_oboxGetAttrAs('titlealign', 'align'),
+          $this->_oboxGetAttrAs('titlevalign', 'valign'),
+          $this->_oboxGetAttrAs('titlecolor', 'bgcolor'),
+          $this->_imagePlaceholder(1, $leftskip),
+          $this->_oboxAttributes['title'],
+          $this->_imagePlaceholder(1, $rightskip),
+          $this->_imagePlaceholder(1, $right),
+          $this->_imagePlaceholder(1,1)
+        );
+
+        $r .= sprintf(
+          " <tr%s>\n  <td colspan='2' height='1'%s>%s</td>\n  <td colspan='2' height='1'%s>%s</td>\n </tr>\n",
+          $this->_oboxGetAttrAs("bgcolor", "bgcolor"),
+          $this->_oboxGetAttrAs("outlinecolor", "bgcolor"),
+          $this->_imagePlaceholder($this->_oboxGetValueWithDefault("outlinewidth", 1), 1),
+          $this->_oboxGetAttrAs("outlinecolor", "bgcolor"),
+          $this->_imagePlaceholder($this->_oboxGetValueWithDefault("outlinewidth", 1), 1)
+        );
+
+        $r .= sprintf(
+          " <tr%s>\n  <td%s>%s</td>\n  <td>%s</td>\n  <td>%s</td>\n  <td%s>%s</td>\n </tr>\n",
+          $this->_oboxGetAttrAs("bgcolor", "bgcolor"),
+          $this->_oboxGetAttrAs('outlinecolor', 'bgcolor'),
+          $this->_imagePlaceholder(1, $this->_oboxGetValueWithDefault("outlinewidth", 1)),
+          $this->_imagePlaceholder(1, 1),
+          $this->_imagePlaceholder(1, 1),
+          $this->_oboxGetAttrAs('outlinecolor', 'bgcolor'),
+          $this->_imagePlaceholder(1, $this->_oboxGetValueWithDefault("outlinewidth", 1))
+        );
 
         return $r;
     }
@@ -251,54 +273,56 @@ class XML_Transformer_Namespace_Widget extends XML_Transformer_Namespace {
     */
     function _box($cdata) {
         /* Outer container */
-        $r  = sprintf("<table border='0' cellpadding='0' cellspacing='0'%s%s>\n",
-                  $this->_oboxGetAttr("align"),
-                  $this->_oboxGetAttr("width")
-              );
+        $r  = sprintf(
+          "<table border='0' cellpadding='0' cellspacing='0'%s%s>\n",
+          $this->_oboxGetAttr("align"),
+          $this->_oboxGetAttr("width")
+        );
 
         /* Title */
         $r .= $this->_titlebox();
 
         /* Content container */
-        $r .= sprintf(" <tr%s>\n",
-                $this->_oboxGetAttr("bgcolor")
-              );
-        $r .= sprintf("  <td%s%s>%s</td>\n",
-                $this->_oboxGetAttrAs("outlinewidth", "width"),
-                $this->_oboxGetAttrAs("outlinecolor", "bgcolor"),
-                $this->_imagePlaceholder(1, $this->_oboxGetValueWithDefault("outlinewidth", 1))
-              );
+        $r .= sprintf(
+          " <tr%s>\n",
+          $this->_oboxGetAttr("bgcolor")
+        );
 
-        $r .= sprintf("  <td colspan='3'>\n");
+        $r .= sprintf(
+          "  <td%s%s>%s</td>\n  <td colspan='3'>\n",
+          $this->_oboxGetAttrAs("outlinewidth", "width"),
+          $this->_oboxGetAttrAs("outlinecolor", "bgcolor"),
+          $this->_imagePlaceholder(1, $this->_oboxGetValueWithDefault("outlinewidth", 1))
+        );
 
-        $r .= sprintf("<table %s%s border='0' cellspacing='0' cellpadding='%s'><tr><td%s%s>%s</td></tr></table>\n",
-                  $this->_oboxGetAttrAs("contentwidth", "width"),
-                  $this->_oboxGetAttrAs("contentheight", "height"),
-                  $this->_oboxGetValueWithDefault("contentpadding", 0),
-                  $this->_oboxGetAttrAs("contentalign", "align"),
-                  $this->_oboxGetAttrAs("contentvalign", "valign"),
-                  $cdata
-              );
-        $r .= sprintf("  </td>\n");
+        $r .= sprintf(
+          "<table %s%s border='0' cellspacing='0' cellpadding='%s'><tr><td%s%s>%s</td></tr></table>\n  </td>\n",
+          $this->_oboxGetAttrAs("contentwidth", "width"),
+          $this->_oboxGetAttrAs("contentheight", "height"),
+          $this->_oboxGetValueWithDefault("contentpadding", 0),
+          $this->_oboxGetAttrAs("contentalign", "align"),
+          $this->_oboxGetAttrAs("contentvalign", "valign"),
+          $cdata
+        );
 
-        $r .= sprintf("  <td%s%s>%s</td>\n",
-                $this->_oboxGetAttrAs("outlinewidth", "width"),
-                $this->_oboxGetAttrAs("outlinecolor", "bgcolor"),
-                $this->_imagePlaceholder(1, $this->_oboxGetValueWithDefault("outlinewidth", 1))
-              );
-
-        $r .= sprintf(" </tr>\n");
+        $r .= sprintf(
+          "  <td%s%s>%s</td>\n </tr>\n",
+          $this->_oboxGetAttrAs("outlinewidth", "width"),
+          $this->_oboxGetAttrAs("outlinecolor", "bgcolor"),
+          $this->_imagePlaceholder(1, $this->_oboxGetValueWithDefault("outlinewidth", 1))
+        );
 
         /* Footer line */
-        $r .= sprintf(" <tr>\n  <td colspan='5'%s>%s</td>\n </tr>\n",
-                $this->_oboxGetAttrAs("outlinecolor", "bgcolor"),
-                $this->_imagePlaceholder()
-              );
-        $r .= sprintf("</table>\n");
+        $r .= sprintf(
+          " <tr>\n  <td colspan='5'%s>%s</td>\n </tr>\n</table>\n",
+          $this->_oboxGetAttrAs("outlinecolor", "bgcolor"),
+          $this->_imagePlaceholder()
+        );
 
         return $r;
     }
 
+    // }}}
     // {{{ function start_obox($attributes)
 
     /**
@@ -366,12 +390,17 @@ class XML_Transformer_Namespace_Widget extends XML_Transformer_Namespace {
     * @access public
     */
     function start_oboxtitle($attributes) {
-        if (isset($attributes['align']))
-          $this->_oboxAttributes['titlealign'] = $attributes['align'];
-        if (isset($attributes['valign']))
-          $this->_oboxAttributes['titlevalign'] = $attributes['valign'];
-        if (isset($attributes['bgcolor']))
-          $this->_oboxAttributes['titlecolor'] = $attributes['bgcolor'];
+        if (isset($attributes['align'])) {
+            $this->_oboxAttributes['titlealign'] = $attributes['align'];
+        }
+
+        if (isset($attributes['valign'])) {
+            $this->_oboxAttributes['titlevalign'] = $attributes['valign'];
+        }
+
+        if (isset($attributes['bgcolor'])) {
+            $this->_oboxAttributes['titlecolor'] = $attributes['bgcolor'];
+        }
 
         return '';
     }
@@ -386,6 +415,7 @@ class XML_Transformer_Namespace_Widget extends XML_Transformer_Namespace {
     */
     function end_oboxtitle($cdata) {
         $this->_oboxAttributes['title'] = $cdata;
+
         return '';
     }
 
