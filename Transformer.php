@@ -366,11 +366,11 @@ class XML_Transformer {
               'are missing on given object.');
         }
 
-        # if the namespace object has a method initObserver,
-        # that method is automatically called with the
-        # registered namespace prefix and with a backpointer
-        # to the transformer, both of which are commonly
-        # needed in a namespace object.
+        // if the namespace object has a method initObserver,
+        // that method is automatically called with the
+        // registered namespace prefix and with a backpointer
+        // to the transformer, both of which are commonly
+        // needed in a namespace object.
 
         if (is_object($object) && method_exists($object, 'initObserver')) {
           $object->initObserver($namespacePrefix, &$this);
