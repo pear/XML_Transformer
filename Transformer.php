@@ -209,7 +209,7 @@ class XML_Transformer {
             // Start transformation.
 
             $this->_debug(
-              'ctor (will start):' . serialize($this) . "\n"
+              'ctor (will start):' . serialize($this)
             );
 
             $this->start();
@@ -218,7 +218,7 @@ class XML_Transformer {
             $this->_overloadedNamespaces = $overloadedNamespaces;
 
             $this->_debug(
-              "ctor (won't start):" . serialize($this) . "\n"
+              "ctor (won't start):" . serialize($this)
             );
         }
     }
@@ -513,10 +513,7 @@ class XML_Transformer {
             $this->_started = TRUE;
 
             $this->_debug(
-              sprintf(
-                "start: %s\n",
-                serialize($this)
-              )
+              'start: ' . serialize($this)
             );
         }
     }
@@ -597,7 +594,7 @@ class XML_Transformer {
 
         $this->_debug(
           sprintf(
-            "startElement[%d]: %s %s\n",
+            'startElement[%d]: %s %s',
             $this->_level,
             $element,
             $this->attributesToString($attributes)
@@ -654,7 +651,7 @@ class XML_Transformer {
     function _endElement($parser, $element) {
         $this->_debug(
           sprintf(
-            "endElement[%d]: %s (with cdata=%s)\n",
+            'endElement[%d]: %s (with cdata=%s)',
             $this->_level,
             $element,
             $this->_cdataStack[$this->_level]
@@ -707,7 +704,7 @@ class XML_Transformer {
 
             $this->_debug(
               sprintf(
-                "recursion[%d]: %s\n",
+                'recursion[%d]: %s',
                 $this->_level,
                 $cdata
               )
@@ -731,7 +728,7 @@ class XML_Transformer {
 
             $this->_debug(
               sprintf(
-                "end recursion[%d]: %s\n",
+                'end recursion[%d]: %s',
                 $this->_level,
                 $cdata
               )
@@ -757,7 +754,7 @@ class XML_Transformer {
     function _characterData($parser, $cdata) {
       $this->_debug(
         sprintf(
-          "cdata [%d]: %s + %s\n",
+          'cdata [%d]: %s + %s',
           $this->_level,
           $this->_cdataStack[$this->_level],
           $cdata
