@@ -414,7 +414,7 @@ class XML_Transformer {
         $element    = $this->canonicalize($element);
 
         if (strstr($element, ':')) {
-            list($namespacePrefix, $qElement) = explode(':', $element);
+            list($namespacePrefix, $element) = explode(':', $element);
         } else {
             $namespacePrefix = '&MAIN';
         }
@@ -441,7 +441,7 @@ class XML_Transformer {
             // that is registered for this namespace.
 
             $cdata = $this->_callbackRegistry->overloadedNamespaces[$namespacePrefix]['object']->startElement(
-              $qElement,
+              $element,
               $attributes
             );
         } else {
@@ -474,7 +474,7 @@ class XML_Transformer {
         $recursion = false;
 
         if (strstr($element, ':')) {
-            list($namespacePrefix, $qElement) = explode(':', $element);
+            list($namespacePrefix, $element) = explode(':', $element);
         } else {
             $namespacePrefix = '&MAIN';
         }
@@ -495,7 +495,7 @@ class XML_Transformer {
             // that is registered for this namespace.
 
             $cdata = $this->_callbackRegistry->overloadedNamespaces[$namespacePrefix]['object']->endElement(
-              $qElement,
+              $element,
               $cdata
             );
 
