@@ -171,9 +171,11 @@ class XML_Transformer {
 
         // Initialize callback registry.
 
-        $this->_callbackRegistry = &XML_Transformer_CallbackRegistry::getInstance(
-          $recursiveOperation
-        );
+        if (!isset($parameters['callbackRegistry'])) {
+            $this->_callbackRegistry = new XML_Transformer_CallbackRegistry($recursiveOperation);
+        } else {
+            $this->_callbackRegistry = &$parameters['callbackRegistry'];
+        }
 
         foreach ($overloadedNamespaces as $namespacePrefix => $object) {
             $this->overloadNamespace(

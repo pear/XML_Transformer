@@ -29,9 +29,9 @@
     <date>2004-MM-DD</date>
     <notes>
 <![CDATA[
-* Do not replace XML entities twice.
++ Enabled the construction of nested transformers by allowing for multiple instances of XML_Transformer_CallbackRegistry. (Based upon a patch by Thomas Duffey <tduffey@homeboyz.org>)
 
-  (Patch by Thomas Duffey <tduffey@homeboyz.org>)
+* XML entities are no longer replaced twice. (Patch by Thomas Duffey <tduffey@homeboyz.org>)
 ]]>
     </notes>
     <filelist>

@@ -65,26 +65,6 @@ class XML_Transformer_CallbackRegistry {
     }
 
     // }}}
-    // {{{ function &getInstance($recursiveOperation)
-
-    /**
-    * Returns an instance of XML_Transformer_CallbackRegistry.
-    *
-    * @param  boolean
-    * @return XML_Transformer_CallbackRegistry
-    * @access public
-    */
-    function &getInstance($recursiveOperation) {
-        static $instance;
-
-        if (!isset($instance)) {
-            $instance = new XML_Transformer_CallbackRegistry($recursiveOperation);
-        }
-
-        return $instance;
-    }
-
-    // }}}
     // {{{ function overloadNamespace($namespacePrefix, &$object, $recursiveOperation = '')
 
     /**
