@@ -177,7 +177,7 @@ class XML_Transformer {
         }
 
         ksort($attributes);
- 
+
         foreach ($attributes as $key => $value) {
             $string .= ' ' . $key . '="' . $value . '"';
         }
@@ -206,7 +206,7 @@ class XML_Transformer {
     * @param  boolean
     * @access public
     */
-    function overloadElement($element, $startHandler, $recursiveOperation = '') {
+    function overloadElement($element, $startHandler, $endHandler, $recursiveOperation = '') {
         $element = $this->canonicalName($element);
 
         $this->_registerElementCallback($element, 'start', $startHandler);
@@ -515,7 +515,7 @@ class XML_Transformer {
     * @access private
     */
     function _characterData($parser, $cdata) {
-        $this->_cdataStack[$this->_level] .= $cdata;    
+        $this->_cdataStack[$this->_level] .= $cdata;
     }
 
     /**
@@ -525,7 +525,7 @@ class XML_Transformer {
     * @return mixed
     * @access private
     */
-    function _parseCallback($callback) {
+    function _parseCallback($callback, $event, $element) {
         $parsedCallback = false;
 
         // classname::staticMethod
@@ -541,7 +541,7 @@ class XML_Transformer {
                 $parsedCallback = array($class, $method);
             }
         }
-    
+
         // object->method
         else if (strstr($callback, '->')) {
             list($object, $method) = explode('->', $callback);
@@ -554,7 +554,7 @@ class XML_Transformer {
                 $parsedCallback = array($GLOBALS[$object], $method);
             }
         }
-    
+
         // function
         else if (function_exists($callback)) {
             $parsedCallback = $callback;
@@ -585,7 +585,7 @@ class XML_Transformer {
     * @access private
     */
     function _registerElementCallback($element, $event, $callback) {
-        if ($parsedCallback = $this->_parseCallback($callback)) {
+        if ($parsedCallback = $this->_parseCallback($callback, $event, $element)) {
             $this->_overloadedElements[$element][$event] = $parsedCallback;
         }
     }
