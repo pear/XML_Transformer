@@ -56,7 +56,7 @@ class XML_Transformer_PHP extends XML_Transformer_Namespace {
     * @var    string
     * @access private
     */
-    var $_define_name;
+    var $_defineName;
 
     /**
     * @var    string
@@ -68,13 +68,13 @@ class XML_Transformer_PHP extends XML_Transformer_Namespace {
     * @var    string
     * @access private
     */
-    var $_in_namespace = false;
+    var $_inNamespace = false;
 
     /**
     * @var    string
     * @access private
     */
-    var $_namespace_class_definition = '';
+    var $_namespaceClassDefinition = '';
 
     /**
     * @var    string
@@ -83,7 +83,6 @@ class XML_Transformer_PHP extends XML_Transformer_Namespace {
     var $_variable = '';
 
     // }}}
-
     // {{{ function start_define($attributes)
 
     /**
@@ -92,14 +91,14 @@ class XML_Transformer_PHP extends XML_Transformer_Namespace {
     * @access public
     */
     function start_define($attributes) {
-        if (! $this->_in_namespace)
-            return "";
-
-        $this->_define_name = $attributes['name'];
-        return "";
+        if ($this->_inNamespace) {
+            $this->_defineName = $attributes['name'];
+        }
+        
+        return '';
     }
-    // }}}
 
+    // }}}
     // {{{ function end_define($cdata)
 
     /**
@@ -108,35 +107,36 @@ class XML_Transformer_PHP extends XML_Transformer_Namespace {
     * @access public
     */
     function end_define($cdata) {
-        if (! $this->_in_namespace) {
-          return "";
+        if ($this->_inNamespace) {
+            $this->_namespaceClassDefinition .= sprintf(
+              'var $%s_attributes = array();
+
+               function start_%s($att) {
+                  $this->%s_attributes = $att;
+
+                  return "";
+               }
+
+               function end_%s($content) {
+                  foreach ($this->%s_attributes as $__k => $__v) {
+                      $$__k = $__v;
+                  }
+
+                  return "%s";
+               }',
+
+              $this->_defineName,
+              $this->_defineName,
+              $this->_defineName,
+              $this->_defineName,
+              $this->_defineName,
+              $cdata
+            );
         }
 
-        $this->_namespace_class_definition .= sprintf('
-            var $%s_attributes = array();
-
-            function start_%s($att) {
-              $this->%s_attributes = $att;
-
-              return "";
-            }
-
-            function end_%s($content) {
-              foreach ($this->%s_attributes as $__k => $__v) {
-                $$__k = $__v;
-              }
-
-              return "%s";
-            }', $this->_define_name,
-              $this->_define_name,
-              $this->_define_name,
-              $this->_define_name,
-              $this->_define_name,
-              $cdata
-        );
-
-        return "";
+        return '';
     }
+
     // }}}
     // {{{ function start_namespace($attributes)
 
@@ -146,19 +146,20 @@ class XML_Transformer_PHP extends XML_Transformer_Namespace {
     * @access public
     */
     function start_namespace($attributes) {
-        $this->_in_namespace = true;
-        $this->_namespace = $attributes['name'];
+        $this->_inNamespace = true;
+        $this->_namespace   = $attributes['name'];
 
-        $classname = sprintf(PEAR_XML_TRANSFORMER_PHP . '%s', $this->_namespace);
-        $this->_namespace_class_definition = sprintf(
+        $classname = 'PEAR_XML_TRANSFORMER_PHP_' . $this->_namespace;
+
+        $this->_namespaceClassDefinition = sprintf(
           'class %s extends XML_Transformer_Namespace {',
           $classname
         );
 
-        return "";
+        return '';
     }
-    // }}}
 
+    // }}}
     // {{{ function end_namespace($cdata)
 
     /**
@@ -167,20 +168,24 @@ class XML_Transformer_PHP extends XML_Transformer_Namespace {
     * @access public
     */
     function end_namespace($cdata) {
-        $classname = sprintf(PEAR_XML_TRANSFORMER_PHP . '%s', $this->_namespace);
+        $classname = 'PEAR_XML_TRANSFORMER_PHP_' . $this->_namespace;
 
-        $this->_namespace_class_definition .= " };";
-        eval($this->_namespace_class_definition);
-        $this->_namespace_class_definition = '';
+        eval($this->_namespaceClassDefinition . ' };');
+        $this->_namespaceClassDefinition = '';
 
-        $this->_transformer->overloadNamespace($this->_namespace, new $classname, true);
+        $this->_transformer->overloadNamespace(
+          $this->_namespace,
+          new $classname,
+          true
+        );
 
-        $this->_namespace = '';
-        $this->_in_namespace = false;
-        return "";
+        $this->_namespace   = '';
+        $this->_inNamespace = false;
+
+        return '';
     }
-    // }}}
 
+    // }}}
     // {{{ function start_expr($attributes)
 
     /**
