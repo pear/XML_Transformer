@@ -31,6 +31,16 @@
 <![CDATA[
 * Refactored using PHP 5 syntax.
 
+* Variable access tags in the PHP Namespace have been
+  renamed. Tag names such as <php:getparameter/> are
+  hard to type, and have been used inconsistently
+  as well (<php:getparameter/>, but <php:cookievariable/>).
+
+  We break compatibility NOW and provide NO backward
+  compatibility interface (you can trivially write your
+  own, if you absolutely need it) in order to encourage
+  the use of the new names thus speeding up migration.
+
 ! PHP 5.0.0 (or higher) is now required.
 ]]>
     </notes>
@@ -78,16 +88,6 @@
       <date>2004-02-06</date>
       <notes>
 <![CDATA[
-* Variable access tags in the PHP Namespace have been
-  renamed. Tag names such as <php:getparameter/> are
-  hard to type, and have been used inconsistently
-  as well (<php:getparameter/>, but <php:cookievariable/>).
-
-  We break compatibility NOW and provide NO backward
-  compatibility interface (you can trivially write your
-  own, if you absolutely need it) in order to encourage
-  the use of the new names thus speeding up migration.
-
 * XML fragments are now handled more gracefully.
 
   It is now possible, for instance, to return
