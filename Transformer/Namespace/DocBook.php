@@ -18,13 +18,6 @@
 
 require_once 'XML/Transformer/Namespace.php';
 
-ini_set('highlight.bg',      '#ffffff');
-ini_set('highlight.comment', '#ba8370');
-ini_set('highlight.default', '#113d73');
-ini_set('highlight.html',    '#000000');
-ini_set('highlight.keyword', '#005500');
-ini_set('highlight.string',  '#550000');
-
 /**
 * DocBook Namespace Handler.
 *
@@ -155,6 +148,19 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     * @var    array
     * @access private
     */
+    var $_highlightColors = array(
+      'bg'      => '#ffffff',
+      'comment' => '#ba8370',
+      'default' => '#113d73',
+      'html'    => '#000000',
+      'keyword' => '#005500',
+      'string'  => '#550000'
+    );
+
+    /**
+    * @var    array
+    * @access private
+    */
     var $_roles = array();
 
     /**
@@ -168,6 +174,23 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     * @access private
     */
     var $_title = '';
+
+    // }}}
+    // {{{ function XML_Transformer_Namespace_DocBook($parameters = array())
+
+    /**
+    * @param  array
+    * @access public
+    */
+    function XML_Transformer_Namespace_DocBook($parameters = array()) {
+        if (isset($parameters['highlightColors'])) {
+            $this->_highlightColors = $parameters['highlightColors'];
+        }
+
+        foreach ($this->_highlightColors as $highlight => $color) {
+            ini_set('highlight.' . $highlight, $color);
+        }
+    }
 
     // }}}
     // {{{ function start_artheader($attributes)
