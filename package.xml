@@ -33,6 +33,10 @@
 
 + Added Widget namespace handler.
 
+* Renamed XML_Transformer_Cache and XML_Transformer_OutputBuffer
+  to XML_Transformer_Driver_Cache and XML_Transformer_Driver_OutputBuffer
+  respectively.
+
 * Significant performance improvement by preventing unnecessary
   recursive parsing.
 
@@ -61,6 +65,11 @@
     <filelist>
       <dir name="/" baseinstalldir="XML">
         <dir name="Transformer">
+          <dir name="Driver">
+            <file role="php" name="Cache.php"/>
+            <file role="php" name="OutputBuffer.php"/>
+          </dir>
+
           <dir name="Namespace">
             <file role="php" name="Anchor.php"/>
             <file role="php" name="DocBook.php"/>
@@ -69,10 +78,8 @@
             <file role="php" name="Widget.php"/>
           </dir>
 
-          <file role="php" name="Cache.php"/>
           <file role="php" name="CallbackRegistry.php"/>
           <file role="php" name="Namespace.php"/>
-          <file role="php" name="OutputBuffer.php"/>
           <file role="php" name="Util.php"/>
         </dir>
 

@@ -26,9 +26,9 @@ require_once 'XML/Transformer.php';
 * Example
 *
 *   <?php
-*   require_once 'XML/Transformer/OutputBuffer.php';
+*   require_once 'XML/Transformer/Driver/OutputBuffer.php';
 *
-*   $t = new XML_Transformer_OutputBuffer(
+*   $t = new XML_Transformer_Driver_OutputBuffer(
 *     array(
 *       'overloadedElements' => array(
 *         'bold' => array(
@@ -58,7 +58,7 @@ require_once 'XML/Transformer.php';
 * @version $Revision$
 * @access  public
 */
-class XML_Transformer_OutputBuffer extends XML_Transformer {
+class XML_Transformer_Driver_OutputBuffer extends XML_Transformer {
     // {{{ Members
 
     /**
@@ -68,7 +68,7 @@ class XML_Transformer_OutputBuffer extends XML_Transformer {
     var $_started = false;
 
     // }}}
-    // {{{ function XML_Transformer_OutputBuffer($parameters = array())
+    // {{{ function XML_Transformer_Driver_OutputBuffer($parameters = array())
 
     /**
     * Constructor.
@@ -76,7 +76,7 @@ class XML_Transformer_OutputBuffer extends XML_Transformer {
     * @param  array
     * @access public
     */
-    function XML_Transformer_OutputBuffer($parameters = array()) {
+    function XML_Transformer_Driver_OutputBuffer($parameters = array()) {
         $this->XML_Transformer($parameters);
 
         if (!empty($this->_callbackRegistry->overloadedElements) ||

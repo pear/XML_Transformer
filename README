@@ -214,11 +214,11 @@ complete XML specification.
 
 * TODO (kk)
 
-2.6 XML_Transformer_Cache
+2.6 XML_Transformer_Driver_Cache
 
 * TODO (sb)
 
-2.7 XML_Transformer_OutputBuffer
+2.7 XML_Transformer_Driver_OutputBuffer
 
 * TODO (any)
 

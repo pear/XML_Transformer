@@ -27,7 +27,7 @@ require_once 'XML/Transformer.php';
 * @version $Revision$
 * @access  public
 */
-class XML_Transformer_Cache extends XML_Transformer {
+class XML_Transformer_Driver_Cache extends XML_Transformer {
     // {{{ Members
 
     /**
@@ -37,7 +37,7 @@ class XML_Transformer_Cache extends XML_Transformer {
     var $_cache = false;
 
     // }}}
-    // {{{ function XML_Transformer_Cache($parameters = array())
+    // {{{ function XML_Transformer_Driver_Cache($parameters = array())
 
     /**
     * Constructor.
@@ -45,7 +45,7 @@ class XML_Transformer_Cache extends XML_Transformer {
     * @param  array
     * @access public
     */
-    function XML_Transformer_Cache($parameters = array()) {
+    function XML_Transformer_Driver_Cache($parameters = array()) {
         $this->XML_Transformer($parameters);
         $this->_cache = new Cache_Lite($parameters);
     }
