@@ -26,7 +26,7 @@ class Main extends XML_Transformer_Namespace {
     }
 
     function end_body($cdata) {
-        return '</body>';
+        return $cdata . '</body>';
     }
 
     function start_bold($attributes) {
