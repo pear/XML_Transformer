@@ -140,17 +140,25 @@ class XML_Transformer {
     function XML_Transformer($parameters = array()) {
         // Parse parameters array.
 
-        $startup                     = isset($parameters['startup'])              ? $parameters['startup']              : true;
         $this->_caseFolding          = isset($parameters['caseFolding'])          ? $parameters['caseFolding']          : false;
         $this->_caseFoldingTo        = isset($parameters['caseFoldingTo'])        ? $parameters['caseFoldingTo']        : CASE_UPPER;
-        $overloadedElements          = isset($parameters['overloadedElements'])   ? $parameters['overloadedElements']   : array();
-        $this->_overloadedNamespaces = isset($parameters['overloadedNamespaces']) ? $parameters['overloadedNamespaces'] : array();
         $this->_recursiveOperation   = isset($parameters['recursiveOperation'])   ? $parameters['recursiveOperation']   : true;
+        $this->_started              = isset($parameters['started'])              ? $parameters['started']              : false;
 
-        if ($startup) {
-            // Walk through overloadedElements array
-            // that was passed to the constructor and
-            // register the element callbacks it contains.
+        $overloadedElements   = isset($parameters['overloadedElements'])   ? $parameters['overloadedElements']   : array();
+        $overloadedNamespaces = isset($parameters['overloadedNamespaces']) ? $parameters['overloadedNamespaces'] : array();
+
+        // Perform startup operations and begin transformation
+        // if the transformation wasn't started before and
+        // overloaded elements or namespaces were passed to the
+        // constructor.
+
+        if (!$this->_started &&
+            (!empty($overloadedElements) ||
+             !empty($overloadedNamespaces)
+            )
+           ) {
+            // Check overloaded elements.
 
             foreach ($overloadedElements as $element => $overloadedElement) {
                 $overloadedElement['start']              = isset($overloadedElement['start'])              ? $overloadedElement['start']              : '';
@@ -165,11 +173,21 @@ class XML_Transformer {
                 );
             }
 
+            // Check overloaded namespaces.
+
+            foreach ($overloadedNamespaces as $namespacePrefix => $object) {
+                $this->overloadNamespace(
+                  $namespacePrefix,
+                  $object
+                );
+            }
+
             // Start transformation.
 
             $this->start();
         } else {
-            $this->_overloadedElements = $overloadedElements;
+            $this->_overloadedElements   = $overloadedElements;
+            $this->_overloadedNamespaces = $overloadedNamespaces;
         }
     }
 
@@ -274,7 +292,9 @@ class XML_Transformer {
     * @access public
     */
     function isOverloadedElement($element) {
-        return isset($this->_overloadedElements[$this->canonicalName($element)]);
+        return isset(
+          $this->_overloadedElements[$this->canonicalName($element)]
+        );
     }
 
     // }}}
@@ -340,7 +360,9 @@ class XML_Transformer {
     * @access public
     */
     function isOverloadedNamespace($namespacePrefix) {
-        return isset($this->_overloadedNamespaces[$this->canonicalName($namespacePrefix)]);
+        return isset(
+          $this->_overloadedNamespaces[$this->canonicalName($namespacePrefix)]
+        );
     }
 
     // }}}
@@ -558,7 +580,7 @@ class XML_Transformer {
                 'overloadedElements'   => $this->_overloadedElements,
                 'overloadedNamespaces' => $this->_overloadedNamespaces,
                 'recursiveOperation'   => $this->_recursiveOperation,
-                'startup'              => false
+                'started'              => true
               )
             );
 
