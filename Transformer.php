@@ -151,28 +151,7 @@ class XML_Transformer {
         // XML/Transformer/Namespace/.
 
         if ($autoload) {
-            $path = dirname(__FILE__) . '/Transformer/Namespace/';
-
-            if ($dir = @opendir($path)) {
-                while (($file = @readdir($dir)) !== false) {
-                    if (strstr($file, '.php')) {
-                        if (@include_once($path . $file)) {
-                            $namespacePrefix = $this->canonicalize(
-                              strtolower(
-                                substr($file, 0, -4)
-                              )
-                            );
-
-                            $className = 'XML_Transformer_Namespace_' . $namespacePrefix;
-
-                            $this->overloadNamespace(
-                              $namespacePrefix,
-                              new $className
-                            );
-                        }
-                    }
-                }
-            }
+            $this->_autoload();
         }
     }
 
@@ -569,6 +548,40 @@ class XML_Transformer {
       );
 
       $this->_cdataStack[$this->_level] .= $cdata;
+    }
+
+    // }}}
+    // {{{ function _autoload()
+
+    /**
+    * Loads all namespace handlers from the
+    * XML/Transformer/Namespace directory.
+    *
+    * @access private
+    */
+    function _autoload() {
+        $path = dirname(__FILE__) . '/Transformer/Namespace/';
+
+        if ($dir = @opendir($path)) {
+            while (($file = @readdir($dir)) !== false) {
+                if (strstr($file, '.php')) {
+                    if (@include_once($path . $file)) {
+                        $namespacePrefix = $this->canonicalize(
+                          strtolower(
+                            substr($file, 0, -4)
+                          )
+                        );
+
+                        $className = 'XML_Transformer_Namespace_' . $namespacePrefix;
+
+                        $this->overloadNamespace(
+                          $namespacePrefix,
+                          new $className
+                        );
+                    }
+                }
+            }
+        }
     }
 
     // }}}
