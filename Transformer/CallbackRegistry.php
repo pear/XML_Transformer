@@ -174,10 +174,11 @@ class XML_Transformer_CallbackRegistry {
 
             foreach ($namespacePrefixes as $namespacePrefix) {
                 if ($namespacePrefix != $namespace) {
-                    unset($this->overloadedNamespaces[$i]['active']);
+                    unset($this->overloadedNamespaces[$namespacePrefix]['active']);
                 }
             }
-
+            
+            $this->_locked = true;
             return true;
         }
 
@@ -197,7 +198,7 @@ class XML_Transformer_CallbackRegistry {
         $namespacePrefixes = array_keys($this->overloadedNamespaces);
 
         foreach ($namespacePrefixes as $namespacePrefix) {
-            $this->overloadedNamespaces[$i]['active'] = true;
+            $this->overloadedNamespaces[$namespacePrefix]['active'] = true;
         }
 
         $this->_locked = false;
