@@ -34,7 +34,7 @@
     </notes>
     <filelist>
       <dir name="/" baseinstalldir="XML">
-        <file role="php">Transformer.php</file>
+        <file role="php" name="Transformer.php"/>
       </dir>
     </filelist>
     <deps>
