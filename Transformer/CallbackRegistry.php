@@ -113,8 +113,8 @@ class XML_Transformer_CallbackRegistry {
             );
         }
 
-        if (method_exists($object, 'startElement') &&
-            method_exists($object, 'endElement')) {
+        if (!method_exists($object, 'startElement') ||
+            !method_exists($object, 'endElement')) {
             return sprintf(
               'Cannot overload namespace "%s", ' .
               'method(s) "startElement" and/or "endElement" ' .
