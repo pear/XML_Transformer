@@ -21,6 +21,59 @@ require_once 'XML/Transformer/Namespace.php';
 /**
 * DocBook Namespace Handler.
 *
+* This namespace handler provides transformations to render a subset of
+* the popular DocBook/XML markup (http://www.docbook.org/) into HTML.
+*
+* Example
+*
+*   <?php
+*   require_once 'XML/Transformer/Namespace/DocBook.php';
+*   require_once 'XML/Transformer/OutputBuffer.php';
+*
+*   $t = new XML_Transformer_OutputBuffer(
+*     array(
+*       'autoload' => 'DocBook'
+*     )
+*   );
+*
+*   echo $t->transform(implode('', file('article.xml')));
+*   ?>
+*   <article>
+*     <section>
+*       <title>
+*         Section One
+*       </title>
+*       <para>
+*         <emphasis role="bold">
+*           Bold Text.
+*         </emphasis>
+*       </para>
+*       <para>
+*         <ulink url="http://pear.php.net/">PEAR</ulink>
+*       </para>
+*     </section>
+*   </article>
+*
+* Output
+*
+*   <html>
+*     <body>
+*       <h2 class="title" style="clear: both">
+*         1. Section One
+*       </h2>
+*       <p>
+*         <b>
+*           Bold Text.
+*         </b>
+*       </p>
+*       <p>
+*         <a href="http://pear.php.net/">
+*           PEAR
+*         </a>
+*       </p>
+*     </body>
+*   </html>
+*
 * @author  Sebastian Bergmann <sb@sebastian-bergmann.de>
 *          Kristian Köhntopp <kris@koehntopp.de>
 * @version $Revision$
@@ -36,29 +89,10 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     var $defaultNamespacePrefix = '&MAIN';
 
     /**
-    * @var    array
-    * @access private
-    */
-    var $_counter = array();
-
-    /**
     * @var    string
     * @access private
     */
     var $_emphasizeRole = '';
-
-    // }}}
-    // {{{ function XML_Transformer_Namespace_DocBook()
-
-    /**
-    * @access public
-    */
-    function XML_Transformer_Namespace_DocBook() {
-        $this->_counter['chapter'] = 1;
-        $this->_counter['example'] = 1;
-        $this->_counter['figure']  = 1;
-        $this->_counter['section'] = 1;
-    }
 
     // }}}
     // {{{ function start_article($attributes)
@@ -159,7 +193,7 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     */
     function start_section($attributes) {
         return '<h2 class="title" style="clear: both">' .
-               $this->_counter['section']++ . '. ';
+               $this->_nextID('section') . '. ';
     }
 
     // }}}
@@ -220,6 +254,26 @@ class XML_Transformer_Namespace_DocBook extends XML_Transformer_Namespace {
     */
     function end_ulink($cdata) {
         return $cdata . '</a>';
+    }
+
+    // }}}
+    // {{{ function nextID($sequence)
+
+    /**
+    * @param  string
+    * @return integer
+    * @access private
+    */
+    function _nextID($sequence) {
+        static $sequences;
+
+        if (!isset($sequences[$sequence])) {
+            $sequences[$sequence] = 1;
+        } else {
+            $sequences[$sequence]++;
+        }
+
+        return $sequences[$sequence];
     }
 
     // }}}
