@@ -256,50 +256,50 @@ class XML_Transformer_PHP extends XML_Transformer_Namespace {
     }
 
     // }}}
-    // {{{ function start_cookieparameter($attributes)
+    // {{{ function start_cookievariable($attributes)
 
     /**
     * @param  array
     * @return string
     * @access public
     */
-    function start_cookieparameter($attributes) {
+    function start_cookievariable($attributes) {
         return isset($_COOKIE[$attributes['name']]) ? $_COOKIE[$attributes['name']] : '';
     }
 
     // }}}
-    // {{{ function end_cookieparameter($cdata)
+    // {{{ function end_cookievariable($cdata)
 
     /**
     * @param  string
     * @return string
     * @access public
     */
-    function end_cookieparameter($cdata) {
+    function end_cookievariable($cdata) {
         return $cdata;
     }
 
     // }}}
-    // {{{ function start_serverparameter($attributes)
+    // {{{ function start_servervariable($attributes)
 
     /**
     * @param  array
     * @return string
     * @access public
     */
-    function start_serverparameter($attributes) {
+    function start_servervariable($attributes) {
         return isset($_SERVER[$attributes['name']]) ? $_SERVER[$attributes['name']] : '';
     }
 
     // }}}
-    // {{{ function end_serverparameter($cdata)
+    // {{{ function end_servervariable($cdata)
 
     /**
     * @param  string
     * @return string
     * @access public
     */
-    function end_serverparameter($cdata) {
+    function end_servervariable($cdata) {
         return $cdata;
     }
 
