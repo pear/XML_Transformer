@@ -200,8 +200,8 @@ class XML_Transformer {
             "level=%d\nelement=%s:%s\ncdata=%s\n\n",
             $i,
             $this->_elementStack[$i],
-            (php_sapi_name() == 'cli') ? $attributes            : htmlspecialchars($attributes),
-            (php_sapi_name() == 'cli') ? $this->_cdataStack[$i] : htmlspecialchars($this->_cdataStack[$i])
+            $attributes,
+            $this->_cdataStack[$i]
           );
         }
 
@@ -361,15 +361,22 @@ class XML_Transformer {
         // Parse input.
 
         if (!xml_parse($parser, $xml, true)) {
+            $line = xml_get_current_line_number($parser);
             $errmsg = sprintf(
-              "<!-- Transformer: XML Error: %s at line %d\n",
+              "Transformer: XML Error: %s at line %d\n",
               xml_error_string(xml_get_error_code($parser)),
               xml_get_current_line_number($parser)
             );
 
-            $errmsg .= $this->stackdump() . " -->\n";
+            $exml = preg_split('/\n/', $xml);
+            for ($i=$line-3; $i<count($exml) and $i<$line+3; $i++)
+              $errmsg .= sprintf("line %d: %s\n", $i+1, $exml[$i]);
 
-            return $errmsg;
+            $errmsg .= "\n";
+            $errmsg .= $this->stackdump();
+            error_log($errmsg);
+
+            return '';
         }
 
         xml_parser_free($parser);
