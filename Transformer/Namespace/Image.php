@@ -168,7 +168,7 @@ class XML_Transformer_Namespace_Image extends XML_Transformer_Namespace {
     * @access public
     */
     function end_gtext($cdata) {
-	if(!is_file($this->_gtextAttributes['font']))
+    if(!is_file($this->_gtextAttributes['font']))
           return '<span>font \"' .
             $this->_gtextAttributes['font'] .
             '" not found</span>';
