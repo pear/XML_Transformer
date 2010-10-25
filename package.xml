@@ -1,131 +1,170 @@
-<?xml version="1.0" encoding="ISO-8859-1" ?>
-<!DOCTYPE package SYSTEM "http://pear.php.net/dtd/package-1.0">
-<package version="1.0">
-  <name>XML_Transformer</name>
-  <summary>XML Transformations in PHP</summary>
-  <description>The XML Transformer allows the binding of PHP functionality to XML tags to transform an XML document without the need for and the limitations of XSLT.</description>
-  <maintainers>
-    <maintainer>
-      <user>sebastian</user>
-      <role>lead</role>
-      <name>Sebastian Bergmann</name>
-      <email>sb@sebastian-bergmann.de</email>
-    </maintainer>
-    <maintainer>
-      <user>kk</user>
-      <role>developer</role>
-      <name>Kristian K&ouml;hntopp</name>
-      <email>kris@koehntopp.de</email>
-    </maintainer>
-  </maintainers>
-  <license>PHP License</license>
-  <release>
-    <version>1.1.0</version>
-    <state>stable</state>
-    <date>2004-11-27</date>
-    <notes>
-<![CDATA[
-+ Enabled the construction of nested transformers by allowing for multiple instances of XML_Transformer_CallbackRegistry. (Based upon a patch by Thomas Duffey <tduffey@homeboyz.org>)
+<?xml version="1.0" encoding="UTF-8"?>
+<package packagerversion="1.9.1" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0
+http://pear.php.net/dtd/tasks-1.0.xsd
+http://pear.php.net/dtd/package-2.0
+http://pear.php.net/dtd/package-2.0.xsd">
+ <name>XML_Transformer</name>
+ <channel>pear.php.net</channel>
+ <summary>XML Transformations in PHP</summary>
+ <description>The XML Transformer allows the binding of PHP functionality to XML tags to transform an XML document without the need for and the limitations of XSLT.
+ </description>
+ <lead>
+  <name>Sebastian Bergmann</name>
+  <user>sebastian</user>
+  <email>sb@sebastian-bergmann.de</email>
+  <active>yes</active>
+ </lead>
+ <developer>
+  <name>Kristian Kohntopp</name>
+  <user>kk</user>
+  <email>kris@koehntopp.de</email>
+  <active>yes</active>
+ </developer>
+ <date>2010-10-25</date>
+ <time>22:48:00</time>
+ <version>
+  <release>1.1.0</release>
+  <api>1.1.0</api>
+ </version>
+ <stability>
+  <release>stable</release>
+  <api>stable</api>
+ </stability>
+ <license uri="http://www.php.net/license">PHP License</license>
+ <notes>
++ Enabled the construction of nested transformers by allowing for multiple instances of XML_Transformer_CallbackRegistry. (Based upon a patch by Thomas Duffey &lt;tduffey@homeboyz.org&gt;)
 
 + Added collapseEmptyTagsMode parameter that controls the collapsing of empty tags and allows for the correct transforming of XHTML documents.
 
-* XML entities are no longer replaced twice. (Patch by Thomas Duffey <tduffey@homeboyz.org>)
+* XML entities are no longer replaced twice. (Patch by Thomas Duffey &lt;tduffey@homeboyz.org&gt;)
 
 * Refactored the testsuite to use PHPUnit2.
 
 ! XML_Transformer now requires XML_Util-1.1.0.
-]]>
-    </notes>
-    <filelist>
-      <dir name="/" baseinstalldir="XML">
-        <dir name="Transformer">
-          <dir name="Driver">
-            <file role="php" name="Cache.php"/>
-            <file role="php" name="OutputBuffer.php"/>
-          </dir>
-
-          <dir name="Namespace">
-            <file role="php" name="Anchor.php"/>
-            <file role="php" name="DocBook.php"/>
-            <file role="php" name="Image.php"/>
-            <file role="php" name="PHP.php"/>
-            <file role="php" name="Widget.php"/>
-          </dir>
-
-          <dir name="Tests">
-            <file role="php" name="AllTests.php"/>
-            <file role="php" name="TestNamespace.php"/>
-            <file role="php" name="TransformerTest.php"/>
-          </dir>
-
-          <file role="php" name="CallbackRegistry.php"/>
-          <file role="php" name="Namespace.php"/>
-        </dir>
-
-        <file role="php" name="Transformer.php"/>
-        <file role="doc" name="README"/>
-      </dir>
-    </filelist>
-    <deps>
-      <dep type="php" rel="ge" version="4.2.0" />
-      <dep type="php" rel="lt" version="5.1" />
-      <dep type="ext" rel="has">pcre</dep>
-      <dep type="ext" rel="has">xml</dep>
-      <dep type="pkg" rel="ge" version="1.1.0">XML_Util</dep>
-    </deps>
-  </release>
-  <changelog>
-    <release>
-      <version>1.0.1</version>
-      <state>stable</state>
-      <date>2004-03-16</date>
-      <notes>
-<![CDATA[
-* The collapsing of empty tags (<foo></foo>) into their
-  short-tag (<foo />) equivalent has been made optional
+ </notes>
+ <contents>
+  <dir name="/">
+   <dir name="Transformer">
+    <dir name="Driver">
+     <file baseinstalldir="XML" name="Cache.php" role="php" />
+     <file baseinstalldir="XML" name="OutputBuffer.php" role="php" />
+    </dir> <!-- //Transformer/Driver -->
+    <dir name="Namespace">
+     <file baseinstalldir="XML" name="Anchor.php" role="php" />
+     <file baseinstalldir="XML" name="DocBook.php" role="php" />
+     <file baseinstalldir="XML" name="Image.php" role="php" />
+     <file baseinstalldir="XML" name="PHP.php" role="php" />
+     <file baseinstalldir="XML" name="Widget.php" role="php" />
+    </dir> <!-- //Transformer/Namespace -->
+    <dir name="Tests">
+     <file baseinstalldir="XML" name="AllTests.php" role="php" />
+     <file baseinstalldir="XML" name="TestNamespace.php" role="php" />
+     <file baseinstalldir="XML" name="TransformerTest.php" role="php" />
+    </dir> <!-- //Transformer/Tests -->
+    <file baseinstalldir="XML" name="CallbackRegistry.php" role="php" />
+    <file baseinstalldir="XML" name="Namespace.php" role="php" />
+   </dir> <!-- //Transformer -->
+   <file baseinstalldir="XML" name="README" role="doc" />
+   <file baseinstalldir="XML" name="Transformer.php" role="php" />
+  </dir> <!-- / -->
+ </contents>
+ <dependencies>
+  <required>
+   <php>
+    <min>4.2.0</min>
+    <max>5.1</max>
+    <exclude>5.1</exclude>
+   </php>
+   <pearinstaller>
+    <min>1.4.0b1</min>
+   </pearinstaller>
+   <package>
+    <name>XML_Util</name>
+    <channel>pear.php.net</channel>
+    <min>1.1.0</min>
+   </package>
+   <extension>
+    <name>pcre</name>
+   </extension>
+   <extension>
+    <name>xml</name>
+   </extension>
+  </required>
+ </dependencies>
+ <phprelease />
+ <changelog>
+  <release>
+   <version>
+    <release>1.0.1</release>
+    <api>1.0.1</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <date>2004-03-16</date>
+   <license uri="http://www.php.net/license">PHP License</license>
+   <notes>
+* The collapsing of empty tags (&lt;foo&gt;&lt;/foo&gt;) into their
+  short-tag (&lt;foo /&gt;) equivalent has been made optional
   and is disabled by default to restore backwards
   compatibility with XML_Transformer versions prior to
   0.9.0.
-]]>
-      </notes>
-    </release>
-    <release>
-      <version>1.0.0</version>
-      <state>stable</state>
-      <date>2004-03-15</date>
-      <notes>
-<![CDATA[
+   </notes>
+  </release>
+  <release>
+   <version>
+    <release>1.0.0</release>
+    <api>1.0.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <date>2004-03-15</date>
+   <license uri="http://www.php.net/license">PHP License</license>
+   <notes>
 * No functional changes since XML_Transformer-0.9.1.
-]]>
-      </notes>
-    </release>
-    <release>
-      <version>0.9.1</version>
-      <state>stable</state>
-      <date>2004-03-02</date>
-      <notes>
-<![CDATA[
+   </notes>
+  </release>
+  <release>
+   <version>
+    <release>0.9.1</release>
+    <api>0.9.1</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <date>2004-03-02</date>
+   <license uri="http://www.php.net/license">PHP License</license>
+   <notes>
 * Fixed E_NOTICE in XML/Transformer.php.
-]]>
-      </notes>
-    </release>
-    <release>
-      <version>0.9.0</version>
-      <state>stable</state>
-      <date>2004-02-06</date>
-      <notes>
-<![CDATA[
+   </notes>
+  </release>
+  <release>
+   <version>
+    <release>0.9.0</release>
+    <api>0.9.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <date>2004-02-06</date>
+   <license uri="http://www.php.net/license">PHP License</license>
+   <notes>
 * XML fragments are now handled more gracefully.
 
   It is now possible, for instance, to return
-  "<t1/><t2/>" from a closing tag's callback.
+  &quot;&lt;t1/&gt;&lt;t2/&gt;&quot; from a closing tag&apos;s callback.
     by Azundris (http://www.azundris.com)
 
 * Entities are no longer unescaped during recursion.
     by Azundris (http://www.azundris.com)
 
-* Empty elements like "<br></br>" are now transformed
-  into "<br/>".
+* Empty elements like &quot;&lt;br&gt;&lt;/br&gt;&quot; are now transformed
+  into &quot;&lt;br/&gt;&quot;.
     by Azundris (http://www.azundris.com)
 
 * Refactored debug message system.
@@ -137,36 +176,51 @@
   with XML_Util::splitQualifiedName().
 
 ! The XML_Util package is now required.
-]]>
-      </notes>
-    </release>
-    <release>
-      <version>0.8.2</version>
-      <state>stable</state>
-      <date>2003-09-11</date>
-      <notes>
-<![CDATA[
+   </notes>
+  </release>
+  <release>
+   <version>
+    <release>0.8.2</release>
+    <api>0.8.2</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <date>2003-09-11</date>
+   <license uri="http://www.php.net/license">PHP License</license>
+   <notes>
 * Performance improvements due to changes in the
   debug mode.
-]]>
-      </notes>
-    </release>
-    <release>
-      <version>0.8.1</version>
-      <state>stable</state>
-      <date>2003-05-06</date>
-      <notes>
-<![CDATA[
+   </notes>
+  </release>
+  <release>
+   <version>
+    <release>0.8.1</release>
+    <api>0.8.1</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <date>2003-05-06</date>
+   <license uri="http://www.php.net/license">PHP License</license>
+   <notes>
 * Bugfix release.
-]]>
-      </notes>
-    </release>
-    <release>
-      <version>0.8</version>
-      <state>stable</state>
-      <date>2002-10-07</date>
-      <notes>
-<![CDATA[
+   </notes>
+  </release>
+  <release>
+   <version>
+    <release>0.8</release>
+    <api>0.8</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <date>2002-10-07</date>
+   <license uri="http://www.php.net/license">PHP License</license>
+   <notes>
 + Added DocBook namespace handler.
 
 + Added Widget namespace handler.
@@ -198,43 +252,48 @@
   are beeing sent can now be configured using setLogTarget().
 
   The default target is the error.log.
-]]>
-      </notes>
-    </release>
-    <release>
-      <version>0.7</version>
-      <state>stable</state>
-      <date>2002-09-22</date>
-      <notes>
-<![CDATA[
+   </notes>
+  </release>
+  <release>
+   <version>
+    <release>0.7</release>
+    <api>0.7</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <date>2002-09-22</date>
+   <license uri="http://www.php.net/license">PHP License</license>
+   <notes>
 + Added Anchor namespace handler.
 
   The Anchor namespace handler implements a database of
   indirect links. These links can be maintained centrally
   in a single location, and can be used using
 
-    <a:iref iref="name">...</a>
+    &lt;a:iref iref=&quot;name&quot;&gt;...&lt;/a&gt;
 
-  <a:random/> selects a single random link from the database.
+  &lt;a:random/&gt; selects a single random link from the database.
 
 + Added Image namespace handler.
 
-    + <img:img/> is a replacement for XHTML's <img/> and
+    + &lt;img:img/&gt; is a replacement for XHTML&apos;s &lt;img/&gt; and
       automatically determines the size of the image.
 
       For this, the image must be in a format that is
       understood by getimagesize().
   
-    + <img:gtext /> is a container that renders its contents
+    + &lt;img:gtext /&gt; is a container that renders its contents
       as a PNG graphics using ImageTTFText().
 
       For this to work, a cache directory below DocumentRoot
       that is writeable by the Webserver owner is necessary.
       The default is /cache/gtext.
   
-    + <img:gtextdefault /> understands the same attributes as
-      <img:gtext /> and supplies these to all subsequent calls
-      of <img:gtext />.
+    + &lt;img:gtextdefault /&gt; understands the same attributes as
+      &lt;img:gtext /&gt; and supplies these to all subsequent calls
+      of &lt;img:gtext /&gt;.
 
 + Namespace handlers can now use getLock() to disable other
   namespace handlers for the time of their transformation.
@@ -250,25 +309,25 @@
 
 + Added new tags to the PHP Namespace Handler:
 
-    + <php:namespace name="a">
-       <php:define name="b">
-        <p>The attribute x is $x and the content is $content.</p>
-       </php:define>
-      </php:namespace>
+    + &lt;php:namespace name=&quot;a&quot;&gt;
+       &lt;php:define name=&quot;b&quot;&gt;
+        &lt;p&gt;The attribute x is $x and the content is $content.&lt;/p&gt;
+       &lt;/php:define&gt;
+      &lt;/php:namespace&gt;
 
       This will define a new namespace a with a single tag b in it
       (You may put multiple defines into a namespace). If you use
-      <a:b x="text">sometext</a:b>, the variable $x will be replaced
+      &lt;a:b x=&quot;text&quot;&gt;sometext&lt;/a:b&gt;, the variable $x will be replaced
       with the text, and the variable $content will be replaced with
       the content.
 
-    + <php:cookievariable name=""/> inserts the contents of a given
+    + &lt;php:cookievariable name=&quot;&quot;/&gt; inserts the contents of a given
       HTTP Cookie into the output XML tree.
 
-    + <php:servervariable name=""/> inserts the contents of a
+    + &lt;php:servervariable name=&quot;&quot;/&gt; inserts the contents of a
       given server variable into the output XML tree.
 
-    + <php:logic/> executes a given block of PHP code and stores
+    + &lt;php:logic/&gt; executes a given block of PHP code and stores
       its output into the output XML tree.
 
 * Refactored the XML_Transformer class into
@@ -278,7 +337,7 @@
     * XML_Transformer_CallbackRegistry.
 
       This class faciliates the registration of new callbacks
-      on-the-fly inside the transformation's recursion.
+      on-the-fly inside the transformation&apos;s recursion.
 
     * XML_Transformer_OutputBuffer.
 
@@ -291,23 +350,28 @@
 
 * Deprecated overloading of single XML elements.
 
-  By overloading a special namespace, &MAIN, the old behaviour can
+  By overloading a special namespace, &amp;MAIN, the old behaviour can
   be achieved.
 
 * setDefaultCallback() and unsetDefaultCallback() are deprecated.
 
-  By overloading the newly introduced &MAIN namespace with a class
+  By overloading the newly introduced &amp;MAIN namespace with a class
   that provides default element handlers the old behaviour can
   be achieved.
-]]>
-      </notes>
-    </release>
-    <release>
-      <version>0.6</version>
-      <state>stable</state>
-      <date>2002-09-18</date>
-      <notes>
-<![CDATA[
+   </notes>
+  </release>
+  <release>
+   <version>
+    <release>0.6</release>
+    <api>0.6</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <date>2002-09-18</date>
+   <license uri="http://www.php.net/license">PHP License</license>
+   <notes>
 + Added methods setDefaultCallback() and unsetDefaultCallback() to
   set/unset default callbacks for elements that are not overloaded.
 
@@ -319,25 +383,25 @@
 + Added PHP namespace handler. Initially the following tags are
   supported:
 
-    + <php:expr/> evaluates a given PHP expression and stores its
+    + &lt;php:expr/&gt; evaluates a given PHP expression and stores its
       return value into the output XML tree.
 
-    + <php:getvariable name=""/> inserts the contents of a given
+    + &lt;php:getvariable name=&quot;&quot;/&gt; inserts the contents of a given
       global variable into the output XML tree.
 
-    + <php:setvariable name="">value</php:setvariable sets a given
+    + &lt;php:setvariable name=&quot;&quot;&gt;value&lt;/php:setvariable sets a given
       global variable to a given value.
 
-    + <php:getparameter name=""/> inserts the contents of a given
+    + &lt;php:getparameter name=&quot;&quot;/&gt; inserts the contents of a given
       HTTP GET parameter into the output XML tree.
 
-    + <php:postparameter name=""/> inserts the contents of a given
+    + &lt;php:postparameter name=&quot;&quot;/&gt; inserts the contents of a given
       HTTP POST parameter into the output XML tree.
 
-    + <php:sessionvariable name=""/> inserts the contents of a given
+    + &lt;php:sessionvariable name=&quot;&quot;/&gt; inserts the contents of a given
       session variable into the output XML tree.
 
-* Fixed a bug in overloadNamespace()'s error handling.
+* Fixed a bug in overloadNamespace()&apos;s error handling.
 
 * Recursive operation can now be selectively turned off for
   overloaded namespaces, too.
@@ -351,24 +415,37 @@
 * Fixed recursive transformation of overloaded namespaces.
 
 * Changed license from PHP License 2.02 to PHP License 3.00.
-]]>
-      </notes>
-    </release>
-    <release>
-      <version>0.5</version>
-      <state>stable</state>
-      <date>2002-09-08</date>
-      <notes>
+   </notes>
+  </release>
+  <release>
+   <version>
+    <release>0.5</release>
+    <api>0.5</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <date>2002-09-08</date>
+   <license uri="http://www.php.net/license">PHP License</license>
+   <notes>
 * Resolved infinite recursion problem that arose when handlers
   do not remove the tags of their assigned element from the input
-  XML document, but only work on it's sub-tree.
-      </notes>
-    </release>
-    <release>
-      <version>0.4</version>
-      <state>stable</state>
-      <date>2002-09-04</date>
-      <notes>
+  XML document, but only work on it&apos;s sub-tree.
+   </notes>
+  </release>
+  <release>
+   <version>
+    <release>0.4</release>
+    <api>0.4</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <date>2002-09-04</date>
+   <license uri="http://www.php.net/license">PHP License</license>
+   <notes>
 + Added a filtering mechanism to the debugger that limits
   the generated debugging information to a given set of
   elements.
@@ -377,13 +454,20 @@
   instead of syslog().
 
 * Fixed a bug in the case-folding handling.
-      </notes>
-    </release>
-    <release>
-      <version>0.3</version>
-      <state>stable</state>
-      <date>2002-05-16</date>
-      <notes>
+   </notes>
+  </release>
+  <release>
+   <version>
+    <release>0.3</release>
+    <api>0.3</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <date>2002-05-16</date>
+   <license uri="http://www.php.net/license">PHP License</license>
+   <notes>
 + Added setDebug() and stackdump() to allow for easier debugging.
 
 + Added setRecursiveOperation() to enable/disable the recursive
@@ -393,21 +477,37 @@
 
 * Changed setCaseFolding() to accept a second parameter to set
   the case to which XML attributes and elements are folded.
-      </notes>
-    </release>
-    <release>
-      <version>0.2</version>
-      <date>2002-04-07</date>
-      <notes>
-* Renamed to XML_Transformer, per Stig's request.
-      </notes>
-    </release>
-    <release>
-      <version>0.1</version>
-      <date>2002-04-06</date>
-      <notes>
+   </notes>
+  </release>
+  <release>
+   <version>
+    <release>0.2</release>
+    <api>0.2</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <date>2002-04-07</date>
+   <license uri="http://www.php.net/license">PHP License</license>
+   <notes>
+* Renamed to XML_Transformer, per Stig&apos;s request.
+   </notes>
+  </release>
+  <release>
+   <version>
+    <release>0.1</release>
+    <api>0.1</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <date>2002-04-06</date>
+   <license uri="http://www.php.net/license">PHP License</license>
+   <notes>
 * Initial independent PEAR release.
-      </notes>
-    </release>
-  </changelog>
+   </notes>
+  </release>
+ </changelog>
 </package>
