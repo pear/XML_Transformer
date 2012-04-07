@@ -17,9 +17,9 @@
   <active>yes</active>
  </developer>
  <date>2012-04-08</date>
- <time>05:35:09</time>
+ <time>05:37:39</time>
  <version>
-  <release>1.1.1</release>
+  <release>1.1.2</release>
   <api>1.1.0</api>
  </version>
  <stability>
@@ -47,6 +47,7 @@ Bug #14681 Security issue due to seeding random number generator
    <file baseinstalldir="/" md5sum="77876f22ca055e8db47876ce8f56a52d" name="XML/Transformer/Tests/TestNamespace.php" role="php" />
    <file baseinstalldir="/" md5sum="9551be18e5ebb50dccd6b49547aea549" name="XML/Transformer/Tests/TransformerTest.php" role="php" />
    <file baseinstalldir="XML" md5sum="52acd2fe898b3da05f27e8550d0fab0f" name="README" role="doc" />
+   <file baseinstalldir="/" md5sum="fd9d7ee03732b2a97d2d60c0892cdc8e" name="XML_Transformer-1.1.1.tgz" role="data" />
   </dir>
  </contents>
  <dependencies>
@@ -493,6 +494,22 @@ Bug #14681 Security issue due to seeding random number generator
   <release>
    <version>
     <release>1.1.1</release>
+    <api>1.1.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <date>2012-04-08</date>
+   <license uri="http://www.php.net/license">PHP License</license>
+   <notes>
+Fix dir layout
+Bug #14681 Security issue due to seeding random number generator
+   </notes>
+  </release>
+  <release>
+   <version>
+    <release>1.1.2</release>
     <api>1.1.0</api>
    </version>
    <stability>
