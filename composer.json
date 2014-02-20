@@ -1,0 +1,37 @@
+{
+    "authors": [
+        {
+            "email": "sb@sebastian-bergmann.de",
+            "name": "Sebastian Bergmann",
+            "role": "Lead"
+        },
+        {
+            "email": "kris@koehntopp.de",
+            "name": "Kristian Kohntopp",
+            "role": "Developer"
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+            "XML": "./"
+        }
+    },
+    "description": "More info available on: http://pear.php.net/package/XML_Transformer",
+    "include-path": [
+        "./"
+    ],
+    "license": "PHP License",
+    "name": "pear/xml_transformer",
+    "support": {
+        "issues": "http://pear.php.net/bugs/search.php?cmd=display&package_name[]=XML_Transformer",
+        "source": "https://github.com/pear/XML_Transformer"
+    },
+    "type": "library",
+    "require": {
+        "pear/pear_exception": "*",
+        "pear/xml_util": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*"
+    }
+}
