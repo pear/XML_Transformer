@@ -16,7 +16,7 @@
 // $Id$
 //
 
-require_once 'PHPUnit2/Framework/TestCase.php';
+require_once 'PHPUnit/Framework/TestCase.php';
 
 require_once 'XML/Transformer/Tests/TestNamespace.php';
 require_once 'XML/Transformer.php';
@@ -116,4 +116,3 @@ class XML_Transformer_Tests_TransformerTest extends PHPUnit2_Framework_TestCase 
  * vim600:  et sw=2 ts=2 fdm=marker
  * vim<600: et sw=2 ts=2
  */
-?>
