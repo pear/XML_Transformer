@@ -53,8 +53,6 @@ Bug #14681 Security issue due to seeding random number generator
   <required>
    <php>
     <min>4.2.0</min>
-    <max>5.1</max>
-    <exclude>5.1</exclude>
    </php>
    <pearinstaller>
     <min>1.4.0b1</min>
