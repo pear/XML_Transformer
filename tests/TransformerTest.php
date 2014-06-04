@@ -18,7 +18,7 @@
 
 require_once 'PHPUnit/Framework/TestCase.php';
 
-require_once 'XML/Transformer/Tests/TestNamespace.php';
+require_once 'TestNamespace.php';
 require_once 'XML/Transformer.php';
 
 /**
@@ -29,7 +29,7 @@ require_once 'XML/Transformer.php';
  * @category    XML
  * @package     XML_Transformer
  */
-class XML_Transformer_Tests_TransformerTest extends PHPUnit2_Framework_TestCase {
+class XML_Transformer_Tests_TransformerTest extends PHPUnit_Framework_TestCase {
     private $t;
 
     public function  setUp() {
