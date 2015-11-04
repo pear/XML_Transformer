@@ -420,13 +420,13 @@ class XML_Transformer {
           "Stackdump (level: %s) follows:\n",
           $this->_level
         );
-
+        $util = new XML_Util();
         for ($i = $this->_level; $i >= 0; $i--) {
           $stackdump .= sprintf(
             "level=%d\nelement=%s:%s\ncdata=%s\n\n",
             $i,
             isset($this->_elementStack[$i])    ? $this->_elementStack[$i]                                  : '',
-            isset($this->_attributesStack[$i]) ? XML_Util::attributesToString($this->_attributesStack[$i]) : '',
+            isset($this->_attributesStack[$i]) ? $util->attributesToString($this->_attributesStack[$i]) : '',
             isset($this->_cdataStack[$i])      ? $this->_cdataStack[$i]                                    : ''
           );
         }
@@ -515,6 +515,7 @@ class XML_Transformer {
         $this->_level           = 0;
         $this->_lastProcessed   = '';
 
+        $util = new XML_Util();
         // Perform second transformation pass, if required.
 
         $secondPassRequired = $this->_secondPassRequired;
@@ -528,7 +529,7 @@ class XML_Transformer {
 
         if ($this->_collapseEmptyTags &&
             $this->_depth == 0) {
-            $result = XML_Util::collapseEmptyTags(
+            $result = $util->collapseEmptyTags(
               $result,
               $this->_collapseEmptyTagsMode
             );
@@ -555,7 +556,8 @@ class XML_Transformer {
     function _startElement($parser, $element, $attributes) {
         $attributes = $this->canonicalize($attributes);
         $element    = $this->canonicalize($element);
-        $qElement   = XML_Util::splitQualifiedName($element, '&MAIN');
+        $util       = new XML_Util();
+        $qElement   = $util->splitQualifiedName($element, '&MAIN');
         $process    = $this->_lastProcessed != $element;
 
         // Push element's name and attributes onto the stack.
@@ -570,7 +572,7 @@ class XML_Transformer {
                 'startElement[%d]: %s %s',
                 $this->_level,
                 $element,
-                XML_Util::attributesToString($attributes)
+                $util->attributesToString($attributes)
               )
             );
         }
@@ -591,7 +593,7 @@ class XML_Transformer {
             $cdata = sprintf(
               '<%s%s>',
               $element,
-              XML_Util::attributesToString($attributes)
+              $util->attributesToString($attributes)
             );
         }
 
@@ -611,7 +613,8 @@ class XML_Transformer {
     function _endElement($parser, $element) {
         $cdata     = $this->_cdataStack[$this->_level];
         $element   = $this->canonicalize($element);
-        $qElement  = XML_Util::splitQualifiedName($element, '&MAIN');
+        $util      = new XML_Util();
+        $qElement  = $util->splitQualifiedName($element, '&MAIN');
         $process   = $this->_lastProcessed != $element;
         $recursion = FALSE;
 
