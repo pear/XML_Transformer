@@ -16,8 +16,6 @@
 // $Id$
 //
 
-require_once 'PHPUnit/Framework/TestCase.php';
-
 require_once 'TestNamespace.php';
 require_once 'XML/Transformer.php';
 
